@@ -1,0 +1,101 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm} % For proof environments
+\usepackage{geometry}
+\usepackage{parskip} % Blank line between paragraphs, no indent
+\usepackage{xcolor}
+
+\geometry{a4paper, margin=1in}
+
+% Custom command for a "Key Insight" box
+\newcommand{\insight}[1]{%
+    \begin{center}
+    \fcolorbox{black}{gray!10}{\begin{minipage}{0.9\textwidth}
+    \textbf{Key Insight:} #1
+    \end{minipage}}
+    \end{center}
+}
+
+\title{KCPC Workshop 1 \\ Solutions}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Introductory brainteaser}
+
+\subsection{Left handed people}
+\textbf{Answer:} 50 people must leave.
+
+\textbf{Explanation:} 
+Initially, there are 99 left-handed people and 1 right-handed person. To make the 1 right-handed person represent 2\% of the total population, we solve for the new total population $x$:
+\[ 0.02x = 1 \implies x = 50 \]
+Since the new total must be 50, then $100 - 50 = 50$ people must leave.
+
+\section{Induction and Logic Puzzles}
+
+\subsection{The Locker Problem}
+\insight{A locker is toggled once for every divisor it has. Only perfect squares have an odd number of divisors.}
+
+\textbf{Solution:}
+A locker $n$ ends up open if it is toggled an odd number of times. This only happens if $n$ is a perfect square.
+\begin{itemize}
+    \item \textbf{Q1:} Between 1 and 100, the perfect squares are $1^2, 2^2, \dots, 10^2$. Thus, 10 lockers are open.
+    \item \textbf{Q2:} For $N$ lockers, the number of open lockers is $\lfloor \sqrt{N} \rfloor$.
+\end{itemize}
+
+\subsection{The Three Wise Men}
+\textbf{Solution:}
+The man announced he was wearing a \textbf{Blue} hat. 
+
+\begin{proof}
+If there was only 1 blue hat, the wearer would see two white hats and instantly know he had blue (since at least one is blue). 
+
+If there were 2 blue hats, one wearer would see one blue and one white. He would wait to see if the other blue-hat-wearer jumped up. When they didn't (meaning they saw more than one blue), he would realize he must be the second blue hat. 
+
+Since they sat for a "very long time," the winner realized that even the 2-hat logic had failed, meaning there must be 3 blue hats.
+\end{proof}
+
+\subsection{Muddy Children}
+\textbf{Solution:}
+They step forward on the $m$-th turn, where $m$ is the number of muddy children.
+
+Assuming that each child has-and knows each of the others to have-perfect logic all children with muddy faces ($X$) will step forward together on turn $X$. The children have different information, depending on whether their own face is muddy or not. Each member of $X$ sees $X-1$ muddy faces, and knows that those children will step forward on turn $X-1$ if they are the only muddy faces. When that does not occur, each member of $X$ knows that he or she is also a member of $X$, and steps forward on turn $X$. Each non-member of $X$ sees $X$ muddy faces, and will not expect anyone to step forward until at least turn $X$. 
+
+
+\section{Invariance and Physics}
+
+\subsection{Ants on a Ruler}
+\insight{When two ants of the same speed collide and bounce, it is mathematically identical to the ants passing through each other.}
+
+\textbf{Solution:}
+Since the ants are indistinguishable and travel at constant speed, we can treat collisions as "passing through." The worst-case scenario is an ant starting at one end and traveling the full length $L$.
+\[ T = \frac{L}{v} \]
+
+\subsection{The Fly and the Cyclists}
+\textbf{Solution:}
+The trick is to ignore the fly's complex path and focus on \textbf{time}.
+The cyclists are 20 miles apart closing at a combined speed of $10 + 10 = 20$ mph. They will collide in exactly 1 hour.
+Since the fly travels at 15 mph for that entire hour, the distance is:
+\[ d = 15 \text{ mph} \times 1 \text{ hour} = 15 \text{ miles} \]
+
+\section{Game Theory}
+
+\subsection{Simple Stick Game}
+\textbf{Solution:}
+A \textbf{winning state} is a state where the player will win the game if they play optimally, and a \textbf{losing state} is a state where the player will lose the game if the opponent plays optimally. It turns out that we can classify all states of a game so that each state is either a winning state or a losing state.
+
+In the above game, state 0 is clearly a losing state, because the player cannot make any moves. States 1, 2 and 3 are winning states, because we can remove 1, 2 or 3 sticks and win the game. State 4, in turn, is a losing state, because any
+move leads to a state that is a winning state for the opponent.
+
+More generally, if there is a move that leads from the current state to a losing state, the current state is a winning state, and otherwise the current state is a
+losing state. Using this observation, we can classify all states of a game starting with losing states where there are no possible moves.
+
+It is easy to analyze this game: a state $k$ is a losing state if $k$ is divisible by
+4, and otherwise it is a winning state. An optimal way to play the game is to always choose a move after which the number of sticks in the heap is divisible by 4. Finally, there are no sticks left and the opponent has lost.
+\end{document}
