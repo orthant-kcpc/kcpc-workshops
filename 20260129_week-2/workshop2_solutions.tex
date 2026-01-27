@@ -66,26 +66,26 @@ $n+1$, of course. Multiplying both sides of an inequality by a positive number d
 so we get
 
 \begin{equation}
-    (n+1)!>2^n(n+1).
+    (n+1)!>2^n(n+1). \notag
 \end{equation}
 
 This is almost what we want, for the right-hand side of the "goal" is $2^{n+1} = 2^n \times 2$, and
 $n+1$ is certainly greater than 2; i.e.,
 
 \begin{equation}
-    (n+1)!>2^n(n+1) > 2^n \times 2 = 2^{n+1}.
+    (n+1)!>2^n(n+1) > 2^n \times 2 = 2^{n+1}. \notag
 \end{equation}
 
 Induction arguments can be rather subtle. Sometimes it is not obvious what plays the role of the
 "index" $n$. Sometimes the crux move is a clever choice of this variable, and/or a neat method of traveling
 between $P(n)$ and $P(n+1)$.
 
-\section{Draw a Picture/Recast}
+\section{Draw a Picture}
 
 We are trying to prove that
 
 \begin{equation}
-    \sum_{i=1}^ni^3=\left(\sum_{i=1}^ni\right)^2=\frac{n^2(n+1)^2}4.
+    \sum_{i=1}^ni^3=\left(\sum_{i=1}^ni\right)^2=\frac{n^2(n+1)^2}4. \notag
 \end{equation}
 
 \textbf{Solution:} A visual illustration of the proof for $n=5$ is shown below.
@@ -99,16 +99,46 @@ The length of one side is given by: $S = 2(1 + 2 + 3 + \dots + n)$. The length o
 
 The area is therefore given in two ways as:
 \begin{equation}
-    A=4(1+2+\dots+n)^2=(n(n+1))^2
+    A=4(1+2+\dots+n)^2=(n(n+1))^2, \notag
 \end{equation}
 \begin{equation}
-    A=4\times 1 \times 1^2 + 4 \times 2 \times 2^2 + 4 \times 3 \times 3^2 + \dots + 4 \times n \times n^2 = 4\sum_{i=1}^n i^3
+    A=4\times 1 \times 1^2 + 4 \times 2 \times 2^2 + 4 \times 3 \times 3^2 + \dots + 4 \times n \times n^2 = 4\sum_{i=1}^n i^3. \notag
 \end{equation}
 The result follows by equating these two expressions for the area.
 
 More interesting proofs for this problem: \href{https://proofwiki.org/wiki/Sum_of_Sequence_of_Cubes}{here}.
 
+\section{Recast}
+
+\textbf{Solution:} At first, this seems like a geometric/combinatorial problem with many cases and subcases. But it is really just a question about counting colors. The two corners that were removed were
+both (without loss of generality) white, so the shape we are interested in contains 32 black and 30 white
+squares. Yet any domino, once it is placed, will occupy exactly one black and one white square. The
+31 dominos thus require 31 black and 31 white squares, so tiling is impossible.
+
+The idea of introducing coloring to reformulate a problem is quite old. Nevertheless, it took several
+years before anyone thought to use this method on the Gallery Problem.
+This problem was first proposed by Victor Klee in 1973, and solved shortly thereafter by Václav
+Chvátal. However, his proof was rather complicated. In 1978, S. Fisk discovered the elegant coloring
+argument. If you want to read more about this beautiful solution, see \href{https://en.wikipedia.org/wiki/Art_gallery_problem}{here}.
+
 \section{Symmetry}
+
+\subsection{Grandma's Cabin}
+
+\textbf{Solution:} First, draw a picture! Label your location by $Y$ and Grandma's by $G$. Certainly, this
+problem can be done with calculus, but it is very ugly (you need to diﬀerentiate the sum of two radicals,
+for starters). The problem appears to have no symmetry in it, but the stream is practically begging you
+to reflect across it! Draw a sample path (shown below as $YA$ followed by $AG$) and look at its reflection.
+We call the reflections of your house and Grandma's house $Y'$ and $G'$, respectively.
+
+\includegraphics[width=0.5\linewidth]{grandma.png}
+
+While you are carrying water to Grandma, your duplicate in an alternate universe is doing the same,
+only south of the stream. Notice that $AG=AG'$, so the length of your path would be unchanged if you
+visited the reflected Grandma instead of the real one. Since the shortest distance between two points
+is the straight line $YBG'$, the optimal path will be $YB$ followed by $BG$. Its length is the same as the
+length of $YBG'$, which is just the hypotenuse of a right triangle with legs 5 and 12 miles. Hence our
+answer is 13 miles.
 
 \subsection{Geometric}
 
