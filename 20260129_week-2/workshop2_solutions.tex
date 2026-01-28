@@ -54,6 +54,25 @@ giving \(7-2=5\) faces in the final solid.
 
 \section{Wishful Thinking and Make it Easier}
 
+\subsection{Long Sequence}
+
+\textbf{Answer:} \(a_{6767} = 6767^2\).
+
+This equation is hard to understand without experimentation. Let's try to build
+up some values of $a_n$. First, we \textit{keep things simple} and try $m=n=0$, which yields $a_0+a_0=a_0$, so
+$a_0 = 0$. Now use the known indices 0, 1: plug $m = 1, n = 0$ into the equation and we have
+$2a_1=\frac{1}{2}(a_2 + a_0) = a_2/2$, so $a_2 = 4a_1 = 4$. More generally, if we just fix $n = 0$, we have
+$2a_m=a_{2m}/2$, or $a_{2m}=4a_m$. Now let's plug in $m=2, n=1$:
+\begin{equation}
+    a_{2+1}+a_{2-1}=\frac{1}{2}(a_{4}+a_{2}). \notag
+\end{equation}
+Since $a_4=4a_2=4\times 4=16$, we have $a_3 + a_1 = \frac{1}{2}(16 + 4) = 10$, so $a_3 = 9$.
+At this point, we are ready to venture the conjecture that $a_n = n^2$.
+If this conjecture is true, a likely method of proof will be \textit{mathematical induction}.
+See the next section for details on induction.
+
+\subsection{An \textit{Algorithm?}}
+
 \textbf{Solution:} $f(n)$ equals the number of 1's in the binary representation of $n$ (the popcount of $n$).
 
 \section{Induction}
