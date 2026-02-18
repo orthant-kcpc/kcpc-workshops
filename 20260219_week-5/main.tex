@@ -1,0 +1,746 @@
+\documentclass{beamer}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{tikz}
+
+% ===== KCPC clean theme =====
+\usetheme{default}
+\useinnertheme{rectangles}
+\useoutertheme{default}
+
+%\beamerdefaultoverlayspecification{<+->}
+
+\setbeamertemplate{navigation symbols}{}
+
+% --- Colours ---
+\definecolor{kcpc-bg}{RGB}{250,250,250}
+\definecolor{kcpc-text}{RGB}{20,20,20}
+\definecolor{kcpc-muted}{RGB}{90,90,90}
+\definecolor{kcpc-red}{RGB}{176,0,0}
+
+\setbeamercolor{background canvas}{bg=kcpc-bg}
+\setbeamercolor{normal text}{fg=kcpc-text}
+\setbeamercolor{frametitle}{fg=kcpc-text,bg=kcpc-bg}
+\setbeamercolor{title}{fg=kcpc-text}
+\setbeamercolor{subtitle}{fg=kcpc-muted}
+\setbeamercolor{structure}{fg=kcpc-red}
+
+\setbeamerfont{title}{series=\bfseries,size=\Large}
+\setbeamerfont{frametitle}{series=\bfseries,size=\large}
+
+\setlength{\parskip}{0.4em}
+
+\setbeamertemplate{itemize item}{→}
+\setbeamertemplate{itemize subitem}{→}
+
+\setbeamertemplate{headline}{
+    \vspace{0.2cm}
+    \hspace{0.2cm}
+    \textcolor{kcpc-muted}{\small\insertsection}
+    \hfill
+}
+
+\setbeamertemplate{footline}{
+    \hspace{0.2cm}
+    \textcolor{kcpc-muted}{\small KCPC}
+    \hfill
+    \vspace{0.3cm}
+}
+
+\setbeamertemplate{background}{
+    \begin{tikzpicture}[remember picture,overlay]
+        \node[
+            opacity=0.035,
+            at=(current page.center)
+        ] {
+            \includegraphics[width=0.55\paperwidth]{kcpc-logo.png}
+        };
+    \end{tikzpicture}
+}
+
+\AtBeginSection[]{
+    \begin{frame}[plain]
+        \vfill
+        \centering
+        {\Large\bfseries \insertsection}
+        \vfill
+    \end{frame}
+}
+
+
+\title{Graphs II}
+\subtitle{Distance, Constraints, and Logical Structure}
+\author{KCPC}
+\date{\today}
+
+\begin{document}
+
+% ------------------------------------------------
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% ------------------------------------------------
+
+\begin{frame}{Overview}
+    \tableofcontents
+\end{frame}
+
+% ------------------------------------------------
+
+\begin{frame}{Attendance}
+    \centering
+    \includegraphics[width=0.5\paperwidth]{attendance.png}
+\end{frame}
+
+% ------------------------------------------------
+\begin{frame}{Our Socials}
+
+    \centering
+    \begin{columns}[c]
+    
+        \column{0.33\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{insta.JPG}
+        \\
+        Instagram
+        
+        \column{0.33\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{discord.JPG}
+        \\
+        Discord
+        
+        \column{0.33\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{whatsapp.JPG}
+        \\
+        WhatsApp
+    
+    \end{columns}
+
+\end{frame}
+
+% ------------------------------------------------
+
+\section{Foundations - A Quick Graph Traversal Recap}
+
+% ------------------------------------------------
+
+\begin{frame}{Depth-First Search}
+
+    \textbf{Purpose}
+    
+        Explore as far as possible along each branch before backtracking.
+    
+    \vspace{0.5em}
+    
+\end{frame}
+
+\begin{frame}{Depth-First Search}
+
+    \textbf{Algorithm (Iterative)}
+    
+    \textbf{1. Initialize}
+        \begin{itemize}
+            \item Create empty \texttt{stack}
+            \item Mark all nodes unvisited
+            \item Push start node
+        \end{itemize}
+
+\end{frame}
+
+\begin{frame}{Depth-First Search}
+
+    \textbf{2. While stack not empty}
+        \begin{itemize}
+            \item Pop node $u$
+            \item If $u$ unvisited:
+            \begin{itemize}
+                \item Mark $u$ visited
+                \item Push unvisited neighbours of $u$
+            \end{itemize}
+        \end{itemize}
+    
+\end{frame}
+
+\begin{frame}{Depth-First Search}
+
+    \textbf{3. Stop when stack empty}
+
+\end{frame}
+
+% ------------------
+
+\begin{frame}{Group walkthrough example}
+
+    % We assume the source (obviously) here is A, with us mapping
+    % all possible routes until we find our target node.
+    
+    \includegraphics<1>[width=0.8\linewidth]{DFS1.jpg}
+    \includegraphics<2>[width=0.8\linewidth]{DFS2.jpg}
+    \includegraphics<3>[width=0.8\linewidth]{DFS3.jpg}
+    \includegraphics<4>[width=0.8\linewidth]{DFS4.jpg}
+    \includegraphics<5>[width=0.8\linewidth]{DFS5.jpg}
+    \includegraphics<6>[width=0.8\linewidth]{DFS6.jpg}
+    \includegraphics<7>[width=0.8\linewidth]{DFS7.jpg}
+
+\end{frame}
+
+% ------------------
+
+\begin{frame}{Breadth-First Search (BFS)}
+
+    \textbf{Purpose}
+    
+        Explore a graph level by level from a starting node.
+
+\end{frame}
+
+\begin{frame}{Breadth-First Search (BFS)}
+
+    \vspace{0.5em}
+    \textbf{Algorithm}
+    
+        \textbf{1. Initialize}
+        \begin{itemize}
+            \item Create empty \texttt{queue}
+            \item Mark all nodes unvisited
+            \item Mark start node visited
+            \item Enqueue start node
+        \end{itemize}
+    
+\end{frame}
+    
+\begin{frame}{Breadth-First Search (BFS)}
+    
+    \textbf{2. While queue not empty}
+        \begin{itemize}
+            \item Dequeue node $u$
+            \item For each neighbour $v$ of $u$:
+            \begin{itemize}
+                \item If $v$ unvisited:
+                \begin{itemize}
+                    \item Mark $v$ visited
+                    \item Enqueue $v$
+                \end{itemize}
+            \end{itemize}
+        \end{itemize}
+
+\end{frame}
+
+\begin{frame}{Breadth-First Search (BFS)}
+
+    \textbf{3. Stop when queue empty}
+
+\end{frame}
+
+% ------------------
+
+\begin{frame}{Group walkthrough example}
+
+    % We assume the source (obviously) here is A, with us mapping
+    % all the routes from A to every other node existing in our tree.
+
+    \includegraphics<1>[width=0.8\linewidth]{BFS1.jpg}
+    \includegraphics<2>[width=0.8\linewidth]{BFS2.jpg}
+    \includegraphics<3>[width=0.8\linewidth]{BFS3.jpg}
+    \includegraphics<4>[width=0.8\linewidth]{BFS4.jpg}
+    \includegraphics<5>[width=0.8\linewidth]{BFS5.jpg}
+    \includegraphics<6>[width=0.8\linewidth]{BFS6.jpg}
+    \includegraphics<7>[width=0.8\linewidth]{BFS7.jpg}
+    \includegraphics<8>[width=0.8\linewidth]{BFS8.jpg}
+
+\end{frame}
+
+% ------------------
+
+\begin{frame}{Why BFS Is Not Enough}
+
+    \textbf{Edge Case: Weighted Graph}
+    
+        BFS assumes all edges have equal cost.
+    
+    \vspace{0.5em}
+    
+    Consider:
+    
+        \begin{itemize}
+            \item $A \rightarrow B$ with weight 100
+            \item $A \rightarrow C$ with weight 1
+            \item $C \rightarrow B$ with weight 1
+        \end{itemize}
+    
+    \vspace{0.5em}
+    
+    \textbf{What BFS does:}
+        \begin{itemize}
+            \item Finds path $A \rightarrow B$ (1 edge)
+        \end{itemize}
+
+\end{frame}
+
+\begin{frame}{Why BFS Is Not Enough}
+
+    \textbf{Actual shortest path:}
+    \begin{itemize}
+        \item $A \rightarrow C \rightarrow B$ with total cost $2$
+    \end{itemize}
+    
+    \textbf{Key Limitation}
+    
+    \vspace{0.5em}
+    
+        BFS minimises the \textit{number of edges},  
+        not the \textit{total path weight}.
+    
+    \vspace{0.8em}
+    
+    \textbf{Implication}
+    
+        When edge weights differ, BFS may return a suboptimal path.
+    
+    \vspace{0.8em}
+    
+    \textbf{Takeaway Point}
+    
+        Do not use BFS on graphs with weights on them!
+    
+\end{frame}
+
+% ------------------
+
+\begin{frame}{Priority Queues}
+    
+    \textbf{Motivation}
+    
+        When edge weights differ, we must expand the \textit{closest} node first.
+    
+    \vspace{0.8em}
+    
+    \textbf{Key Idea}
+    
+        Instead of processing nodes in FIFO order (like BFS),  
+        we process nodes in order of \textit{smallest current distance}.
+    
+    \vspace{0.8em}
+    
+    \textbf{Data Structure}
+    
+        A \texttt{min-heap} (priority queue) allows us to:
+        \begin{itemize}
+            \item Always extract the node with smallest distance
+            \item Efficiently update distances
+        \end{itemize}
+    
+\end{frame}
+
+% ------------------------------------------------
+
+\section{Dijkstra - An Exploration}
+
+% ------------------------------------------------
+
+\begin{frame}{Why Would We Ever Use This?}
+
+    \textbf{Problem}
+    
+        BFS only guarantees shortest path when all edges have equal weight.
+    
+    \vspace{0.8em}
+    
+    \textbf{Issue}
+    
+        When edge weights differ:
+        \begin{itemize}
+            \item The path with fewer edges may not have minimum total cost
+            \item We must prioritise smaller cumulative distance
+        \end{itemize}
+    
+    \vspace{0.8em}
+    
+    \textbf{Solution}
+    
+        Use Dijkstra’s Algorithm:
+        \begin{itemize}
+            \item Always expand the node with smallest known distance
+            \item Guarantees shortest paths for non-negative weights
+        \end{itemize}
+
+\end{frame}
+
+% ------------------
+
+\begin{frame}{Algorithmic Theory}
+
+    \textbf{Core Idea}
+    
+        Always expand the node with the smallest known distance.
+
+\end{frame}
+
+\begin{frame}{Algorithmic Theory}
+
+    \vspace{0.8em}
+    
+    \textbf{Algorithm}
+    
+    \textbf{1. Initialize}
+    \begin{itemize}
+        \item Set $distance[v] = \infty$ for all nodes
+        \item Set $distance[start] = 0$
+        \item Create empty \texttt{min-heap} (priority queue)
+        \item Insert $(0, start)$ into queue
+    \end{itemize}
+    
+\end{frame}
+
+\begin{frame}{Algorithmic Theory}
+
+    \textbf{2. While queue not empty}
+        \begin{itemize}
+            \item Extract node $u$ with smallest distance
+            \item If extracted distance is outdated, skip
+            \item For each neighbour $v$ with edge weight $w$:
+            \begin{itemize}
+                \item If $distance[u] + w < distance[v]$:
+                \begin{itemize}
+                    \item Update $distance[v]$
+                    \item Insert $(distance[v], v)$ into queue
+                \end{itemize}
+            \end{itemize}
+        \end{itemize}
+    
+\end{frame}
+
+\begin{frame}{Algorithmic Theory}
+
+    \textbf{3. Stop when queue empty}
+
+\end{frame}
+
+\begin{frame}{Algorithmic Theory}
+
+    \textbf{Time Complexity (Binary Min-Heap)}
+    
+        \begin{itemize}
+            \item Best case: $O((V + E)\log V)$
+            \item Average case: $O((V + E)\log V)$
+            \item Worst case: $O((V + E)\log V)$
+        \end{itemize}
+    
+    \vspace{0.6em}
+    
+    \textbf{Space Complexity}
+    
+        \begin{itemize}
+            \item $O(V + E)$
+        \end{itemize}
+    
+\end{frame}
+
+% ------------------
+
+\begin{frame}{Group walkthrough example}
+
+\includegraphics<1>[width=0.8\linewidth]{Dijkstra1.jpg}
+\includegraphics<2>[width=0.8\linewidth]{Dijkstra2.jpg}
+\includegraphics<3>[width=0.8\linewidth]{Dijkstra3.jpg}
+\includegraphics<4>[width=0.8\linewidth]{Dijkstra4.jpg}
+\includegraphics<5>[width=0.8\linewidth]{Dijkstra5.jpg}
+\includegraphics<6>[width=0.8\linewidth]{Dijkstra6.jpg}
+\includegraphics<7>[width=0.8\linewidth]{Dijkstra7.jpg}
+\includegraphics<8>[width=0.8\linewidth]{Dijkstra8.jpg}
+
+\end{frame}
+
+% ------------------
+
+\begin{frame}{Edge Cases and Limitations}
+
+    \textbf{1. Negative Edge Weights}
+    
+        \begin{itemize}
+            \item Dijkstra assumes all edge weights are non-negative
+            \item Negative weights can produce incorrect shortest paths
+            \item Use Bellman–Ford instead
+        \end{itemize}
+    
+    \vspace{0.6em}
+    
+    \textbf{2. Disconnected Graphs}
+    
+        \begin{itemize}
+            \item Unreachable nodes remain at $distance = \infty$
+        \end{itemize}
+
+\end{frame}
+
+\begin{frame}{Edge Cases and Limitations}
+
+    \textbf{3. Duplicate Priority Queue Entries}
+
+        \begin{itemize}
+            \item A node may be inserted multiple times with different distances
+            \item Outdated entries are skipped during extraction
+        \end{itemize}
+        
+    \vspace{0.6em}
+    
+    \textbf{4. When to Use Another Algorithm}
+    
+        \begin{itemize}
+            \item Equal weights → use BFS
+            \item Weights restricted to $0$ or $1$ → use 0–1 BFS
+        \end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------
+
+\section{0--1 BFS - An Exploration}
+
+% ------------------------------------------------
+
+\begin{frame}{Why Would We Ever Use 0--1 BFS?}
+
+    \textbf{Observation}
+    
+        Dijkstra works for all non-negative weights,  
+        but requires a priority queue and incurs a $\log V$ factor.
+
+    \vspace{0.8em}
+    
+    \textbf{Special Case}
+    
+        If edge weights are restricted to $\{0,1\}$:
+        \begin{itemize}
+            \item We do not need full priority ordering
+            \item Only two distance transitions are possible
+        \end{itemize}
+    
+\end{frame}
+    
+\begin{frame}{Why Would We Ever Use 0--1 BFS?}
+    
+    \textbf{Key Idea}
+    
+        Exploit the weight structure to replace the heap  
+        with a deque.
+        
+    \vspace{0.8em}
+    
+    \textbf{Guarantee}
+    
+        0--1 BFS computes shortest paths  
+        when all edge weights are exactly $0$ or $1$.
+
+\end{frame}
+
+% ------------------
+
+\begin{frame}{Algorithmic Theory}
+
+    \textbf{Core Idea}
+    
+        Simulate Dijkstra without a heap by using a deque.
+    
+        \vspace{0.8em}
+    
+        Maintain $distance[v]$ as usual.
+
+\end{frame}
+
+\begin{frame}{Algorithmic Theory}
+    \textbf{Algorithm}
+    
+        \textbf{1. Initialize}
+            \begin{itemize}
+                \item Set $distance[v] = \infty$ for all nodes
+                \item Set $distance[start] = 0$
+                \item Create empty \texttt{deque}
+                \item Push $start$ to front
+            \end{itemize}
+
+\end{frame}
+
+\begin{frame}{Algorithmic Theory}
+
+    \textbf{2. While deque not empty}
+        \begin{itemize}
+            \item Pop node $u$ from front
+            \item For each neighbour $v$ with weight $w \in \{0,1\}$:
+            \begin{itemize}
+                \item If $distance[u] + w < distance[v]$:
+                \begin{itemize}
+                    \item Update $distance[v]$
+                    \item If $w = 0$: push $v$ to front
+                    \item If $w = 1$: push $v$ to back
+                \end{itemize}
+            \end{itemize}
+        \end{itemize}
+
+\end{frame}
+
+\begin{frame}{Algorithmic Theory}
+
+    \textbf{3. Stop when deque empty}
+
+\end{frame}
+
+\begin{frame}{Algorithmic Theory}
+
+    \textbf{Why It Works}
+    
+        The deque preserves nondecreasing distance order.
+    
+    \vspace{0.8em}
+    
+    \textbf{Time Complexity}
+    
+        \begin{itemize}
+            \item Best case: $O(V + E)$
+            \item Average case: $O(V + E)$
+            \item Worst case: $O(V + E)$
+        \end{itemize}
+    
+    \vspace{0.6em}
+    
+        \textbf{Space Complexity}
+    
+            \begin{itemize}
+                \item $O(V + E)$
+            \end{itemize}
+
+\end{frame}
+
+
+% ------------------
+
+\begin{frame}{Group walkthrough example}
+
+    \includegraphics<1>[width=0.8\linewidth]{01BFS1.jpg}
+
+\end{frame}
+
+% ------------------
+
+\begin{frame}{Edge Cases and Limitations}
+
+    \textbf{1. Weight Restriction}
+    
+        \begin{itemize}
+            \item Only valid when all edge weights are exactly $0$ or $1$
+            \item If weights include $2$ or higher, use Dijkstra (or Dial’s algorithm)
+        \end{itemize}
+    
+    \vspace{0.6em}
+    
+        \textbf{2. Disconnected Graphs}
+        
+        \begin{itemize}
+            \item Unreachable nodes remain at $distance = \infty$
+        \end{itemize}
+
+\end{frame}
+
+\begin{frame}{Edge Cases and Limitations}
+    
+    \textbf{3. Multiple Relaxations}
+    
+        \begin{itemize}
+            \item Nodes may be relaxed multiple times
+            \item Do not permanently mark nodes as “visited” after first processing
+        \end{itemize}
+    
+    \vspace{0.6em}
+    
+    \textbf{4. Negative Weights}
+    
+        \begin{itemize}
+            \item Not valid if negative edges are present
+        \end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------
+
+\section{Choosing the Right Algorithm (Quick Rules)}
+
+% ------------------------------------------------
+
+\begin{frame}{Choosing the Right Algorithm}
+
+    \begin{itemize}
+    
+        \item \textbf{DFS:} Use when exploring graph structure such as connectivity or cycles, where shortest path distance is not required.
+        
+    \pause
+        
+        \item \textbf{BFS:} Use when all edges have equal weight and you need the shortest path in terms of number of edges.
+    
+    \pause
+        
+        \item \textbf{0--1 BFS:} Use when edge weights are restricted to exactly 0 or 1 and you need shortest path distances efficiently.
+    
+    \pause
+        
+        \item \textbf{Dijkstra:} Use when edge weights are non-negative and may vary, and you need the shortest path from a source node.
+        
+    \end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------
+
+\section{Problem Sheet}
+
+% ------------------------------------------------
+
+
+\begin{frame}{Problem Sheet}
+
+    \begin{itemize}
+    
+        \item Solve the problems using the appropriate shortest-path algorithm
+    
+    \pause
+    
+        \item Work individually or in small groups
+    
+    \pause
+    
+        \item Refer to previous slides if needed
+    
+    \pause
+    
+        \item We will review selected solutions afterwards
+    
+    \end{itemize}
+
+\end{frame}
+
+% ------------------------------------------------
+
+\section{Final Remarks}
+
+% ------------------------------------------------
+
+\begin{frame}{Further Reading}
+
+    \begin{itemize}
+    
+        \item A document containing relevant supplementary + research reading will be available on the KCPC website (for this workshop) and the KCPC Discord Resource section for you to check out :D
+    
+    \end{itemize}
+    
+\end{frame}
+
+% ------------------------------------------------
+
+\end{document}
