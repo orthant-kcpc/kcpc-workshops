@@ -1,0 +1,95 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
+\setlist[itemize]{noitemsep, topsep=4pt}
+\setlist[enumerate]{noitemsep, topsep=4pt}
+
+\title{KCPC-CS111 \\ Supplementary Reading \\ Graphs II: Traversal and Shortest Paths}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\noindent
+This document contains recommended and further readings for Depth-First Search (DFS), Breadth-First Search (BFS), Dijkstra’s Algorithm, and 0--1 BFS.  
+These references are intended to deepen conceptual understanding beyond implementation.
+
+\hrule
+\vspace{1em}
+
+% ----------------------------------------------------
+\section*{I. Core Algorithmic Reading}
+
+\subsection*{Competitive Programming Guide (PDF)}
+
+\url{https://duoblogger.github.io/assets/pdf/memonvyftw/guide-t-cp.pdf}
+
+\vspace{0.8em}
+
+\begin{itemize}
+    \item \textbf{Depth-First Search (DFS)} - p. 83
+    \item \textbf{Breadth-First Search (BFS)} - p. 85
+    \item \textbf{Bellman--Ford} (further reading) - p. 88
+    \item \textbf{Dijkstra’s Algorithm} - p. 89
+    \item \textbf{Floyd--Warshall} (further reading) - p. 92
+\end{itemize}
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+% ----------------------------------------------------
+\section*{II. 0--1 BFS}
+
+\subsection*{CP-Algorithms}
+
+\url{https://cp-algorithms.com/graph/01_bfs.html}
+
+\vspace{0.5em}
+
+This reference provides a concise explanation of 0--1 BFS, including its correctness argument and time complexity analysis.
+
+\vspace{1em}
+
+\hrule
+\vspace{1em}
+
+% ----------------------------------------------------
+\section*{III. Formal Textbook Reference}
+
+\subsection*{Introduction to Algorithms \\ (Cormen, Leiserson, Rivest, Stein)}
+
+\url{https://www.cs.mcgill.ca/~akroit/math/compsci/Cormen%20Introduction%20to%20Algorithms.pdf}
+
+\vspace{0.8em}
+
+\begin{itemize}
+    \item \textbf{Priority Queue} - p. 162
+    \item \textbf{Breadth-First Search} - p. 594
+    \item \textbf{Depth-First Search} - p. 603
+    \item \textbf{Bellman--Ford} (further reading) - p. 651
+    \item \textbf{Dijkstra’s Algorithm} - p. 658
+    \item \textbf{Floyd--Warshall} (further reading) - p. 693
+\end{itemize}
+
+\vspace{1em}
+
+\hrule
+\vspace{1em}
+
+\noindent
+\textbf{Recommended Approach:}
+\begin{itemize}
+    \item Begin with the competitive programming guide for implementation clarity.
+    \item Use CP-Algorithms for structural intuition regarding 0--1 BFS.
+    \item Consult CLRS for formal proofs, invariants, and complexity analysis.
+\end{itemize}
+
+\end{document}

@@ -1,0 +1,108 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
+
+\title{KCPC-CS111 - Research References}
+\author{Graphs II: Distance, Constraints, and Logical Structure}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\noindent
+This workshop introduces shortest-path algorithms in weighted graphs, focusing on Dijkstra’s Algorithm and 0--1 BFS, and situates these techniques within their broader theoretical and historical context.
+
+\section*{Foundational Papers}
+
+\subsection*{[1] Dijkstra, E. W. (1959)}
+\textit{A note on two problems in connexion with graphs.}  
+Numerische Mathematik, 1, 269--271.  
+\url{https://doi.org/10.1007/BF01386390}
+
+\textbf{Why referenced:}  
+Introduces Dijkstra’s algorithm, the primary shortest-path method taught in this workshop for graphs with non-negative edge weights.
+
+\vspace{0.8em}
+
+\subsection*{[2] Moore, E. F. (1959)}
+\textit{The shortest path through a maze.}  
+Proceedings of the International Symposium on the Theory of Switching, Harvard University Press, 285--292.
+
+\textbf{Why referenced:}  
+Establishes breadth-first search as a shortest-path algorithm in unweighted graphs, forming the conceptual foundation for both Dijkstra’s algorithm and 0--1 BFS.
+
+\vspace{0.8em}
+
+\subsection*{[3] Lee, C. Y. (1961)}
+\textit{An algorithm for path connections and its applications.}  
+IRE Transactions on Electronic Computers, EC-10(3), 346--365.  
+\url{https://doi.org/10.1109/TEC.1961.5219222}
+
+\textbf{Why referenced:}  
+Demonstrates BFS-based shortest-path techniques in structured grid environments.
+
+\section*{Structural and Data Structure Improvements}
+
+\subsection*{[4] Dial, R. B. (1969)}
+\textit{Algorithm 360: Shortest-path forest with topological ordering.}  
+Communications of the ACM, 12(11), 632--633.  
+\url{https://doi.org/10.1145/363269.363610}
+
+\textbf{Why referenced:}  
+Introduces bucket-based shortest-path methods for small integer weights, providing the theoretical basis for the 0--1 BFS optimisation.
+
+\vspace{0.8em}
+
+\subsection*{[5] Fredman, M. L., \& Tarjan, R. E. (1984)}
+\textit{Fibonacci heaps and their uses in improved network optimization algorithms.}  
+Journal of the ACM, 34(3), 596--615.  
+\url{https://doi.org/10.1145/28869.28874}
+
+\textbf{Why referenced:}  
+Shows how priority queue design impacts the efficiency of Dijkstra’s algorithm.
+
+\vspace{0.8em}
+
+\subsection*{[6] Johnson, D. B. (1977)}
+\textit{Efficient algorithms for shortest paths in sparse networks.}  
+Journal of the ACM, 24(1), 1--13.  
+\url{https://doi.org/10.1145/321992.321993}
+
+\textbf{Why referenced:}  
+Demonstrates extensions and optimisations of Dijkstra’s algorithm for sparse graphs.
+
+\section*{Advanced and Modern Developments}
+
+\subsection*{[7] Thorup, M. (1999)}
+\textit{Undirected single-source shortest paths with positive integer weights in linear time.}  
+Journal of the ACM, 46(3), 362--394.  
+\url{https://doi.org/10.1145/316542.316548}
+
+\textbf{Why referenced:}  
+Proves that shortest-path problems can be solved in linear time under restricted weight conditions.
+
+\vspace{0.8em}
+
+\subsection*{[8] Duan, R., Mao, J., Mao, X., Shu, X., \& Yin, L. (2025--2026)}
+\textit{Breaking the sorting barrier for directed single-source shortest paths.}  
+Proceedings of STOC 2025.
+
+\textit{A faster directed single-source shortest path algorithm.}  
+arXiv preprint.
+
+\textbf{Why referenced:}  
+Included to show that single-source shortest path remains an active theoretical topic. 
+These works revisit the fundamental complexity bounds underlying Dijkstra-style methods and demonstrate that even classical problems continue to admit structural improvements under refined models.
+
+\section*{Summary}
+
+Together, these papers trace the development of single-source shortest path algorithms: from the original formulations of BFS and Dijkstra’s method, through data-structure-driven optimisations, to modern complexity refinements. They situate the techniques presented in this workshop within their broader theoretical lineage.
+
+\end{document}

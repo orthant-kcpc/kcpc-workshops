@@ -1,0 +1,213 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{hyperref}
+\renewcommand{\UrlFont}{\footnotesize}
+\usepackage{enumitem}
+\usepackage{titlesec}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
+\setlist[itemize]{noitemsep, topsep=4pt}
+\setlist[enumerate]{noitemsep, topsep=4pt}
+
+\title{KCPC-CS111 \\ Problem Sheet \\ Graphs II: Dijkstra and 0--1 BFS}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\noindent
+Developed by the KCPC Internal Committee, this problem sheet accompanies the \textit{Graphs II} workshop.  
+Problems are divided into three categories:
+\begin{itemize}
+    \item Integrated examples (discussed live)
+    \item Core practice set (to be attempted during the workshop)
+    \item Extended homework
+\end{itemize}
+
+\hrule
+\vspace{1em}
+
+% ----------------------------------------------------
+\section*{I. Integrated Into Slides (Live Walkthrough)}
+
+\begin{enumerate}
+    \item \textbf{GeeksForGeeks - Implementing Dijkstra (Adjacency Matrix)}  
+    
+    \vspace{0.3em}
+    {\url{https://www.geeksforgeeks.org/problems/implementing-dijkstra-set-1-adjacency-matrix/1}}
+
+    \vspace{0.8em}
+
+    \item \textbf{LeetCode 743 - Network Delay Time}  
+
+    \vspace{0.3em}
+    {\url{https://leetcode.com/problems/network-delay-time}}
+
+        \vspace{0.8em}
+
+    \item \textbf{LeetCode 1368 - Minimum Cost to Make at Least One Valid Path in a Grid}  
+
+    \vspace{0.3em}
+    {\url{https://leetcode.com/problems/minimum-cost-to-make-at-least-one-valid-path-in-a-grid}}
+
+\end{enumerate}
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+% ----------------------------------------------------
+\section*{II. Core Workshop Practice Set}
+
+These problems should be attempted during the workshop.  
+They require careful modelling and correct algorithm selection.
+
+For any questions that were not completed during the workshop, please attempt them independently afterwards.
+
+\begin{enumerate}
+
+    \item \textbf{LeetCode 1514 - Path With Maximum Probability}
+
+    (Dijkstra variant with multiplicative weights)
+
+    \vspace{0.3em}
+    {\url{https://leetcode.com/problems/path-with-maximum-probability}}
+
+    \vspace{0.8em}
+
+    \item \textbf{LeetCode 1631 - Path With Minimum Effort}
+
+    (Dijkstra + monotonicity reasoning)
+
+    \vspace{0.3em}
+    {\url{https://leetcode.com/problems/path-with-minimum-effort}}
+
+    \vspace{0.8em}
+
+    \item \textbf{LeetCode 2290 - Minimum Obstacle Removal to Reach Corner}
+
+    (0--1 BFS application)
+
+    \vspace{0.3em}
+    {\url{https://leetcode.com/problems/minimum-obstacle-removal-to-reach-corner}}
+
+    \vspace{0.8em}
+
+    \item \textbf{LeetCode 542 - 01 Matrix}
+
+    (Multi-source BFS; binary distance propagation)
+
+    \vspace{0.3em}
+    {\url{https://leetcode.com/problems/01-matrix}}
+
+    \vspace{0.8em}
+
+    \item \textbf{AtCoder ABC 176 D - Wizard in Maze}
+
+    (Classic 0--1 BFS modelling)
+
+    \vspace{0.3em}
+    {\url{https://atcoder.jp/contests/abc176/tasks/abc176_d}}
+
+    \vspace{0.8em}
+
+    \item \textbf{Project Euler 81}
+
+    (Weighted grid shortest path; DP or Dijkstra)
+
+    \vspace{0.3em}
+    {\url{https://projecteuler.net/problem=81}}
+
+    \vspace{0.8em}
+
+    \item \textbf{Project Euler 82}
+
+    (Weighted grid shortest path; Dijkstra)
+
+    \vspace{0.3em}
+    {\url{https://projecteuler.net/problem=82}}
+
+    \vspace{0.8em}
+
+    \item \textbf{Project Euler 83}
+
+    (Weighted grid shortest path; Dijkstra, 4-direction movement)
+
+    \vspace{0.3em}
+    {\url{https://projecteuler.net/problem=83}}
+
+\end{enumerate}
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+% ----------------------------------------------------
+\section*{III. Extended Homework}
+
+\textbf{Important.} The following problems are genuinely extremely difficult.  
+They should only be attempted after completing all previously listed problems and assigned supplementary reading.  
+They are intended as stretch challenges for those who wish to explore advanced modelling and optimisation techniques.
+
+\medskip
+
+\textbf{Matthew's Note.} I hope you enjoy working through these problems.  
+If you have any questions, please feel free to contact me or the Director of Competitive Programmes (Marcell).
+
+\vspace{0.8em}
+
+\begin{enumerate}
+
+    \item \textbf{LeetCode 1928 - Minimum Cost to Reach Destination in Time}
+
+    (State expansion + constrained shortest path)
+
+    \vspace{0.3em}
+    {\small\url{https://leetcode.com/problems/minimum-cost-to-reach-destination-in-time}}
+
+    \vspace{0.8em}
+
+    \item \textbf{Codeforces 786B - Legacy}
+
+    (Segment tree graph construction + Dijkstra)
+
+    \vspace{0.3em}
+    {\small\url{https://codeforces.com/problemset/problem/786/B}}
+
+    \vspace{0.8em}
+
+    \item \textbf{Codeforces 715B - Complete The Graph}
+
+    (Constructive shortest path + repeated Dijkstra reasoning)
+
+    \vspace{0.3em}
+    {\small\url{https://codeforces.com/problemset/problem/715/B}}
+
+    \vspace{0.8em}
+
+    \item \textbf{AtCoder ABC 213 E - Stronger Takahashi}
+
+    (Advanced 0--1 BFS modelling; non-trivial movement rules)
+
+    \vspace{0.3em}
+    {\small\url{https://atcoder.jp/contests/abc213/tasks/abc213_e}}
+
+\end{enumerate}
+
+\vspace{1em}
+
+\hrule
+\vspace{1em}
+
+\noindent
+\textbf{Guidance:}
+\begin{itemize}
+    \item Identify whether weights are uniform, binary, or general non-negative.
+    \item Choose between BFS, 0--1 BFS, or Dijkstra accordingly.
+    \item Focus on modelling transitions correctly before coding.
+\end{itemize}
+
+\end{document}
