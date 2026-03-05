@@ -1,0 +1,101 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
+\setlist[itemize]{noitemsep, topsep=4pt}
+\setlist[enumerate]{noitemsep, topsep=4pt}
+
+\title{KCPC-CS120 \\ Supplementary Reading \\ Combinatorics I: Learning to Count}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\noindent
+This document contains recommended and further readings for stars and bars, principle of inclusion-exclusion, bijections, and Burnside's Lemma (which requires knowledge of group theory). 
+
+These references are intended to deepen conceptual understanding beyond implementation.
+
+\hrule
+\vspace{1em}
+
+% ----------------------------------------------------
+\section*{I. Core Algorithmic Reading}
+
+\subsection*{Competitive Programmer's Handbook --- Antti Laaksonen (PDF)}
+\url{https://cses.fi/book/book.pdf}
+\vspace{0.5em}
+\begin{itemize}
+    \item \textbf{Counting} --- Chapter 22, p. 227
+    \item \textbf{Binomial Coefficients} --- Section 22.2, p. 229
+    \item \textbf{Inclusion-Exclusion} --- Section 22.4, p. 232
+    \item \textbf{Burnside's Lemma} --- Section 22.6, p. 235
+    \item \textbf{Catalan Numbers} --- Section 22.7, p. 236
+\end{itemize}
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+% ----------------------------------------------------
+\section*{II. Online Reference --- CP-Algorithms}
+
+\subsection*{Combinatorics}
+\url{https://cp-algorithms.com/combinatorics/}
+\vspace{0.5em}
+\begin{itemize}
+    \item \textbf{Binomial Coefficients} ---
+    
+        \url{https://cp-algorithms.com/combinatorics/binomial-coefficients.html}
+    \item \textbf{Stars and Bars} ---
+    
+        \url{https://cp-algorithms.com/combinatorics/stars_and_bars.html}
+    \item \textbf{Inclusion-Exclusion} ---
+    
+        \url{https://cp-algorithms.com/combinatorics/inclusion-exclusion.html}
+    \item \textbf{Catalan Numbers} ---
+    
+        \url{https://cp-algorithms.com/combinatorics/catalan-numbers.html}
+    \item \textbf{Burnside's Lemma} ---
+    
+        \url{https://cp-algorithms.com/combinatorics/burnside.html}
+\end{itemize}
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+% ----------------------------------------------------
+\section*{III. Formal Textbook Reference}
+
+\subsection*{Dexter Chua's Lecture Notes}
+These are intended for a more advanced audience comfortable with proof-based mathematics or those willing to learn more about group theory or number theory.
+
+Numbers and Sets:
+Covers bijections, counting arguments, inclusion-exclusion, and
+the formal foundations of combinatorics.
+
+\url{hhttps://dec41.user.srcf.net/h/IA_M/numbers_and_sets}
+
+Groups:
+Required background for Burnside's Lemma. Read this only if you want
+to understand the group-theoretic proof rather than just applying the formula.
+
+\url{https://dec41.user.srcf.net/h/IA_M/groups}
+\vspace{1em}
+
+\hrule
+\vspace{1em}
+
+The ArtofProblemSolving has a lot of material on all sorts of olympiad content, recommended to check it out. It's intended more for people who've already done some olympiads though.
+
+Brilliant is good for newbies and explains everything from the ground up.
+
+
+\end{document}
