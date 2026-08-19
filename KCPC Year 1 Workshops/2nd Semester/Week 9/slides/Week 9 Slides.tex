@@ -1,0 +1,391 @@
+\documentclass{beamer}
+\usepackage{tikz}
+\usepackage{fancyvrb} % for the verbatim
+
+% ===== KCPC clean theme =====
+\usetheme{default}
+\useinnertheme{rectangles}
+\useoutertheme{default}
+
+\setbeamertemplate{navigation symbols}{}
+
+% --- Colours ---
+\definecolor{kcpc-bg}{RGB}{250,250,250}
+\definecolor{kcpc-text}{RGB}{20,20,20}
+\definecolor{kcpc-muted}{RGB}{90,90,90}
+\definecolor{kcpc-red}{RGB}{176,0,0}
+
+\setbeamercolor{background canvas}{bg=kcpc-bg}
+\setbeamercolor{normal text}{fg=kcpc-text}
+\setbeamercolor{frametitle}{fg=kcpc-text,bg=kcpc-bg}
+\setbeamercolor{title}{fg=kcpc-text}
+\setbeamercolor{subtitle}{fg=kcpc-muted}
+\setbeamercolor{structure}{fg=kcpc-red}
+
+\setbeamerfont{title}{series=\bfseries,size=\Large}
+\setbeamerfont{frametitle}{series=\bfseries,size=\large}
+
+\setlength{\parskip}{0.4em}
+
+\setbeamertemplate{itemize item}{$\rightarrow$}
+\setbeamertemplate{itemize subitem}{$\rightarrow$}
+
+\setbeamertemplate{headline}{
+    \vspace{0.2cm}
+    \hspace{0.2cm}
+    \textcolor{kcpc-muted}{\small\insertsection}
+    \hfill
+}
+
+\setbeamertemplate{footline}{
+    \hspace{0.2cm}
+    \textcolor{kcpc-muted}{\small KCPC}
+    \hfill
+    \vspace{0.3cm}
+}
+
+\setbeamertemplate{background}{
+    \begin{tikzpicture}[remember picture,overlay]
+        \node[
+            opacity=0.035,
+            at=(current page.center)
+        ] {
+            \includegraphics[width=0.55\paperwidth]{kcpc-logo.png}
+        };
+    \end{tikzpicture}
+}
+
+\AtBeginSection[]{
+    \begin{frame}[plain]
+        \vfill
+        \centering
+        {\Large\bfseries \insertsection}
+        \vfill
+    \end{frame}
+}
+
+\begin{document}
+
+\title{Introduction to Dynamic Programming (and Also on Trees)}
+\date{}
+
+\begin{frame}[plain]
+    \titlepage
+\end{frame}
+
+\section{The Core Idea}
+
+\begin{frame}{What is Dynamic Programming?}
+    \begin{itemize}
+        \item The essence of dynamic programming is to \textbf{avoid repeated calculation}.
+        \item Many DP problems are naturally solvable by recursion, DP only optimises those solutions.
+        \item \textbf{Key Insight:} Identify overlapping subproblems and store their results in a lookup table.
+        \item Two main approaches:
+        \begin{itemize}
+            \item \textbf{Top-Down (Memoization):} Write the recursive solution, then cache results.
+            \item \textbf{Bottom-Up (Tabulation):} Build the solution iteratively from base cases upward, with a \textit{state} transition.
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{The Fibonacci Sequence}
+    \begin{itemize}
+        \item One of the most classic examples of dynamic programming.
+        \item Recursive formulation: $f(n) = f(n-1) + f(n-2)$ for $n \ge 2$.
+        \item Base cases: $f(0) = 0$, $f(1) = 1$.
+        \item The naive recursive approach has exponential time complexity.
+        \item \textbf{Why?} Each call to $f(n)$ spawns two similarly-sized subproblems, giving approximately $\mathcal{O}(2^n)$ total calls.
+        \item \textbf{Example:} Computing $f(29)$ with naive recursion results in \textit{over 1 million} function calls.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Naive Recursive Fibonacci}
+\begin{Verbatim}[fontsize=\small]
+int f(int n) {
+    if (n == 0) return 0;
+    if (n == 1) return 1;
+    return f(n - 1) + f(n - 2);
+}
+\end{Verbatim}
+    \vspace{0.5em}
+    \begin{itemize}
+        \item \textbf{Time Complexity:} $\mathcal{O}(2^n)$
+        \item \textbf{Space Complexity:} $\mathcal{O}(n)$ for the call stack.
+        \item Unusable for large inputs. We need a better approach.
+    \end{itemize}
+\end{frame}
+
+\section{Top-Down DP with Memoization}
+
+\begin{frame}{The Memoization Principle}
+    \begin{itemize}
+        \item \textbf{Key Observation:} The number of \textit{distinct} subproblems needed to compute $f(n)$ is only $\mathcal{O}(n)$.
+        \item We only ever need $f(0), f(1), \dots, f(n)$.
+        \item \textbf{The Fix:} Solve each subproblem exactly once and store the result in a lookup table.
+        \item Subsequent calls for the same value return the cached result in $\mathcal{O}(1)$.
+        \item \textbf{Result:} Total time complexity drops from $\mathcal{O}(2^n)$ to $\mathcal{O}(n)$.
+        \item \textbf{Impact:} $f(29)$ now requires only \textit{57 function calls} down from a million.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Memoized Fibonacci (Array)}
+\begin{Verbatim}[fontsize=\small]
+const int MAXN = 100;
+bool found[MAXN];
+int memo[MAXN];
+
+int f(int n) {
+    if (found[n]) return memo[n];
+    if (n == 0) return 0;
+    if (n == 1) return 1;
+
+    found[n] = true;
+    return memo[n] = f(n - 1) + f(n - 2);
+}
+\end{Verbatim}
+    \vspace{0.5em}
+    \begin{itemize}
+        \item Arrays give $\mathcal{O}(1)$ lookup with minimal overhead --- preferred when possible.
+        \item \textbf{Caveat:} $f(46)$ is the last Fibonacci number that fits in a signed 32-bit integer.
+    \end{itemize}
+\end{frame}
+
+% \begin{frame}[fragile]{Alternative State Storage}
+% \footnotesize
+% \begin{Verbatim}[fontsize=\small]
+% // unordered_map (hash table): O(n) average time
+% unordered_map<int, int> memo;
+% int f(int n) {
+%     if (memo.count(n)) return memo[n];
+%     if (n == 0) return 0;
+%     if (n == 1) return 1;
+%     return memo[n] = f(n - 1) + f(n - 2);
+% }
+
+% // map (BST): O(n log n) time
+% map<int, int> memo;
+% int f(int n) {
+%     if (memo.count(n)) return memo[n];
+%     if (n == 0) return 0;
+%     if (n == 1) return 1;
+%     return memo[n] = f(n - 1) + f(n - 2);
+% }
+% \end{Verbatim}
+% \end{frame}
+
+\begin{frame}{Runtime Analysis of Memoization}
+    \begin{itemize}
+        \item \textbf{General Rule:}
+        $$\text{Total Work} = \text{Work per Sub-problem } \times \text{ Number of Sub-problems}$$
+        \item \textbf{Array-based memo:} $\mathcal{O}(1)$ lookup $\times$ $\mathcal{O}(n)$ subproblems $= \mathcal{O}(n)$.
+        \item \textbf{\texttt{std::unordered\_map}:} $\mathcal{O}(1)$ average lookup $= \mathcal{O}(n)$ average overall.
+        \item \textbf{\texttt{std::map}:} $\mathcal{O}(\log n)$ lookup $\times$ $\mathcal{O}(n)$ subproblems $= \mathcal{O}(n \log n)$.
+        \item \textbf{Recommendation:} Use arrays whenever the state fits. Use maps only when the state involves complex types like vectors or strings.
+    \end{itemize}
+\end{frame}
+
+\section{Bottom-Up DP}
+
+\begin{frame}{The Bottom-Up Approach}
+    \begin{itemize}
+        \item \textbf{Top-Down:} Start at the query value, recurse to base cases, cache on the way back.
+        \item \textbf{Bottom-Up:} Start at the base cases and iteratively extend to the target value.
+        \item No recursion, no call stack overhead, only iterative, so generally faster.
+        \item \textbf{Key Requirement:} Determine the correct filling order so that all dependencies are resolved before they are needed.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Bottom-Up Fibonacci}
+\begin{Verbatim}[fontsize=\small]
+const int MAXN = 100;
+int fib[MAXN];
+
+int f(int n) {
+    fib[0] = 0;
+    fib[1] = 1;
+    for (int i = 2; i <= n; i++)
+        fib[i] = fib[i - 1] + fib[i - 2];
+    return fib[n];
+}
+\end{Verbatim}
+    \vspace{0.5em}
+    \begin{itemize}
+        \item \textbf{Time Complexity:} $\mathcal{O}(n)$.
+        \item \textbf{Space Complexity:} $\mathcal{O}(n)$ but can we do a bit better?
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Optimizing Space to $\mathcal{O}(1)$}
+\begin{Verbatim}[fontsize=\small][fontsize=\small]
+const int MAX_SAVE = 3;
+int fib[MAX_SAVE];
+
+int f(int n) {
+    fib[0] = 0;
+    fib[1] = 1;
+    for (int i = 2; i <= n; i++)
+        fib[i % MAX_SAVE] = fib[(i - 1) % MAX_SAVE]
+                          + fib[(i - 2) % MAX_SAVE];
+    return fib[n % MAX_SAVE];
+}
+\end{Verbatim}
+    \vspace{0.5em}
+    \begin{itemize}
+        \item Only the last two values are ever needed, so we keep a rolling window of size 3.
+        \item The modulo operator is a common trick for maintaining only the necessary window.
+        \item \textbf{Space Complexity:} $\mathcal{O}(1)$
+    \end{itemize}
+\end{frame}
+
+\section{Dynamic Programming on Trees}
+
+\begin{frame}{Why Tree DP?}
+    \begin{itemize}
+        \item A tree has no cycles, so if we root it, every node has a clear
+        set of children.
+        \item The natural subproblem is usually: ``solve the subtree rooted at
+        this node.''
+        \item Once all child subproblems are solved, we can merge them at the
+        parent.
+        \item This is the same DP idea as before: solve smaller pieces and
+        combine the answers.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{AtCoder DP Contest Problem P, "Independent Set"}
+    \href{https://atcoder.jp/contests/dp/tasks/dp_p}{https://atcoder.jp/contests/dp/tasks/dp\_p}
+    \begin{itemize}
+        \item We are given a tree with \(N\) vertices.
+        \item Paint each vertex either \textbf{white} or \textbf{black}.
+        \item No edge may have \textbf{both endpoints black}.
+        \item Count the number of valid colourings modulo \(10^9+7\) (reminder to a couple weeks back with modular arithmetic with our guy Yersin!).
+        \item Since \(N \le 10^5\), we need something much faster than brute force.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{The Exponential Baseline}
+    \begin{itemize}
+        \item A recursive brute force chooses a colour for each vertex and explores both possibilities.
+        \item That creates \(2^N\) possible colourings.
+        \item Then we would check whether any edge has two black endpoints.
+        \item \textbf{Time complexity:} \(\mathcal{O}(N 2^N)\)
+        \item This is impossible for \(N = 10^5\), unless you have 999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999999.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Things to See}
+    \begin{itemize}
+        \item The graph is a \textbf{tree}, so if we root it, every node gets a set of children.
+        \item Subtrees of different children do not overlap.
+        \item The constraint is \textbf{local}: only adjacent vertices matter.
+        \item So once the colour of a node is fixed, each child subtree can be solved independently.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{So What \textit{is} DP on Trees?}
+    \begin{itemize}
+        \item Instead of something like this for bottom up:
+    \end{itemize}
+
+    \begin{Verbatim}[fontsize=\small]
+dp[i] = max(A[i] + dp[i + 2], dp[i + 1])
+    \end{Verbatim}
+
+    \begin{itemize}
+        \item We have this:
+    \end{itemize}
+
+    \begin{Verbatim}[fontsize=\small]
+dp[i] = max(A[i] + sum_grandchild[i + 1], SUM child[i])
+    \end{Verbatim}
+
+    \begin{itemize}
+        \item This ``solve a rooted subtree from its children'' pattern is what DP on trees means.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Okay, so, What to Do?}
+    \begin{itemize}
+        \item Root the tree at any node, say the first vertex, zero (if 0-indexed).
+        \item Define a DP value for each rooted subtree (what's the transition? what's the state?).
+        \item Process children before the parent (with DFS).
+        \item Combine the children's answers using multiplication, because the choices are independent.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{What's the State?}
+    \begin{itemize}
+        \item Let \(dp[v][0]\) be the number of ways to colour the subtree of \(v\), if \(v\) is \textbf{white}.
+        \item Let \(dp[v][1]\) be the number of ways to colour the subtree of \(v\), if \(v\) is \textbf{black}.
+        \item We only need two states, because the only relevant information is whether \(v\) is black or not.
+        \item For a leaf, both values are \(1\): one way if it is white, one way if it is black.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{What's the Recurrence/Transition?}
+    \begin{itemize}
+        \item If \(v\) is black, then every child must be white:
+        \[
+            dp[v][1] = \prod_{u \in child(v)} dp[u][0]
+        \]
+        \item If \(v\) is white, then each child can be white or black:
+        \[
+            dp[v][0] = \prod_{u \in child(v)} \bigl(dp[u][0] + dp[u][1]\bigr)
+        \]
+        \item Why a product? Because the child subtrees are independent.
+        \item Final answer:
+        $$\bigl(dp[\text{root}][0] + dp[\text{root}][1]\bigr)\bmod (10^9+7)$$
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{DFS Post-Order Implementation}
+\begin{Verbatim}[fontsize=\small]
+const long long MOD = 1000000007LL;
+const int MAXN = 100000 + 5;
+vector<int> g[MAXN];
+long long dp[MAXN][2];
+void dfs(int v, int p) {
+    dp[v][0] = dp[v][1] = 1;
+    for (int u : g[v]) {
+        if (u == p) continue;
+        dfs(u, v);
+        dp[v][0] = dp[v][0] * (dp[u][0] + dp[u][1]) % MOD;
+        dp[v][1] = dp[v][1] * dp[u][0] % MOD;
+    }
+}
+\end{Verbatim}
+
+    \begin{itemize}
+        \item Call \texttt{dfs(root, 0)} after building the adjacency list.
+        \item The answer is \texttt{(dp[root][0] + dp[root][1]) \% MOD}.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Why This Is Tree DP}
+    \begin{itemize}
+        \item We turned one big problem into many small subtree problems.
+        \item Each subtree is solved once.
+        \item Each edge is visited a constant number of times.
+        \item \textbf{Time complexity:} \(\mathcal{O}(N)\)
+        \item \textbf{Space complexity:} \(\mathcal{O}(N)\)
+        \item The general pattern is: \textbf{root the tree, define subtree states, recurse, combine}.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Some Notes on Dynamic Programming}
+    \begin{itemize}
+        \item One of the most important tricks. It is often the difference between a solution that is impossible and one that runs in time.
+        \item The core idea is simple: memoization, or define the states and transitions
+        \item In many problems, the hardest part is not the transition itself.
+        \item The hardest part is finding the right state to describe the problem.
+        \item Once the state is right, the recurrence is often surprisingly simple.
+        \item So whenever you see recursion and overlapping structure, ask:
+        \[
+            \text{``Can I cache this?''}
+            \text{``What's the state?''}
+        \]
+    \end{itemize}
+\end{frame}
+
+
+\end{document}
