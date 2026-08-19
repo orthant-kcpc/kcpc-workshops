@@ -1,29 +1,29 @@
-# Week 1 Workshop
+# Week 8 Workshop
 
 **Important**: This workshop was hosted in collaboration with *KCL Tech* in our partnership with them in 2025 - 2026.
 
 ## Topic
 
-The **topic** of this workshop is: ***Introduction to Competitive Programming***.
+The **topic** of this workshop is: ***Disjoint Set Union in Competitive Programming***.
 
 ## Repository Structure
 
 ```
 slides/
-  Week [1] Slides.tex
+  Week [8] Slides.tex
 problems/
-  Week [1] Problems.tex
+  Week [8] Problems.tex
 solutions/
-  Week [1] Solutions.tex
+  Week [8] Solutions.tex
 reading/
-  Week [1] Reading.tex
+  Week [8] Reading.tex
 papers/
-  Week [1] Papers.tex
-Week [1] Slides.pdf
-Week [1] Problems.pdf
-Week [1] Solutions.pdf
-Week [1] Reading.pdf
-Week [1] Papers.pdf
+  Week [8] Papers.tex
+Week [8] Slides.pdf
+Week [8] Problems.pdf
+Week [8] Solutions.pdf
+Week [8] Reading.pdf
+Week [8] Papers.pdf
 ```
 
 ## License

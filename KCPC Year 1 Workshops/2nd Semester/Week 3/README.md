@@ -1,29 +1,29 @@
-# Week 1 Workshop
+# Week 3 Workshop
 
 **Important**: This workshop was hosted in collaboration with *KCL Tech* in our partnership with them in 2025 - 2026.
 
 ## Topic
 
-The **topic** of this workshop is: ***Introduction to Competitive Programming***.
+The **topic** of this workshop is: ***The Lambda Calculus - Functions, Computation, and Numbers***.
 
 ## Repository Structure
 
 ```
 slides/
-  Week [1] Slides.tex
+  Week [3] Slides.tex
 problems/
-  Week [1] Problems.tex
+  Week [3] Problems.tex
 solutions/
-  Week [1] Solutions.tex
+  Week [3] Solutions.tex
 reading/
-  Week [1] Reading.tex
+  Week [3] Reading.tex
 papers/
-  Week [1] Papers.tex
-Week [1] Slides.pdf
-Week [1] Problems.pdf
-Week [1] Solutions.pdf
-Week [1] Reading.pdf
-Week [1] Papers.pdf
+  Week [3] Papers.tex
+Week [3] Slides.pdf
+Week [3] Problems.pdf
+Week [3] Solutions.pdf
+Week [3] Reading.pdf
+Week [3] Papers.pdf
 ```
 
 ## License

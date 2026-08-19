@@ -1,29 +1,29 @@
-# Week 1 Workshop
+# Week 7 Workshop
 
 **Important**: This workshop was hosted in collaboration with *KCL Tech* in our partnership with them in 2025 - 2026.
 
 ## Topic
 
-The **topic** of this workshop is: ***Introduction to Competitive Programming***.
+The **topic** of this workshop is: ***Number Theory in Competitive Programming***.
 
 ## Repository Structure
 
 ```
 slides/
-  Week [1] Slides.tex
+  Week [7] Slides.tex
 problems/
-  Week [1] Problems.tex
+  Week [7] Problems.tex
 solutions/
-  Week [1] Solutions.tex
+  Week [7] Solutions.tex
 reading/
-  Week [1] Reading.tex
+  Week [7] Reading.tex
 papers/
-  Week [1] Papers.tex
-Week [1] Slides.pdf
-Week [1] Problems.pdf
-Week [1] Solutions.pdf
-Week [1] Reading.pdf
-Week [1] Papers.pdf
+  Week [7] Papers.tex
+Week [7] Slides.pdf
+Week [7] Problems.pdf
+Week [7] Solutions.pdf
+Week [7] Reading.pdf
+Week [7] Papers.pdf
 ```
 
 ## License

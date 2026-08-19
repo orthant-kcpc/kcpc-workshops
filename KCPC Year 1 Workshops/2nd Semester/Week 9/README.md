@@ -1,29 +1,29 @@
-# Week 1 Workshop
+# Week 9 Workshop
 
 **Important**: This workshop was hosted in collaboration with *KCL Tech* in our partnership with them in 2025 - 2026.
 
 ## Topic
 
-The **topic** of this workshop is: ***Introduction to Competitive Programming***.
+The **topic** of this workshop is: ***Introduction to Dynamic Programming (and also on Trees)***.
 
 ## Repository Structure
 
 ```
 slides/
-  Week [1] Slides.tex
+  Week [9] Slides.tex
 problems/
-  Week [1] Problems.tex
+  Week [9] Problems.tex
 solutions/
-  Week [1] Solutions.tex
+  Week [9] Solutions.tex
 reading/
-  Week [1] Reading.tex
+  Week [9] Reading.tex
 papers/
-  Week [1] Papers.tex
-Week [1] Slides.pdf
-Week [1] Problems.pdf
-Week [1] Solutions.pdf
-Week [1] Reading.pdf
-Week [1] Papers.pdf
+  Week [9] Papers.tex
+Week [9] Slides.pdf
+Week [9] Problems.pdf
+Week [9] Solutions.pdf
+Week [9] Reading.pdf
+Week [9] Papers.pdf
 ```
 
 ## License
