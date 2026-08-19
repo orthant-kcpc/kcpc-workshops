@@ -25,3 +25,11 @@ Week [X] Papers.pdf
 ```
 
 Where Typst is used instead of Latex, please consider the same folder layout!
+
+## Contribution
+
+Whenever you are contributing to this repository, please ensure you do so using Pull Requests.
+
+## License
+
+See [CC BY-NC-SA 4.0.](LICENSE.md)
