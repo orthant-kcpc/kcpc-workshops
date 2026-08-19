@@ -1,0 +1,106 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
+\setlist[itemize]{noitemsep, topsep=4pt}
+\setlist[enumerate]{noitemsep, topsep=4pt}
+
+\title{KCPC-CS130 \\ Supplementary Reading \\ Number Theory I: Primes, Structure, and Factorisation}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\noindent
+This document contains recommended and further readings for number theory. Given the lecture was only an hour, we had to cut out a lot of content. Number Theory is one of the oldest and most built-upon areas in mathematics, and Analytic Number Theory is a personal favourite. 
+
+Two sets of notes are given, one going through elementary number theory, combinatorial number theory. The other goes through analytic number theory, algorithmic number theory, arithmetic geometry and probabilistic number theory.
+
+These references are intended for those from a mathematics background to read but the ideas are rich and simple once translated out of that language. It does not cover much about the programming, and is instead intended to deepen conceptual understanding beyond implementation.
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+% ----------------------------------------------------
+\section*{I. Elementary Number Theory}
+\subsection*{IA Numbers and Sets (Thomason / Dexter Chua notes)}
+
+These notes cover the foundational theory underlying everything in the workshop.
+\vspace{0.5em}
+\begin{itemize}
+    \item \textbf{Euclid's Algorithm and B\'{e}zout's Identity} --- Ch.~3.1, pp.~12--14. \\
+    The proof that $\gcd(a,b)$ is the smallest positive linear combination of $a$ and $b$, and the reverse-substitution method for finding Bezout coefficients explicitly.
+
+    \item \textbf{Prime Factorisation and the Fundamental Theorem of Arithmetic} --- Ch.~3.2, pp.~15--17. \\
+    Existence and uniqueness of prime factorisation, including Euclid's proof of infinitely many primes and Erd\H{o}s's independent counting argument.
+
+    \item \textbf{Modular Arithmetic, Units, and Inverses} --- Ch.~5.1--5.2, pp.~27--29. \\
+    Congruence classes, the characterisation of units modulo $m$ via $\gcd$, and the condition for $ax \equiv b \pmod{m}$ to be soluble.
+
+    \item \textbf{Chinese Remainder Theorem} --- Ch.~5.2, p.~29. \\
+    Existence and uniqueness of solutions to simultaneous congruences with coprime moduli.
+
+    \item \textbf{Euler's Totient Function} --- Ch.~5.2, p.~29. \\
+    Definition of $\varphi(m)$, multiplicativity, and the formula $\varphi(m) = m \prod_{p \mid m}(1 - 1/p)$ proved via inclusion-exclusion.
+
+    \item \textbf{Wilson's Theorem and Fermat--Euler} --- Ch.~5.3, pp.~30--31. \\
+    Proofs of both theorems and the key idea of pairing units with their inverses. Also covers quadratic residues and the criterion for $-1$ to be a square mod $p$.
+
+    \item \textbf{RSA Encryption} --- Ch.~5.4, pp.~32--33. \\
+    The full RSA construction as a direct application of the Fermat--Euler theorem.
+\end{itemize}
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+% ----------------------------------------------------
+\section*{II. Further Number Theory}
+\subsection*{Part II Number Theory (Zhiyuan Bai, based on Dr.\ J.\ Wolf, Michaelmas 2020)}
+
+These notes pick up where the workshop and the IA notes leave off.
+\vspace{0.5em}
+\begin{itemize}
+    \item \textbf{Primitive Roots} --- Ch.~2.4, pp.~9--10. \\
+    Proof that $(\mathbb{Z}/p\mathbb{Z})^\times$ is cyclic, existence of primitive roots modulo prime powers, and why powers of $2$ behave differently.
+
+    \item \textbf{Quadratic Residues and the Legendre Symbol} --- Ch.~3.1, pp.~10--12. \\
+    Euler's criterion, Gauss's lemma, and the formula for when $2$ and $-1$ are quadratic residues. Directly extends the material in the workshop on Euler's criterion.
+
+    \item \textbf{Quadratic Reciprocity} --- Ch.~3.2, pp.~13--14. \\
+    The full proof of quadratic reciprocity and its extension to the Jacobi symbol, with worked examples of efficient Legendre symbol computation.
+
+    \item \textbf{Distribution of Primes} --- Ch.~5, pp.~22--29. \\
+    The Prime Number Theorem (statement), Dirichlet's theorem on primes in arithmetic progressions, and Tchebychev's elementary bounds. \\
+    The Riemann $\zeta$ function and its Euler product are introduced in Ch.~5.3 --- this is the analytic number theory content mentioned in the introduction.
+
+    \item \textbf{Bertrand's Postulate} --- Ch.~5.5, p.~29. \\
+    For every $n$, there is always a prime between $n$ and $2n$. A beautiful elementary proof using binomial coefficients.
+
+    \item \textbf{Continued Fractions} --- Ch.~6, pp.~30--36. \\
+    Rational approximation, convergents, Lagrange's theorem on eventually periodic expansions, and Pell's equation. Non-trivial but very rewarding.
+
+    \item \textbf{Primality Testing and Factorisation} --- Ch.~7, pp.~36--41. \\
+    The Solovay--Strassen test, Miller--Rabin (extends the workshop's discussion directly), the factor base method, and Pollard's $p-1$ method. These algorithms underpin modern cryptography.
+\end{itemize}
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+\noindent
+\textbf{Recommended Approach:}
+\begin{itemize}
+    \item If the workshop content felt fast, start with the IA Numbers \& Sets notes (Section~I). The proofs are written to be self-contained and require no prerequisites beyond secondary school.
+    \item If you are comfortable with the elementary material and want to go further, jump to the Part~II notes (Section~II). Chapters~5 and~7 are the most directly relevant to competitive programming.
+    \item The Part~II notes assume familiarity with basic group theory (cyclic groups, Lagrange's theorem). If that is unfamiliar, the IA notes cover everything needed.
+\end{itemize}
+
+\end{document}
+

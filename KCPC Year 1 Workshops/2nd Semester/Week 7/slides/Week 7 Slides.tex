@@ -1,0 +1,843 @@
+\documentclass[aspectratio=169]{beamer}
+\usepackage{tikz}
+\usepackage{amsmath}
+
+% ===== KCPC clean theme =====
+\usetheme{default}
+\useinnertheme{rectangles}
+\useoutertheme{default}
+
+\setbeamertemplate{navigation symbols}{}
+
+% --- Colours ---
+\definecolor{kcpc-bg}{RGB}{250,250,250}
+\definecolor{kcpc-text}{RGB}{20,20,20}
+\definecolor{kcpc-muted}{RGB}{90,90,90}
+\definecolor{kcpc-red}{RGB}{176,0,0}
+
+\setbeamercolor{background canvas}{bg=kcpc-bg}
+\setbeamercolor{normal text}{fg=kcpc-text}
+\setbeamercolor{frametitle}{fg=kcpc-text,bg=kcpc-bg}
+\setbeamercolor{title}{fg=kcpc-text}
+\setbeamercolor{subtitle}{fg=kcpc-muted}
+\setbeamercolor{structure}{fg=kcpc-red}
+
+\setbeamerfont{title}{series=\bfseries,size=\Large}
+\setbeamerfont{frametitle}{series=\bfseries,size=\large}
+
+\setlength{\parskip}{0.4em}
+
+\setbeamertemplate{itemize item}{→}
+\setbeamertemplate{itemize subitem}{→}
+
+\setbeamertemplate{headline}{
+    \vspace{0.2cm}
+    \hspace{0.2cm}
+    \textcolor{kcpc-muted}{\small\insertsection}
+    \hfill
+}
+
+\setbeamertemplate{footline}{
+    \hspace{0.2cm}
+    \textcolor{kcpc-muted}{\small KCPC}
+    \hfill
+    \vspace{0.3cm}
+}
+
+\setbeamertemplate{background}{
+    \begin{tikzpicture}[remember picture,overlay]
+        \node[
+            opacity=0.035,
+            at=(current page.center)
+        ] {
+            % Replaced with a placeholder if the image isn't locally available during compilation
+            \includegraphics[width=0.55\paperwidth]{kcpc-logo.png}
+            \huge \bfseries KCPC
+        };
+    \end{tikzpicture}
+}
+
+\AtBeginSection[]{
+    \begin{frame}[plain]
+        \vfill
+        \centering
+        {\Large\bfseries \insertsection}
+        \vfill
+    \end{frame}
+}
+% ============================
+
+\title{Number Theory in Competitive Programming}
+\author{KCPC Training}
+\date{}
+
+\begin{document}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\begin{frame}{Overview}
+    \tableofcontents
+\end{frame}
+
+% ------------------------------------------------
+
+\begin{frame}{Attendance}
+    \centering
+    \includegraphics[width=0.5\paperwidth]{attendance.png}
+\end{frame}
+
+% ------------------------------------------------
+\begin{frame}{Our Socials}
+
+    \centering
+    \begin{columns}[c]
+    
+        \column{0.33\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{insta.JPG}
+        \\
+        Instagram
+        
+        \column{0.33\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{discord.JPG}
+        \\
+        Discord
+        
+        \column{0.33\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{whatsapp.JPG}
+        \\
+        WhatsApp
+    
+    \end{columns}
+\end{frame}
+
+\section*{Module 0: Motivation}
+
+
+\begin{frame}{Core Ideas}
+    Want to be able to deal with systems of factorisations, division and remainders concretely and easily. 
+    
+    Playing around with factorisations or sequences of numbers as a kid may have revealed patterns or similarities that we want to now formalise.
+
+    \textbf{Convention}: we take the naturals $\mathbb{N}$ to be the integers $\geq 1$
+\end{frame}
+
+\section{Module 1: Foundations of Divisibility and Modular Arithmetic}
+
+
+\begin{frame}{Division Algorithm}
+    \textbf{Division Algorithm} Given two integers, we can always divide them (given they're not 0) and end up with a ratio/\textbf{quotient} and a \textbf{remainder}.
+    
+    $$A, B \in \mathbb{Z}, B \neq 0, \exists q,r \in \mathbb{Z}, r \in [0, B-1]: A = qB+r$$
+\end{frame}
+
+\begin{frame}{Basics}
+    We claim a number is a \textbf{factor} of another when the remainder is $0$.
+    
+    We say $B$ divides $A$; $B$ is a factor of $A$; $A$ is a \textbf{multiple} of $B$ and use the notation $B|A$ if there exists an integer $C$ such that $A = B * C$
+
+    $\pm1, \pm B$ are both factors of $B$ also, and all others are called \textbf{proper factors}.
+
+    A natural with no proper factors is a \textbf{prime}.
+\end{frame}
+
+\begin{frame}{Greatest Common Divisor (GCD)}
+    \textbf{Definition:} The largest positive integer that divides both $A$ and $B$ without leaving a remainder.
+
+    We call it $G$, and define it to be the natural such that if $G$ is a common factor of $A, B$ so that $G|A, G|B$ then for all other common factors $F$, $F|G$
+    
+    \vspace{0.5cm}
+    \textbf{The Naïve Approach:}
+    \begin{itemize}
+        \item Iterate from $\min(A, B)$ down to $1$.
+        \item \textbf{Complexity:} $\mathcal{O}(\min(A, B))$.
+        \item \textit{Verdict:} Too slow for CP bounds (where $A, B \le 10^{18}$).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Extending the Division Algorithm}
+    What if we kept going for the division algorithm? Do we gain any valuable insight?
+    \pause 
+    Set it up as:
+    \begin{align*}
+    A &= q_1B+ r_1\\
+    B &= q_2r_1 + r_2\\
+    r_1 &= q_3r_2 + r_3\\
+    &\vdots\\
+    r_{n-2} &= q_nr_{n-1}
+  \end{align*}
+  \pause
+  \textbf{Claim}: then the highest common factor is $r_{n-1}$.
+\end{frame}
+
+\begin{frame}{Interlude: Introducing Modular Arithmetic}
+    \textbf{Motivation:} Is there a fundamental way to quickly express factorisations and remainders? Wouldn't it be nice if it also helped else condense theorems about factorisations and primality?
+
+    \pause 
+
+    We introduce \textbf{modular arithmetic}. Consider $A = qB + r$ we can express this in the form $A (\bmod B) \equiv r$. 
+
+    $A$ 'give or take' some $B$'s is $r$
+
+    What is $4 (\bmod 2), 19 (\bmod 7), -8 (\mod 13)?$
+\end{frame}
+
+\begin{frame}{The Euclidean Algorithm}
+    \textbf{Core Intuition:} 
+    If $A > B$, then any divisor of $A$ and $B$ also divides their difference, $A - B$. By extension, it divides the remainder of $A \pmod B$.
+    
+    
+    
+    \vspace{0.5cm}
+    \textbf{The Recurrence:}
+    $$\gcd(A, B) = \gcd(B, A \bmod B)$$
+    
+    \textbf{Base Case:}
+    $$\gcd(A, 0) = A$$
+\end{frame}
+
+\begin{frame}[fragile]{Euclidean Algorithm: Implementation}
+    \textbf{Pseudocode (Recursive):}
+    \begin{verbatim}
+    function gcd(A, B):
+        if B == 0:
+            return A
+        return gcd(B, A mod B)
+    \end{verbatim}
+    
+    \vspace{0.5cm}
+    \textbf{Complexity Analysis:}
+    \begin{itemize}
+        \item \textbf{Time:} $\mathcal{O}(\log(\min(A, B)))$
+        \item \textbf{Space:} $\mathcal{O}(\log(\min(A, B)))$ due to call stack.
+        \item \textit{Note:} The worst-case input for GCD is consecutive Fibonacci numbers.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Extended Euclidean Algorithm: The "Why"}
+    Sometimes we need more than just the GCD. We need to express the GCD as a linear combination of $A$ and $B$.
+    
+    \vspace{0.5cm}
+    \textbf{Bézout's Identity:}
+    For any integers $A$ and $B$, there exist integers $x$ and $y$ such that:
+    $$A \cdot x + B \cdot y = \gcd(A, B)$$
+    
+    \textbf{Why in CP?}
+    \begin{itemize}
+        \item Solving Linear Diophantine Equations.
+        \item Computing Modular Inverses.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Extended Euclidean Algorithm: Changing Directions}
+    Remember how we find the greatest common divisor:
+    \begin{align*}
+    A &= q_1B+ r_1\\
+    B &= q_2r_1 + r_2\\
+    r_1 &= q_3r_2 + r_3\\
+    &\vdots\\
+    r_{n-3} &= q_{n-1} r_{n-2} + r_{n-1} \\
+    r_{n-2} &= q_nr_{n-1} = q_nG
+  \end{align*}
+    Now instead try working backwards: can express things like:
+    \begin{align*}
+        G &= \frac{1}{q_n q_{n-1}}\left(r_{n-3} - r_{n-1}\right) \\
+    \end{align*}
+\end{frame}
+
+\begin{frame}{Extended Euclidean Algorithm: The "How"}
+    Assume we already have the coefficients $x_1, y_1$ for the next recursive step:
+    $$B \cdot x_1 + (A \bmod B) \cdot y_1 = \gcd(A, B)$$
+    
+    We know that $A \bmod B = A - \left\lfloor \frac{A}{B} \right\rfloor \cdot B$. Substitute this into the equation:
+    $$B \cdot x_1 + \left( A - \left\lfloor \frac{A}{B} \right\rfloor \cdot B \right) \cdot y_1 = \gcd(A, B)$$
+    
+    Rearranging terms to isolate $A$ and $B$:
+    $$A \cdot y_1 + B \cdot \left( x_1 - \left\lfloor \frac{A}{B} \right\rfloor \cdot y_1 \right) = \gcd(A, B)$$
+\end{frame}
+
+\begin{frame}[fragile]{Extended Euclidean Algorithm: Implementation}
+    Matching coefficients gives us our transition: 
+    $x = y_1$ and $y = x_1 - \left\lfloor \frac{A}{B} \right\rfloor \cdot y_1$.
+    
+    \vspace{0.3cm}
+    \textbf{Pseudocode:}
+    \begin{verbatim}
+    function extended_gcd(A, B):
+        if B == 0:
+            return (A, 1, 0)  // gcd, x, y
+        g, x1, y1 = extended_gcd(B, A mod B)
+        x = y1
+        y = x1 - floor(A / B) * y1
+        return (g, x, y)
+    \end{verbatim}
+    \textbf{Time Complexity:} $\mathcal{O}(\log(\min(A, B)))$
+\end{frame}
+
+\begin{frame}{Modular Arithmetic: Division}
+    Addition, subtraction, and multiplication distribute nicely over modulo $M$. \textbf{Division does not.}
+    
+    $$(A / B) \bmod M \neq ( (A \bmod M) / (B \bmod M) ) \bmod M$$
+    
+    \vspace{0.5cm}
+    Instead of dividing by $B$, we must multiply by its \textbf{Modular Inverse}, denoted as $B^{-1}$.
+    
+    \textbf{Definition of Modular Inverse:}
+    $$B \cdot B^{-1} \equiv 1 \pmod M$$
+    
+    
+\end{frame}
+
+\begin{frame}{Modular Inverses: Existence}
+    \textbf{Crucial Rule:} 
+    The modular inverse $B^{-1} \pmod M$ exists \textbf{if and only if} $B$ and $M$ are coprime (i.e., $\gcd(B, M) = 1$).
+    
+    \vspace{0.5cm}
+    If $\gcd(B, M) > 1$, it is mathematically impossible to divide by $B$ under modulo $M$.
+
+    \textbf{Recall:} for $M$ a prime $p$, every integer smaller than $p$ is coprime! Working modulo $p$ is extremely convenient!
+\end{frame}
+
+\begin{frame}{Method 1: Fermat's Little Theorem}
+    \textbf{Theorem:} If $M$ is prime, and $A$ is not divisible by $M$:
+    $$A^{M-1} \equiv 1 \pmod M$$
+    
+    Multiply both sides by $A^{-1}$:
+    $$A^{M-2} \equiv A^{-1} \pmod M$$
+    
+    \vspace{0.5cm}
+    \textbf{Implementation:}
+    Calculate $A^{M-2} \pmod M$ using Binary Exponentiation.
+    \begin{itemize}
+        \item \textbf{Requirement:} $M$ must be prime.
+        \item \textbf{Time Complexity:} $\mathcal{O}(\log M)$
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Method 2: Extended Euclidean}
+    What if $M$ is not prime? As long as $\gcd(A, M) = 1$, we use Bézout's Identity:
+    $$A \cdot x + M \cdot y = 1$$
+    
+    Take modulo $M$ on both sides. The $M \cdot y$ term vanishes:
+    $$A \cdot x \equiv 1 \pmod M$$
+    
+    \vspace{0.5cm}
+    Therefore, $x$ (computed via \texttt{extended\_gcd}) is the modular inverse of $A$ modulo $M$.
+    \begin{itemize}
+        \item \textbf{Requirement:} $\gcd(A, M) = 1$.
+        \item \textbf{Time Complexity:} $\mathcal{O}(\log(\min(A, M)))$.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Pro-Tips \& CP "Gotchas"}
+    \begin{itemize}
+        \item \textbf{Negative Modulo in C++/Java:} 
+        The \texttt{\%} operator can return negative values. Always sanitize! \\
+        \texttt{safe\_mod = (x \% M + M) \% M}
+        \item \textbf{Extended GCD Normalization:} 
+        The $x$ returned by \texttt{extended\_gcd} might be negative. Apply the safe modulo technique above before using it as an inverse.
+        \item \textbf{Overflows:} 
+        When multiplying large numbers before taking the modulo, use 64-bit integers (\texttt{long long} in C++).
+    \end{itemize}
+\end{frame}
+
+\section{Module 2: Exponentiation and Sequence Optimization}
+
+\begin{frame}{Binary Exponentiation: The Objective}
+    \textbf{The Problem:} Calculate $A^B \pmod{M}$ efficiently.
+    
+    \vspace{0.5cm}
+    \textbf{The Naïve Approach:}
+    \begin{itemize}
+        \item Multiply $A$ by itself $B$ times.
+        \item \textbf{Complexity:} $\mathcal{O}(B)$ time.
+        \item \textit{Verdict:} Time Limit Exceeded (TLE) when $B$ is large (e.g., $B \ge 10^9$).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Binary Exponentiation: The Intuition}
+    \textbf{Core Idea:} Divide and Conquer. We can cut the work in half at each step by using the properties of exponents.
+    
+    \vspace{0.3cm}
+    \textbf{The Recurrence:}
+    \begin{itemize}
+        \item \textbf{If $B$ is even:} $A^B = \left(A^{B/2}\right)^2$
+        \item \textbf{If $B$ is odd:} $A^B = A \cdot \left(A^{(B-1)/2}\right)^2$
+        \item \textbf{Base Case:} $A^0 = 1$
+    \end{itemize}
+    
+    \vspace{0.3cm}
+    \textit{Example ($3^{13}$):} 
+    Instead of $13$ multiplications, we compute $3 \to 3^2 \to 3^3 \to 3^6 \to 3^{12} \to 3^{13}$ requiring only $5$ multiplications.
+\end{frame}
+
+\begin{frame}[fragile]{Binary Exponentiation: Implementation}
+
+    \vspace{0.2cm}
+    \textbf{Pseudocode (Iterative):}
+    \begin{verbatim}
+    function binpow(A, B, M):
+        A = A mod M
+        result = 1
+        while B > 0:
+            if B is odd:     // (B & 1) == 1
+                result = (result * A) mod M
+            A = (A * A) mod M
+            B = floor(B / 2) // B >>= 1
+        return result
+    \end{verbatim}
+    
+    \textbf{Complexity:} Time $\mathcal{O}(\log B)$, Space $\mathcal{O}(1)$.
+\end{frame}
+
+\begin{frame}{Fibonacci Sequence: Hitting the Wall}
+    \textbf{The Sequence:} $F_n = F_{n-1} + F_{n-2}$, with $F_0 = 0, F_1 = 1$.
+    
+    \vspace{0.5cm}
+    \textbf{Standard Dynamic Programming:}
+    \begin{itemize}
+        \item Iterate from $2$ to $N$, storing previous values.
+        \item \textbf{Complexity:} $\mathcal{O}(N)$ time.
+        \item \textbf{The Constraint Wall:} In many CP problems, $N$ can be up to $10^{18}$. An $\mathcal{O}(N)$ algorithm will fail. We need a logarithmic approach.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Matrix Exponentiation: Mathematical Model}
+    We can represent linear recurrences as matrix multiplications.
+    
+    \vspace{0.3cm}
+    To transition from the state $\begin{pmatrix} F_{n-1} \\ F_{n-2} \end{pmatrix}$ to $\begin{pmatrix} F_n \\ F_{n-1} \end{pmatrix}$, we multiply by a transition matrix:
+    
+    $$
+    \begin{pmatrix} F_n \\ F_{n-1} \end{pmatrix} = \begin{pmatrix} 1 & 1 \\ 1 & 0 \end{pmatrix} \begin{pmatrix} F_{n-1} \\ F_{n-2} \end{pmatrix}
+    $$
+    
+    
+\end{frame}
+
+\begin{frame}{Matrix Exponentiation: The $\mathcal{O}(\log N)$ Leap}
+    By expanding the recurrence, we reach the base state:
+    
+    $$
+    \begin{pmatrix} F_n \\ F_{n-1} \end{pmatrix} = \begin{pmatrix} 1 & 1 \\ 1 & 0 \end{pmatrix}^{n-1} \begin{pmatrix} F_1 \\ F_0 \end{pmatrix}
+    $$
+    
+    \vspace{0.3cm}
+    \textbf{The breakthrough:} Matrix multiplication is associative. This means we can compute the matrix power $\begin{pmatrix} 1 & 1 \\ 1 & 0 \end{pmatrix}^{n-1}$ using \textbf{Binary Exponentiation}!
+    
+    \vspace{0.3cm}
+    \textbf{Complexity:} 
+    Matrix multiplication takes $\mathcal{O}(K^3)$ where $K=2$. Doing this $\log N$ times yields a total time complexity of $\mathcal{O}(2^3 \log N) = \mathcal{O}(\log N)$.
+\end{frame}
+
+
+\begin{frame}{Pro-Tips \& CP "Gotchas"}
+    \begin{itemize}
+        \item \textbf{Identity Matrix:} When implementing matrix binary exponentiation, always initialize your result matrix to the Identity Matrix (diagonal of 1s, rest 0s). It acts as the integer "$1$" for matrices.
+        \item \textbf{Modulo at Every Step:} In both Matrix Exponentiation and Fast Doubling, apply the modulo operator after \textit{every single} addition and multiplication to prevent integer overflow.
+        \item \textbf{Negative Modulo in Fast Doubling:} The formula $F_{2k} = F_k \cdot (2F_{k+1} - F_k)$ involves subtraction. Ensure you use the safe modulo technique: \\
+        \texttt{F\_2k = (F\_2k \% M + M) \% M}.
+    \end{itemize}
+\end{frame}
+
+\section{Module 3: Primes and Sieves}
+
+\begin{frame}{Generating Primes: The Need for Sieves}
+    \textbf{The Scenario:} 
+    You need to find all prime numbers up to $N$, or rapidly answer queries about whether $K \le N$ is prime.
+    
+    \vspace{0.3cm}
+    \textbf{Naïve Approach:}
+    \begin{itemize}
+        \item Iterate $i$ from $2$ to $N$.
+        \item Run trial division up to $\sqrt{i}$ for each number.
+        \item \textbf{Complexity:} $\mathcal{O}(N \sqrt{N})$.
+        \item \textit{Verdict:} Too slow for $N = 10^7$. We need to precompute primes efficiently.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{The Sieve of Eratosthenes: Intuition}
+    \textbf{Core Idea:} Instead of checking if a number has divisors, we let prime numbers "announce" their multiples as composite.
+    
+    
+    
+    \vspace{0.3cm}
+    \textbf{The Process:}
+    \begin{enumerate}
+        \item Assume all numbers from $2$ to $N$ are prime.
+        \item Find the first uncrossed number (which must be prime).
+        \item Cross out all of its multiples.
+        \item Repeat until you have processed up to $\sqrt{N}$.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{The Sieve of Eratosthenes: Implementation}
+    \textbf{Optimization:} We only need to start crossing out multiples from $i \cdot i$, because any smaller multiple $i \cdot k$ (where $k < i$) would have already been crossed out by the smaller prime factor $k$.
+    
+    \begin{verbatim}
+    function sieve_eratosthenes(N):
+        is_prime = boolean array of size N+1, initialized to true
+        is_prime[0] = is_prime[1] = false
+        
+        for i from 2 to sqrt(N):
+            if is_prime[i]:
+                for j from i * i to N step i:
+                    is_prime[j] = false
+                    
+        return all i where is_prime[i] is true
+    \end{verbatim}
+\end{frame}
+
+\begin{frame}{Complexity of the Standard Sieve}
+    \textbf{Time Complexity Analysis:}
+    The inner loop runs $N/p$ times for each prime $p$. The total number of operations is proportional to:
+    $$N \cdot \left( \frac{1}{2} + \frac{1}{3} + \frac{1}{5} + \frac{1}{7} + \dots \right)$$
+    
+    The sum of the reciprocals of primes up to $N$ diverges as $\log \log N$.
+    \begin{itemize}
+        \item \textbf{Time Complexity:} $\mathcal{O}(N \log \log N)$
+        \item \textbf{Space Complexity:} $\mathcal{O}(N)$
+    \end{itemize}
+    
+    \vspace{0.3cm}
+    For practical CP limits ($N \approx 10^7$), $\mathcal{O}(N \log \log N)$ is extremely fast and often behaves almost like $\mathcal{O}(N)$.
+\end{frame}
+
+\begin{frame}{The Inefficiency of the Standard Sieve}
+    If the Sieve of Eratosthenes is so fast, why do we need anything else?
+    
+    \vspace{0.3cm}
+    \textbf{The Redundancy:} 
+    Many composite numbers are crossed out multiple times. 
+    \begin{itemize}
+        \item $12$ is crossed out when $i=2$ ($2 \cdot 6$).
+        \item $12$ is crossed out again when $i=3$ ($3 \cdot 4$).
+    \end{itemize}
+    
+    To achieve strict $\mathcal{O}(N)$ time, we must ensure every composite number is visited and crossed out \textbf{exactly once}.
+\end{frame}
+
+\begin{frame}{The Linear Sieve: Mathematical Foundation}
+    To visit every composite number $C$ exactly once, we must represent it uniquely.
+    
+    \vspace{0.3cm}
+    \textbf{Unique Representation:}
+    Every integer $C > 1$ can be uniquely factored as:
+    $$C = p \cdot i$$
+    Where $p$ is the \textbf{smallest prime factor (SPF)} of $C$, and $i \ge p$.
+    
+    
+    
+    \vspace{0.3cm}
+    If we can guarantee that we only generate $C$ when iterating over $i$ and multiplying it by its smallest prime factor $p$, we achieve linear time.
+\end{frame}
+
+\begin{frame}{The Linear Sieve: The Algorithm}
+    \begin{enumerate}
+        \item Iterate $i$ from $2$ to $N$.
+        \item If $i$ has not been marked, add it to our list of primes.
+        \item Iterate through our discovered primes $p_j$.
+        \item Mark $i \cdot p_j$ as composite.
+        \item \textbf{The Crucial Break Condition:} Stop the inner loop if $i \bmod p_j == 0$.
+    \end{enumerate}
+    
+    \vspace{0.3cm}
+    \textbf{Why does the break condition work?}
+    If $i \bmod p_j == 0$, then $p_j$ is the smallest prime factor of $i$. For any subsequent prime $p_{k} > p_j$, the composite number $C = i \cdot p_k$ will have $p_j$ as its smallest prime factor, not $p_k$. We must leave it to be crossed out when the outer loop eventually reaches $i' = C / p_j$.
+\end{frame}
+
+\begin{frame}[fragile]{The Linear Sieve: Implementation}
+    \textbf{Pseudocode:}
+    \begin{verbatim}
+    function linear_sieve(N):
+        is_prime = boolean array initialized to true
+        primes = empty list
+        for i from 2 to N:
+            if is_prime[i]:
+                primes.append(i)
+            for p in primes:
+                if i * p > N: break
+                is_prime[i * p] = false
+                if i mod p == 0: 
+                    break  // p is the SPF of i  
+        return primes
+    \end{verbatim}
+\end{frame}
+
+\begin{frame}{Linear vs. Standard Sieve}
+    \textbf{When to use which?}
+    
+    \begin{itemize}
+        \item \textbf{Standard Sieve:} Easier to memorize, smaller constant factor. Often faster in practice for $N \le 10^7$ due to simple array access patterns and CPU cache friendliness.
+        \item \textbf{Linear Sieve:} Strictly $\mathcal{O}(N)$. Extremely powerful because the same $\mathcal{O}(N)$ loop can be used to precompute multiplicative functions (like Euler's Totient function $\phi$, or divisor counts) alongside the primes.
+    \end{itemize}
+    
+    \vspace{0.3cm}
+    \textbf{Pro-Tip:} In CP, the array \texttt{is\_prime} in the linear sieve is often replaced with an array \texttt{spf} (Smallest Prime Factor) to allow for $\mathcal{O}(\log K)$ prime factorization of multiple queries later.
+\end{frame}
+
+
+\section{Module 4: Factorization and Divisor Functions}
+
+\begin{frame}{Primality Testing: Trial Division}
+    \textbf{The Problem:} Given a single integer $N$, determine if it is prime.
+    
+    \vspace{0.3cm}
+    \textbf{Mathematical Property:} 
+    If $N$ is a composite number, it can be factored into two integers, $N = a \cdot b$, where $a, b > 1$. 
+    
+    If both $a$ and $b$ were strictly greater than $\sqrt{N}$, then $a \cdot b > \sqrt{N} \cdot \sqrt{N} = N$, which is a contradiction. Therefore, at least one factor must be less than or equal to $\sqrt{N}$.
+    
+    \vspace{0.3cm}
+    \textbf{Conclusion:} 
+    We only need to test for divisors up to $\lfloor\sqrt{N}\rfloor$. If no divisors are found in this range, $N$ is prime.
+\end{frame}
+
+\begin{frame}[fragile]{Primality Testing: Implementation}
+    \textbf{Pseudocode:}
+    \begin{verbatim}
+    function is_prime(N):
+        if N < 2: return false
+        for i from 2 to floor(sqrt(N)):
+            if N mod i == 0:
+                return false 
+        return true
+    \end{verbatim}
+    
+    \textbf{Complexity Analysis:}
+    \begin{itemize}
+        \item \textbf{Time:} $\mathcal{O}(\sqrt{N})$
+        \item \textbf{Space:} $\mathcal{O}(1)$
+        \item \textit{Note:} To avoid precision issues with floating-point `sqrt()`, it is safer to write the loop condition as `i * i <= N` (using 64-bit integers to prevent overflow).
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Integer Factorization: Trial Division}
+    We can extend the trial division logic to find the prime factorization of $N$.
+    
+    \vspace{0.3cm}
+    \textbf{The Process:}
+    \begin{enumerate}
+        \item Iterate $i$ from $2$ to $\sqrt{N}$.
+        \item If $i$ divides $N$, divide $N$ by $i$ as many times as possible, recording $i$ as a prime factor.
+        \item \textbf{Crucial Step:} After the loop, if the remaining value of $N$ is greater than $1$, it is a prime number itself and must be added to the list of factors.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}[fragile]{Factorization: Implementation}
+    \textbf{Pseudocode:}
+    \begin{verbatim}
+    function prime_factors(N):
+        factors = empty list
+        for i from 2 to floor(sqrt(N)):  // i * i <= N
+            while N mod i == 0:
+                factors.append(i)
+                N = floor(N / i)
+        if N > 1:
+            factors.append(N)
+        return factors
+    \end{verbatim}
+    \textbf{Time Complexity:} $\mathcal{O}(\sqrt{N})$ worst-case (when $N$ is prime).
+\end{frame}
+
+\begin{frame}{Fast Factorization: The $\mathcal{O}(\log N)$ Trick}
+    \textbf{The Constraint Wall:} 
+    What if you need to factor $10^5$ different numbers, each up to $10^7$? 
+    Calling an $\mathcal{O}(\sqrt{N})$ function $10^5$ times will cause a Time Limit Exceeded (TLE) error.
+    
+    \vspace{0.3cm}
+    \textbf{The Solution:} 
+    Recall the Sieve of Eratosthenes (or Linear Sieve). Instead of just marking `true`/`false`, we can store the \textbf{Smallest Prime Factor (SPF)} for each composite number during the sieve computation.
+    
+    
+\end{frame}
+
+\begin{frame}[fragile]{Fast Factorization: Implementation}
+    Assuming we have precomputed an array `spf` using a Sieve in $\mathcal{O}(MAX\_N \log \log MAX\_N)$ or $\mathcal{O}(MAX\_N)$:
+    
+    \vspace{0.3cm}
+    \textbf{Pseudocode (Answering a query):}
+    \begin{verbatim}
+    function fast_factorization(N, spf):
+        factors = empty list
+        while N != 1:
+            factors.append(spf[N])
+            N = floor(N / spf[N])
+        return factors
+    \end{verbatim}
+    
+    \textbf{Complexity:} Time $\mathcal{O}(\log N)$ per query, since $N$ is divided by at least $2$ at each step.
+\end{frame}
+
+\begin{frame}{Divisor Functions: Introduction}
+    Once we have the prime factorization of $N$, we can easily answer queries about its divisors without actually finding them all.
+    
+    \vspace{0.3cm}
+    Let the unique prime factorization of $N$ be:
+    $$N = p_1^{a_1} \cdot p_2^{a_2} \cdots p_k^{a_k}$$
+    
+    Where $p_i$ are distinct prime factors, and $a_i$ are their respective exponents.
+    
+    \vspace{0.3cm}
+    We will look at two fundamental multiplicative functions:
+    \begin{itemize}
+        \item $\tau(N)$ or $d(N)$: The total \textbf{number} of divisors.
+        \item $\sigma(N)$: The \textbf{sum} of all divisors.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Number of Divisors: $\tau(N)$}
+    \textbf{Combinatorial Proof:}
+    Any divisor $D$ of $N$ must be formed by selecting a subset of $N$'s prime factors. 
+    
+    For a specific prime factor $p_i$ (which appears $a_i$ times in $N$), the divisor $D$ can contain $p_i$ exactly $0, 1, 2, \dots, a_i$ times.
+    This gives exactly $(a_i + 1)$ independent choices for each prime factor.
+    
+    \vspace{0.3cm}
+    \textbf{Formula:}
+    $$\tau(N) = (a_1 + 1) \cdot (a_2 + 1) \cdots (a_k + 1) = \prod_{i=1}^{k} (a_i + 1)$$
+    
+    \textit{Example:} $12 = 2^2 \cdot 3^1$. 
+    $\tau(12) = (2 + 1) \cdot (1 + 1) = 3 \cdot 2 = 6$. 
+    (The divisors are 1, 2, 3, 4, 6, 12).
+\end{frame}
+
+\begin{frame}{Sum of Divisors: $\sigma(N)$}
+    \textbf{Algebraic Expansion:}
+    If we want the sum of all divisors, we can represent it as the product of the sums of all possible powers of each prime factor.
+    
+    $$\sigma(N) = (1 + p_1 + p_1^2 + \dots + p_1^{a_1}) \cdots (1 + p_k + p_k^2 + \dots + p_k^{a_k})$$
+    
+    \vspace{0.3cm}
+    Each term in parenthesis is a geometric series. We can simplify this using the geometric series sum formula:
+    
+    \textbf{Formula:}
+    $$\sigma(N) = \prod_{i=1}^{k} \frac{p_i^{a_i+1} - 1}{p_i - 1}$$
+\end{frame}
+
+\begin{frame}{Pro-Tips \& CP "Gotchas"}
+    \begin{itemize}
+        \item \textbf{Multiplicative Property:} Both $\tau(N)$ and $\sigma(N)$ are multiplicative. This means if $\gcd(A, B) = 1$, then $\tau(A \cdot B) = \tau(A) \cdot \tau(B)$. This allows for $\mathcal{O}(N)$ precomputations alongside the Linear Sieve.
+        \item \textbf{Overflows with $\sigma(N)$:} The sum of divisors can easily exceed 32-bit integer limits even for relatively small inputs. Always use 64-bit integers.
+        \item \textbf{Modulo operations on $\sigma(N)$:} If a problem asks for $\sigma(N) \pmod M$, calculating the fraction $\frac{p_i^{a_i+1} - 1}{p_i - 1} \pmod M$ requires finding the Modular Inverse of $(p_i - 1)$ modulo $M$ (refer back to Module 1).
+    \end{itemize}
+\end{frame}
+
+\section{Module 5: Integration and Q\&A}
+
+\begin{frame}{Recognizing the Right Tool: Constraints}
+    In Competitive Programming, the constraints dictate the algorithm. Let $N$ be the primary input variable.
+    
+    \vspace{0.3cm}
+    \textbf{Constraint Guidelines:}
+    \begin{itemize}
+        \item $N \le 10^7$: $\mathcal{O}(N)$ operations are safe. Use the \textbf{Linear Sieve} or \textbf{Standard Sieve} for primes, factorization queries, or precomputing divisor functions.
+        \item $N \le 10^{12}$: $\mathcal{O}(\sqrt{N})$ is required. Use \textbf{Trial Division} for primality testing or factorization of a single number.
+        \item $N \le 10^{18}$: $\mathcal{O}(\log N)$ or $\mathcal{O}(1)$ is required. Rely on \textbf{Binary Exponentiation}, \textbf{Matrix Exponentiation}, or the \textbf{Euclidean Algorithm}.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Complexity Cheat Sheet}
+    
+    
+    \vspace{0.2cm}
+    \begin{table}[]
+        \centering
+        \begin{tabular}{|l|l|l|}
+        \hline
+        \textbf{Algorithm} & \textbf{Time Complexity} & \textbf{Space Complexity} \\ \hline
+        Euclidean Algorithm (GCD) & $\mathcal{O}(\log(\min(A, B)))$ & $\mathcal{O}(1)$ \\ \hline
+        Extended Euclidean & $\mathcal{O}(\log(\min(A, B)))$ & $\mathcal{O}(1)$ \\ \hline
+        Binary Exponentiation & $\mathcal{O}(\log B)$ & $\mathcal{O}(1)$ \\ \hline
+        Matrix Exponentiation & $\mathcal{O}(K^3 \log N)$ & $\mathcal{O}(K^2)$ \\ \hline
+        Sieve of Eratosthenes & $\mathcal{O}(N \log \log N)$ & $\mathcal{O}(N)$ \\ \hline
+        Linear Sieve & $\mathcal{O}(N)$ & $\mathcal{O}(N)$ \\ \hline
+        Trial Division (Factorization) & $\mathcal{O}(\sqrt{N})$ & $\mathcal{O}(\log N)$ \\ \hline
+        Fast Factorization (with Sieve) & $\mathcal{O}(\log N)$ per query & $\mathcal{O}(N)$ precomp \\ \hline
+        \end{tabular}
+    \end{table}
+\end{frame}
+
+\begin{frame}{Common CP Scenarios \& Triggers}
+    When reading a problem statement, look for these mathematical triggers:
+    
+    \vspace{0.3cm}
+    \begin{itemize}
+        \item \textbf{"Calculate $X / Y \pmod M$"} $\rightarrow$ Compute the Modular Inverse of $Y$ modulo $M$. Use Fermat's Little Theorem if $M$ is prime, else Extended Euclidean.
+        \item \textbf{"Find the $N$-th state of a linear process"} $\rightarrow$ Define the transition matrix and apply Matrix Exponentiation.
+        \item \textbf{"Output the answer modulo $10^9 + 7$"} $\rightarrow$ Modulo arithmetic is required at every addition, subtraction, and multiplication step.
+        \item \textbf{"Given $10^5$ numbers, count their divisors"} $\rightarrow$ Precompute the Smallest Prime Factor (SPF) using a Linear Sieve, then use the $\tau(N)$ formula for each query.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Final Checklist Before Submission}
+    Before submitting your code, verify these common failure points in number theory problems:
+    
+    \vspace{0.3cm}
+    \begin{enumerate}
+        \item \textbf{Integer Overflow:} Are you using 64-bit integers (\texttt{long long} in C++) for intermediate multiplications before applying the modulo?
+        \item \textbf{Negative Modulo:} Does your code handle subtraction safely? Use \texttt{(A - B \% M + M) \% M}.
+        \item \textbf{Base Cases:} Does your logic handle $N=0$ or $N=1$ correctly, especially for prime sieves and exponentiation?
+        \item \textbf{Coprime Requirements:} If taking a modular inverse via Extended Euclidean, did you verify that $\gcd(A, M) = 1$?
+    \end{enumerate}
+\end{frame}
+
+\section{Module 6: Extensions}
+
+\begin{frame}{Extensions: Chinese Remainder Theorem}
+    Can we always construct a solution to some set of congruences? $N (\bmod M_1) = r_1, N(\bmod M_2) = r_2,\dots N(\bmod M_k) = r_k$
+
+    \pause
+    
+    Yes, provided $(M_i, M_j) = 1$ $\forall i<j$. This is a constructive proof, providing a solution modulo $(\bmod M := M_1M_2\dots M_k)$. Recall the extended Euclidean algorithm, where terms can vanish when we use modular arithmetic. 
+    
+    We want to do something similar, where we sum $k$ terms together where for each $M_k$ all terms but one vanish. 
+
+    \begin{itemize}
+        \item compute $M = M_1 M_2 \dots M_k$
+        \item For each $i = 1, 2, \dots k$ compute $b_i = \frac{M}{M_i}$ which screens out most terms
+        \item For each $i = 1, 2, \dots k$ compute $c_i \equiv b_i^{-1} (\bmod m_i)$ guaranteed to exist since all $m_i$ coprime
+        \item $N = a_1b_1c_1 + a_2b_2c_2 + \dots a_k b_k c_k$  is your solution
+    \end{itemize}
+    
+\end{frame}
+
+\begin{frame}{Extension: Probabilistic Primality Testing (Miller-Rabin)}
+    \textbf{The Problem:} Trial division is $\mathcal{O}(\sqrt{N})$ --- too slow for $N \le 10^{18}$.
+
+    \textbf{The Algorithm:} To test if $n$ is prime, write $n - 1 = 2^s \cdot d$ with $d$ odd.
+    For a randomly chosen base $a$:
+    \begin{enumerate}
+        \item Compute $x = a^d \bmod n$ via binary exponentiation.
+        \item If $x \equiv 1$ or $x \equiv -1 \pmod{n}$, this base \textit{passes} --- move to the next.
+        \item Repeatedly square $x$ up to $s - 1$ times. If any square gives $x \equiv -1$, this base passes.
+        \item If none of the above triggered, $n$ is \textbf{definitely composite}. Stop.
+        \item If all $k$ bases pass, $n$ is \textbf{probably prime}.
+    \end{enumerate}
+\end{frame}
+\begin{frame}{Extension: Probabilistic Primality Testing}
+    \vspace{0.2cm}
+    \textbf{In practice:}
+    \begin{itemize}
+        \item \textbf{Randomized:} $k$ random bases $\rightarrow$ false positive probability $\le 4^{-k}$.
+        \item \textbf{Deterministic:} Bases $\{2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37\}$
+        are correct for all $N < 3.3 \times 10^{24}$.
+        \item \textbf{Complexity:} $\mathcal{O}(k \log^2 N)$ per query.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[plain]
+    \vfill
+    \centering
+    {\Large\bfseries Problem solving}
+    
+    \vspace{0.5cm}
+    \textcolor{kcpc-muted}{Let's solve some problems!.}
+    \vfill
+\end{frame}
+
+\end{document}

@@ -1,0 +1,348 @@
+\documentclass{beamer}
+\usepackage{tikz}
+
+% ===== KCPC clean theme =====
+\usetheme{default}
+\useinnertheme{rectangles}
+\useoutertheme{default}
+
+\setbeamertemplate{navigation symbols}{}
+
+% --- Colours ---
+\definecolor{kcpc-bg}{RGB}{250,250,250}
+\definecolor{kcpc-text}{RGB}{20,20,20}
+\definecolor{kcpc-muted}{RGB}{90,90,90}
+\definecolor{kcpc-red}{RGB}{176,0,0}
+
+\setbeamercolor{background canvas}{bg=kcpc-bg}
+\setbeamercolor{normal text}{fg=kcpc-text}
+\setbeamercolor{frametitle}{fg=kcpc-text,bg=kcpc-bg}
+\setbeamercolor{title}{fg=kcpc-text}
+\setbeamercolor{subtitle}{fg=kcpc-muted}
+\setbeamercolor{structure}{fg=kcpc-red}
+
+\setbeamerfont{title}{series=\bfseries,size=\Large}
+\setbeamerfont{frametitle}{series=\bfseries,size=\large}
+
+\setlength{\parskip}{0.4em}
+
+\setbeamertemplate{itemize item}{$\rightarrow$}
+\setbeamertemplate{itemize subitem}{$\rightarrow$}
+
+\setbeamertemplate{headline}{
+    \vspace{0.2cm}
+    \hspace{0.2cm}
+    \textcolor{kcpc-muted}{\small\insertsection}
+    \hfill
+}
+
+\setbeamertemplate{footline}{
+    \hspace{0.2cm}
+    \textcolor{kcpc-muted}{\small KCPC}
+    \hfill
+    \vspace{0.3cm}
+}
+
+\setbeamertemplate{background}{
+    \begin{tikzpicture}[remember picture,overlay]
+        \node[
+            opacity=0.035,
+            at=(current page.center)
+        ] {
+            \includegraphics[width=0.55\paperwidth]{kcpc-logo.png}
+        };
+    \end{tikzpicture}
+}
+
+\AtBeginSection[]{
+    \begin{frame}[plain]
+        \vfill
+        \centering
+        {\Large\bfseries \insertsection}
+        \vfill
+    \end{frame}
+}
+
+\begin{document}
+
+\title{Disjoint Set Union in Competitive Programming}
+\date{}
+
+\begin{frame}[plain]
+    \titlepage
+\end{frame}
+
+\section{ The Dynamic Connectivity Problem}
+
+\begin{frame}[fragile]{Defining the Problem}
+    \begin{itemize}
+        \item We start with $N$ elements, initially partitioned into $N$ distinct, isolated sets.
+        \item We must efficiently support two core operations:
+        \begin{itemize}
+            \item \textbf{\texttt{find(x)}}: Identify the unique representative (the "root") of the set containing $x$.
+            \item \textbf{\texttt{union(x, y)}}: Merge the sets containing $x$ and $y$ into a single set.
+        \end{itemize}
+        \item The network changes dynamically; queries and updates are interleaved.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Why Standard Traversals Fail}
+    \begin{itemize}
+        \item \textbf{The Graph Traversal Approach:} Run DFS or BFS after every edge addition to determine if two nodes are connected.
+        \item \textbf{The Bottleneck:} A single traversal requires $\mathcal{O}(N + M)$ time.
+        \item For $Q$ dynamic queries, the worst-case time complexity degrades to $\mathcal{O}(Q \times (N + M))$.
+        \item In standard competitive programming bounds ($N, M, Q \approx 2 \cdot 10^5$), this approach guarantees a Time Limit Exceeded (TLE) verdict.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Enter Disjoint Set Union (DSU)}
+    \begin{itemize}
+        \item DSU provides a specialized data structure strictly optimized for the dynamic connectivity problem.
+        \item \textbf{Target Time Complexity:} Nearly $\mathcal{O}(1)$ amortized time per query.
+        \item \textbf{Target Space Complexity:} $\mathcal{O}(N)$ to maintain the parent relationships.
+        \item \textbf{Trade-off:} Standard DSU cannot "un-merge" sets or handle edge deletions efficiently. It is purely an incremental data structure.
+    \end{itemize}
+\end{frame}
+
+\section{Naive Implementation \& Its Bottlenecks}
+
+\begin{frame}{Tree Representation of Sets}
+    \begin{itemize}
+        \item Instead of storing sets as flat arrays, we represent them as \textbf{directed trees}.
+        \item Every node points to a parent node.
+        \item The \textbf{root} of the tree (a node that points to itself) serves as the unique representative for that entire set.
+        \item \textbf{\texttt{find(x)}}: Traverse up the parent pointers until reaching the root ($parent[x] == x$).
+        \item \textbf{\texttt{union(x, y)}}: Find the roots of $x$ and $y$, then make one root the child of the other.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Naive C++ Implementation}
+\footnotesize
+\begin{verbatim}
+void make_set(int v) {
+    parent[v] = v;
+}
+
+int find_set(int v) {
+    if (v == parent[v])
+        return v;
+    return find_set(parent[v]);
+}
+
+void union_sets(int a, int b) {
+    a = find_set(a);
+    b = find_set(b);
+    if (a != b)
+        parent[b] = a;
+}
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{Complexity Analysis}
+    \begin{itemize}
+        \item \textbf{Space Complexity:} $O(N)$ to store the \texttt{parent} array.
+        \item \textbf{Time Complexity (Best Case):} $O(1)$ if the tree is completely flat.
+        \item \textbf{Time Complexity (Worst Case):} $O(N)$ per operation.
+        \item \textbf{The Bottleneck:} If we sequentially \texttt{union(1, 2)}, \texttt{union(2, 3)}, $\dots$, \texttt{union(N-1, N)}, the tree degrades into a straight line (a linked list).
+        \item A subsequent \texttt{find(1)} will require traversing all $N$ nodes.
+    \end{itemize}
+\end{frame}
+
+%TODO: REMOVE THIS SLIDE
+\begin{frame}{Pro-Tip: Malicious Test Cases}
+    \begin{itemize}
+        \item \textbf{Never use naive DSU in CP} unless $N$ is trivially small (e.g., $N \le 100$).
+        \item Problem setters actively design test cases (often called "star graphs" or "deep lines") specifically to exploit the $O(N)$ worst-case of a naive DSU.
+        \item Submitting naive DSU on standard constraints ($N = 10^5$) will consistently yield a Time Limit Exceeded (TLE) verdict.
+    \end{itemize}
+\end{frame}
+
+\section{Core Optimizations}
+
+\begin{frame}{Path Compression: The "Find" Optimization}
+    \begin{itemize}
+        \item \textbf{The Goal:} If we spend time traversing a long path to find the root, we should ensure we never pay that cost again for the same nodes.
+        \item \textbf{The Mechanism:} During the recursive return phase of \texttt{find(x)}, reassign the parent of every visited node to point directly to the root.
+        \item This aggressively "flattens" the tree structure.
+        \item \textbf{Complexity Impact:} Reduces the amortized time complexity of \texttt{find} to $\mathcal{O}(\log N)$.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Implementing Path Compression}
+\begin{verbatim}
+int find(int x) {
+    if (x == parent[x]) {
+        return x;
+    }
+    // Path compression: update parent on the way back up
+    return parent[x] = find(parent[x]); 
+}
+\end{verbatim}
+    \vspace{0.5em}
+    \begin{itemize}
+        \item \textbf{Caveat:} This requires the underlying parent array to be mutable during a conceptually "read-only" operation.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Union by Size: The "Union" Optimization}
+    \begin{itemize}
+        \item \textbf{The Goal:} Prevent the tree from becoming deep in the first place when merging two distinct sets.
+        \item \textbf{The Mechanism:} Maintain the size (number of elements) of each set. Always attach the root of the \textit{smaller} tree as a child of the root of the \textit{larger} tree.
+        \item \textbf{Mathematical Guarantee:} The depth of any node can only increase if its tree is merged into a tree of equal or greater size. Thus, the maximum depth is strictly bounded by $\log_2(N)$.
+        \item \textbf{Complexity Impact:} Operations take strictly $\mathcal{O}(\log N)$ time, even without path compression.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Implementing Union by Size}
+\begin{verbatim}
+bool unite(int x, int y) {
+    int rootX = find(x);
+    int rootY = find(y);
+    if (rootX == rootY) return false;
+    
+    // Ensure rootX represents the larger tree
+    if (size[rootX] < size[rootY]) {
+        swap(rootX, rootY);
+    }
+    
+    parent[rootY] = rootX;
+    size[rootX] += size[rootY];
+    return true;
+}
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{Alternative Heuristics: Randomized Linking}
+    \begin{itemize}
+        \item \textbf{The Concept:} If maintaining a \texttt{size} or \texttt{rank} array introduces unwanted overhead, randomized heuristics offer a probabilistic alternative.
+        \item \textbf{Coin-Flip Linking:} When merging \texttt{rootX} and \texttt{rootY}, generate a random boolean to decide which becomes the parent.
+        \item \textbf{Why it works:} It explicitly breaks deterministic, malicious test cases designed by problem setters to force the worst-case $\mathcal{O}(N)$ linked-list structure.
+        \item \textbf{Use Case:} Highly effective in tight memory limits where saving the $\mathcal{O}(N)$ space of the size array is required, though Union by Size remains the standard for general competitive programming.
+    \end{itemize}
+\end{frame}
+
+\section{Complexity Analysis}
+
+\begin{frame}{The Ackermann Function}
+    \begin{itemize}
+        \item To understand the complexity of an optimized DSU, we must first look at the Ackermann function, $A(m, n)$.
+        \item It is a computable function that is strictly not primitive recursive.
+        \item \textbf{Key Characteristic:} It grows at an extraordinarily rapid rate.
+        \item For context, $A(4, 2)$ yields a number with $19,729$ decimal digits. $A(4, 3)$ is vastly larger than the estimated number of atoms in the observable universe.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{The Inverse Ackermann Function $\alpha(N)$}
+    \begin{itemize}
+        \item The inverse Ackermann function, denoted as $\alpha(N)$, essentially asks: ``How many times must we apply the inverse operation to reach a base case?''
+        \item Because $A(m, n)$ grows unfathomably fast, its inverse $\alpha(N)$ grows unfathomably slowly.
+        \item For any physically meaningful value of $N$, $\alpha(N) \le 4$.
+        \item Specifically, $\alpha(N) \le 4$ for all $N < 2^{2^{2^{65536}}} - 3$.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Amortized Complexity of DSU}
+    \begin{itemize}
+        \item \textbf{The Theorem:} When combining \textbf{Path Compression} and \textbf{Union by Size/Rank}, a sequence of $M$ operations on $N$ elements takes $\mathcal{O}(M \alpha(N))$ time.
+        \item The amortized time complexity per operation is therefore strictly bounded by $\mathcal{O}(\alpha(N))$.
+        \item \textbf{Mathematical Distinction:} While $\alpha(N) \le 4$ in practice, $\mathcal{O}(N \alpha(N))$ is \textit{not} mathematically equivalent to strictly linear $\mathcal{O}(N)$ time. It is technically superlinear, albeit by a microscopic margin.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Practical Implications in Competitive Programming}
+    \begin{itemize}
+        \item \textbf{Is it $\mathcal{O}(1)$?} In software engineering practice, yes. In asymptotic theory, no.
+        \item \textbf{Performance Bottlenecks:} You will never receive a Time Limit Exceeded (TLE) due to the $\alpha(N)$ scaling factor.
+        \item If an optimized DSU solution TLEs, the issue is typically:
+        \begin{itemize}
+            \item High constant factors (e.g. excessive cache misses, or failing to use path compression and suffering deep recursion).
+            \item Overusing heavy data structures (like \texttt{std::map}) alongside the DSU operations.
+            \item Other algorithmic phases dominating the runtime (e.g., sorting edges in Kruskal's algorithm takes $\mathcal{O}(M \log M)$).
+        \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\section{Standard Applications}
+
+\begin{frame}{Application 1: Dynamic Connected Components}
+    \begin{itemize}
+        \item \textbf{The Problem:} Given a graph where edges are added sequentially, efficiently query the number of connected components at any time.
+        \item \textbf{The DSU Approach:}
+        \begin{itemize}
+            \item Initially, with $N$ isolated vertices, there are exactly $N$ components.
+            \item Every time an edge successfully connects two \textit{previously disconnected} vertices (i.e., \texttt{union(u, v)} merges two distinct roots), the total number of components decreases by exactly 1.
+        \end{itemize}
+        \item \textbf{Formula:} $\text{Current Components} = N - \text{Successful Unions}$.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Tracking Components in C++}
+\begin{verbatim}
+int components = n;
+
+bool unite(int x, int y) {
+    int rx = find(x), ry = find(y);
+    if (rx == ry) return false;
+
+    if (size[rx] < size[ry]) swap(rx, ry);
+    parent[ry] = rx;
+    size[rx] += size[ry];
+    
+    components--; // Decrement on successful merge
+    return true;
+}
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{Application 2: Kruskal's Algorithm (MST)}
+    \begin{itemize}
+        \item \textbf{The Problem:} Find a subset of edges that connects all vertices in a weighted graph with the minimum possible total edge weight.
+        \item \textbf{The Algorithm:}
+        \begin{enumerate}
+            \item Sort all edges in non-decreasing order of weight.
+            \item Iterate through the sorted edges.
+            \item For each edge $(u, v)$, use DSU to check if $u$ and $v$ are in the same set.
+            \item If they are not (\texttt{find(u) != find(v)}), add the edge to the MST and \texttt{union(u, v)}.
+        \end{enumerate}
+        \item \textbf{Why it works:} Processing edges in ascending order guarantees that we connect components using the cheapest possible edge, while the DSU inherently prevents cycle formation.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Implementing Kruskal's}
+\begin{verbatim}
+// edges: vector of pair<weight, pair<u, v>>
+sort(edges.begin(), edges.end());
+
+long long mst_weight = 0;
+int edges_used = 0;
+
+for (auto& edge : edges) {
+    if (dsu.unite(edge.second.first, edge.second.second)) {
+        mst_weight += edge.first;
+        edges_used++;
+    }
+    // Optimization: 
+    // MST is complete when N-1 edges are added
+    if (edges_used == N - 1) break; 
+}
+\end{verbatim}
+\end{frame}
+
+\begin{frame}{Problem Walkthrough: Cycle Detection}
+    \begin{itemize}
+        \item \textbf{Classic Problem Formulation:} "Redundant Connection"
+        \item \textbf{Statement:} You are given a tree with $N$ nodes and $N$ edges (meaning exactly one extra edge has been added, creating a single cycle). Find an edge that can be removed to restore the strict tree structure.
+        \item \textbf{The DSU Solution:}
+        \begin{itemize}
+            \item Initialize a DSU with $N$ elements.
+            \item Iterate through the given edges sequentially.
+            \item For each edge $(u, v)$, attempt to perform \texttt{unite(u, v)}.
+            \item If \texttt{unite(u, v)} returns \texttt{false} (meaning $u$ and $v$ already share the same root), then adding this specific edge creates the cycle. This is the redundant connection.
+        \end{itemize}
+        \item \textbf{Complexity:} $\mathcal{O}(N \alpha(N))$
+    \end{itemize}
+\end{frame}
+
+\end{document}
+
+\end{document}

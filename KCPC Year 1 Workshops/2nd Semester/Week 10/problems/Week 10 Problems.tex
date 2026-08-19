@@ -1,0 +1,442 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{hyperref}
+\renewcommand{\UrlFont}{\footnotesize}
+\usepackage{enumitem}
+\usepackage{titlesec}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
+\setlist[itemize]{noitemsep, topsep=4pt}
+\setlist[enumerate]{noitemsep, topsep=4pt}
+
+\title{KCPC-CS250 \\ Problem Sheet \\ Segment Trees: Queries, Updates, and Lazy Propagation}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\noindent
+Developed by the KCPC Internal Committee, this problem sheet follows the
+\textit{Segment Trees} workshop.
+Problems are divided into four categories:
+\begin{itemize}
+    \item Warm-up practice set
+    \item Core practice set (to be attempted during the workshop)
+    \item Extended homework
+    \item Further challenge problems
+\end{itemize}
+
+\hrule
+\vspace{1em}
+
+% ----------------------------------------------------
+\section*{I. Warm-up Practice Set}
+
+These problems are intended to build familiarity with the basic segment tree
+workflow: choosing what each node stores, writing the merge operation, and
+handling simple queries and updates.
+
+\begin{enumerate}
+    \item \textbf{LeetCode 307 - Range Sum Query - Mutable}
+
+    Canonical first segment tree problem. Supports point updates and range sum
+    queries. If you already know Fenwick trees, this is a good chance to
+    compare the two data structures.
+
+    \vspace{0.3em}
+    {\url{https://leetcode.com/problems/range-sum-query-mutable/}}
+
+    \vspace{0.8em}
+
+    \item \textbf{AtCoder Library Practice Contest J - Segment Tree}
+
+    Very clean implementation exercise. In addition to point updates and range
+    maximum queries, this problem also introduces tree descent / binary search
+    on the segment tree.
+
+    \vspace{0.3em}
+    {\url{https://atcoder.jp/contests/practice2/tasks/practice2_j}}
+
+    \vspace{0.8em}
+
+    \item \textbf{CSES 1647 - Static Range Minimum Queries}
+
+    Strictly speaking, this is a static query problem, so a sparse table is
+    often the intended solution. It is included here as a useful contrast case:
+    when are segment trees appropriate, and when are they overkill?
+
+    \vspace{0.3em}
+    {\url{https://cses.fi/problemset/task/1647/}}
+
+    \vspace{0.8em}
+
+\end{enumerate}
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+% ----------------------------------------------------
+\section*{II. Core Workshop Practice Set}
+
+These problems should be attempted during the workshop.
+They reinforce the standard segment tree patterns that appear repeatedly in
+contests: point updates, different merge operations, and richer node states.
+
+For any questions that were not completed during the workshop, please attempt
+them independently afterwards.
+
+\textbf{[REDACTED]'s Note.} Segment trees are less about memorising one template
+and more about identifying the correct \emph{node information},
+\emph{merge operation}, and, when needed, \emph{lazy tag composition}. We will
+emphasise this design process in the live walk-throughs.
+
+\begin{enumerate}
+    \item \textbf{CSES 1648 - Dynamic Range Sum Queries}
+
+    Textbook segment tree problem. Build the tree, support point updates, and
+    answer range sum queries correctly and efficiently.
+
+    \vspace{0.3em}
+    {\url{https://cses.fi/problemset/task/1648/}}
+
+    \vspace{0.8em}
+
+    \item \textbf{CSES 1650 - Range Xor Queries}
+
+    Same general structure as range sum queries, but with xor as the merge
+    operation. A good reminder that the segment tree is really an abstraction
+    over an associative operation.
+
+    \vspace{0.3em}
+    {\url{https://cses.fi/problemset/task/1650/}}
+
+    \vspace{0.8em}
+
+    \item \textbf{CSES 1190 - Subarray Sum Queries}
+
+    Classic segment tree problem. Each node stores four values:
+    total sum, best prefix, best suffix, and best subarray sum.
+    This is one of the most important examples of storing more than one value
+    per node.
+
+    \vspace{0.3em}
+    {\url{https://cses.fi/problemset/task/1190/}}
+
+    \vspace{0.8em}
+
+\end{enumerate}
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+% ----------------------------------------------------
+\section*{III. Extended Homework}
+
+\textbf{Important.} The following problems are intended to be more extensive or
+conceptually harder.
+They should only be attempted after completing the warm-up and core sets.
+They are designed to introduce lazy propagation, non-trivial update rules, and
+more advanced pruning ideas.
+
+\medskip
+
+\begin{enumerate}
+
+    \item \textbf{CSES 1651 - Range Update Queries}
+
+    A good first step beyond point updates. While it can be approached with
+    lazy propagation, there are also simpler ways to think about it if you
+    examine what the query type is really asking for.
+
+    \vspace{0.3em}
+    {\small\url{https://cses.fi/problemset/task/1651/}}
+
+    \vspace{0.8em}
+
+    \item \textbf{CSES 1735 - Range Updates and Sums}
+
+    Standard lazy propagation problem with multiple update types.
+    You must handle range addition, range assignment, and range sum queries.
+    Tag composition is the main difficulty.
+
+    \vspace{0.3em}
+    {\small\url{https://cses.fi/problemset/task/1735/}}
+
+    \vspace{0.8em}
+
+    \item \textbf{Codeforces 438D - The Child and Sequence}
+
+    Very important pruning idea. Modulo updates only matter on segments whose
+    maximum is at least the modulus, so storing segment maxima gives a powerful
+    optimisation. This is a gentle introduction to ``segment tree beats''
+    style reasoning.
+
+    \vspace{0.3em}
+    {\small\url{https://codeforces.com/problemset/problem/438/D}}
+
+    \vspace{0.8em}
+
+    \item \textbf{AtCoder Library Practice Contest K - Range Affine Range Sum}
+
+    Strong lazy propagation exercise. Each update applies an affine transform
+    \(x \mapsto ax + b\), so both the stored node values and the lazy tags must
+    be composed carefully.
+
+    \vspace{0.3em}
+    {\small\url{https://atcoder.jp/contests/practice2/tasks/practice2_k}}
+
+\end{enumerate}
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+% ----------------------------------------------------
+\section*{IV. Further Challenge Problems}
+
+These are classical segment tree problems ranging from comfortable intermediate
+practice to very advanced implementations.
+Some overlap with the homework section above; they are retained here because
+they are standard references for the topic.
+
+\begin{enumerate}
+
+    \item \textbf{SPOJ - KQUERY}
+    \hfill \textit{[Persistent segment tree / Merge sort tree]}
+
+    \vspace{0.3em}
+    {\small\url{http://www.spoj.com/problems/KQUERY/}}
+
+    \vspace{0.8em}
+
+    \item \textbf{Codeforces 339D - Xenia and Bit Operations}
+
+    \vspace{0.3em}
+    {\small\url{https://codeforces.com/problemset/problem/339/D}}
+
+    \vspace{0.8em}
+
+    \item \textbf{UVA 11402 - Ahoy, Pirates!}
+
+    \vspace{0.3em}
+    {\small\url{https://uva.onlinejudge.org/index.php?option=com_onlinejudge&Itemid=8&page=show_problem&problem=2397}}
+
+    \vspace{0.8em}
+
+    \item \textbf{SPOJ - GSS3}
+
+    \vspace{0.3em}
+    {\small\url{http://www.spoj.com/problems/GSS3/}}
+
+    \vspace{0.8em}
+
+    \item \textbf{Codeforces 1234D - Distinct Characters Queries}
+
+    \vspace{0.3em}
+    {\small\url{https://codeforces.com/problemset/problem/1234/D}}
+
+    \vspace{0.8em}
+
+    \item \textbf{Codeforces 356A - Knight Tournament}
+    \hfill \textit{[For beginners]}
+
+    \vspace{0.3em}
+    {\small\url{https://codeforces.com/contest/356/problem/A}}
+
+    \vspace{0.8em}
+
+    \item \textbf{Codeforces 474F - Ant colony}
+
+    \vspace{0.3em}
+    {\small\url{https://codeforces.com/contest/474/problem/F}}
+
+    \vspace{0.8em}
+
+    \item \textbf{Codeforces 515E - Drazil and Park}
+
+    \vspace{0.3em}
+    {\small\url{https://codeforces.com/contest/515/problem/E}}
+
+    \vspace{0.8em}
+
+    \item \textbf{Codeforces 52C - Circular RMQ}
+
+    \vspace{0.3em}
+    {\small\url{https://codeforces.com/problemset/problem/52/C}}
+
+    \vspace{0.8em}
+
+    \item \textbf{Codeforces 121E - Lucky Array}
+
+    \vspace{0.3em}
+    {\small\url{https://codeforces.com/contest/121/problem/E}}
+
+    \vspace{0.8em}
+
+    \item \textbf{Codeforces 438D - The Child and Sequence}
+    \hfill \textit{[Also listed in Homework]}
+
+    \vspace{0.3em}
+    {\small\url{https://codeforces.com/contest/438/problem/D}}
+
+    \vspace{0.8em}
+
+    \item \textbf{Codeforces 446C - DZY Loves Fibonacci Numbers}
+    \hfill \textit{[Lazy propagation]}
+
+    \vspace{0.3em}
+    {\small\url{https://codeforces.com/contest/446/problem/C}}
+
+    \vspace{0.8em}
+
+    \item \textbf{Codeforces 610E - Alphabet Permutations}
+
+    \vspace{0.3em}
+    {\small\url{https://codeforces.com/problemset/problem/610/E}}
+
+    \vspace{0.8em}
+
+    \item \textbf{Codeforces 895E - Eyes Closed}
+
+    \vspace{0.3em}
+    {\small\url{https://codeforces.com/problemset/problem/895/E}}
+
+    \vspace{0.8em}
+
+    \item \textbf{Codeforces 580E - Kefa and Watch}
+
+    \vspace{0.3em}
+    {\small\url{https://codeforces.com/problemset/problem/580/E}}
+
+    \vspace{0.8em}
+
+    \item \textbf{Codeforces 558E - A Simple Task}
+
+    \vspace{0.3em}
+    {\small\url{https://codeforces.com/problemset/problem/558/E}}
+
+    \vspace{0.8em}
+
+    \item \textbf{Codeforces 920F - SUM and REPLACE}
+
+    \vspace{0.3em}
+    {\small\url{https://codeforces.com/problemset/problem/920/F}}
+
+    \vspace{0.8em}
+
+    \item \textbf{Codeforces 242E - XOR on Segment}
+    \hfill \textit{[Lazy propagation]}
+
+    \vspace{0.3em}
+    {\small\url{https://codeforces.com/problemset/problem/242/E}}
+
+    \vspace{0.8em}
+
+    \item \textbf{Codeforces 1114F - Please, another Queries on Array?}
+    \hfill \textit{[Lazy propagation]}
+
+    \vspace{0.3em}
+    {\small\url{https://codeforces.com/problemset/problem/1114/F}}
+
+    \vspace{0.8em}
+
+    \item \textbf{COCI - Deda}
+    \hfill \textit{[Last element smaller or equal to x / Binary search]}
+
+    \vspace{0.3em}
+    {\small\url{https://oj.uz/problem/view/COCI17_deda}}
+
+    \vspace{0.8em}
+
+    \item \textbf{Codeforces 869E - The Untended Antiquity}
+    \hfill \textit{[2D]}
+
+    \vspace{0.3em}
+    {\small\url{https://codeforces.com/problemset/problem/869/E}}
+
+    \vspace{0.8em}
+
+    \item \textbf{CSES 1143 - Hotel Queries}
+
+    \vspace{0.3em}
+    {\small\url{https://cses.fi/problemset/task/1143}}
+
+    \vspace{0.8em}
+
+    \item \textbf{CSES 1736 - Polynomial Queries}
+
+    \vspace{0.3em}
+    {\small\url{https://cses.fi/problemset/task/1736}}
+
+    \vspace{0.8em}
+
+    \item \textbf{CSES 1735 - Range Updates and Sums}
+    \hfill \textit{[Also listed in Homework]}
+
+    \vspace{0.3em}
+    {\small\url{https://cses.fi/problemset/task/1735}}
+
+\end{enumerate}
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+% ----------------------------------------------------
+\section*{V. Reading List}
+
+The following references are strongly recommended.
+
+\begin{itemize}
+    \item \textbf{Codeforces blog: Segment tree for graph problems}
+
+    {\small\url{https://codeforces.com/blog/entry/135761}}
+
+    \item \textbf{AtCoder Library documentation: \texttt{segtree}}
+
+    Excellent reference for thinking about segment trees in terms of monoids.
+
+    {\small\url{https://atcoder.github.io/ac-library/master/document_en/segtree.html}}
+
+    \item \textbf{Codeforces EDU / ITMO Academy: Segment Tree lesson}
+
+    Structured tutorial sequence with many progressively harder tasks.
+
+    {\small\url{https://codeforces.com/edu/course/2/lesson/4}}
+
+    \item \textbf{cp-algorithms: Segment Tree}
+
+    Reliable reference for standard implementations and common variants.
+
+    {\small\url{https://cp-algorithms.com/data_structures/segment_tree.html}}
+\end{itemize}
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+\noindent
+\textbf{Guidance:}
+\begin{itemize}
+    \item Before coding, define the \emph{node state}, the \emph{merge
+    operation}, and, if applicable, the \emph{lazy tag} and how tags compose.
+    \item Check whether the operation you are using is associative. Segment
+    trees rely on this heavily.
+    \item Be consistent with interval convention: either use
+    \texttt{[l, r]} everywhere or \texttt{[l, r)} everywhere.
+    \item For lazy propagation, composition order matters. ``Apply A then B''
+    is generally different from ``apply B then A''.
+    \item Many tree-descent queries require a monotone property. If your
+    predicate is not monotone, a binary search on the segment tree may fail.
+    \item Use \texttt{long long} when working with sums unless the constraints
+    make overflow impossible.
+    \item Do not default to a segment tree automatically. Sometimes a Fenwick
+    tree, sparse table, prefix sums, or offline sorting is simpler and faster.
+\end{itemize}
+
+\end{document}

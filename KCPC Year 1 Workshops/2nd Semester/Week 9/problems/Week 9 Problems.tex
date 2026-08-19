@@ -1,0 +1,371 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{hyperref}
+\renewcommand{\UrlFont}{\footnotesize}
+\usepackage{enumitem}
+\usepackage{titlesec}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
+\setlist[itemize]{noitemsep, topsep=4pt}
+\setlist[enumerate]{noitemsep, topsep=4pt}
+
+\title{KCPC-CS150 \\ Problem Sheet \\ Dynamic Programming and DP on Trees}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\noindent
+Developed by the KCPC Internal Committee, this problem sheet accompanies the
+\textit{Dynamic Programming} workshop.  
+Problems are divided into six categories:
+
+\begin{itemize}
+    \item Warm-up problems (basic DP state design and tree DP intuition)
+    \item Core workshop practice set (standard DP transitions, tree DP,
+          and rerooting)
+    \item Additional practice problems (classic one-dimensional, interval,
+          and grid DP)
+    \item DP contest collections (systematic revision)
+    \item Extended homework (advanced state design and optimisation)
+    \item Extra notes and reading material
+\end{itemize}
+
+\hrule
+\vspace{1em}
+
+% ----------------------------------------------------
+\section*{I. Warm-up Problems}
+
+These problems introduce the basic idea of dynamic programming and simple
+tree DP.
+
+\begin{enumerate}
+
+\item \textbf{AtCoder Educational DP Contest --- P. Independent Set}
+
+(Tree DP basics)
+
+\vspace{0.3em}
+{\url{https://atcoder.jp/contests/dp/tasks/dp_p}}
+
+\vspace{0.8em}
+
+\item \textbf{CSES --- Tree Diameter}
+
+(DFS on trees and path-based DP intuition)
+
+\vspace{0.3em}
+{\url{https://cses.fi/problemset/task/1131/}}
+
+\vspace{0.8em}
+
+\item \textbf{AtCoder Educational DP Contest --- O. Matching}
+
+(Bitmask DP warm-up)
+
+\vspace{0.3em}
+{\url{https://atcoder.jp/contests/dp/tasks/dp_o}}
+
+\end{enumerate}
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+% ----------------------------------------------------
+\section*{II. Core Workshop Practice Set}
+
+These problems should be attempted during the workshop.
+
+They focus on standard DP transitions, tree DP, and rerooting techniques.
+
+\begin{enumerate}
+
+\item \textbf{CSES --- Tree Distances I}
+
+(Tree DP / rerooting starter)
+
+\vspace{0.3em}
+{\url{https://cses.fi/problemset/task/1132/}}
+
+\vspace{0.8em}
+
+\item \textbf{CSES --- Tree Distances II}
+
+(Sum of distances on trees)
+
+\vspace{0.3em}
+{\url{https://cses.fi/problemset/task/1133/}}
+
+\vspace{0.8em}
+
+\item \textbf{CSES --- Subtree Queries}
+
+(Euler tour + subtree aggregation)
+
+\vspace{0.3em}
+{\url{https://cses.fi/problemset/task/1137/}}
+
+\vspace{0.8em}
+
+\item \textbf{LeetCode --- Binary Tree Maximum Path Sum}
+
+(Tree DP for best path value)
+
+\vspace{0.3em}
+{\url{https://leetcode.com/problems/binary-tree-maximum-path-sum/}}
+
+\vspace{0.8em}
+
+\item \textbf{LeetCode --- House Robber III}
+
+(Tree DP with two states)
+
+\vspace{0.3em}
+{\url{https://leetcode.com/problems/house-robber-iii/}}
+
+\vspace{0.8em}
+
+\item \textbf{LeetCode --- Count Good Nodes in Binary Tree}
+
+(DFS state propagation)
+
+\vspace{0.3em}
+{\url{https://leetcode.com/problems/count-good-nodes-in-binary-tree/}}
+
+\vspace{0.8em}
+
+\item \textbf{LeetCode --- Longest Univalue Path}
+
+(Path DP on trees)
+
+\vspace{0.3em}
+{\url{https://leetcode.com/problems/longest-univalue-path/}}
+
+\vspace{0.8em}
+
+\item \textbf{LeetCode --- Diameter of Binary Tree}
+
+(Classic tree DP)
+
+\vspace{0.3em}
+{\url{https://leetcode.com/problems/diameter-of-binary-tree/}}
+
+\vspace{0.8em}
+
+\item \textbf{LeetCode --- Sum of Distances in Tree}
+
+(Rerooting DP)
+
+\vspace{0.3em}
+{\url{https://leetcode.com/problems/sum-of-distances-in-tree/}}
+
+\vspace{0.8em}
+
+\item \textbf{LeetCode --- Minimum Height Trees}
+
+(Tree centering / breadth-first reduction)
+
+\vspace{0.3em}
+{\url{https://leetcode.com/problems/minimum-height-trees/}}
+
+\end{enumerate}
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+% ----------------------------------------------------
+\section*{III. Additional Practice Problems}
+
+These are good for strengthening your DP modelling and transition design.
+
+\begin{enumerate}
+
+\item \textbf{LeetCode 1137 --- N-th Tribonacci Number}
+
+(1D DP)
+
+\vspace{0.3em}
+{\url{https://leetcode.com/problems/n-th-tribonacci-number/description/}}
+
+\vspace{0.8em}
+
+\item \textbf{LeetCode 118 --- Pascal's Triangle}
+
+(Combinatorial DP)
+
+\vspace{0.3em}
+{\url{https://leetcode.com/problems/pascals-triangle/description/}}
+
+\vspace{0.8em}
+
+\item \textbf{LeetCode 1025 --- Divisor Game}
+
+(Game DP)
+
+\vspace{0.3em}
+{\url{https://leetcode.com/problems/divisor-game/description/}}
+
+\vspace{0.8em}
+
+\item \textbf{Codeforces 699C --- Vacations}
+
+(State DP)
+
+\vspace{0.3em}
+{\url{https://codeforces.com/problemset/problem/699/C}}
+
+\vspace{0.8em}
+
+\item \textbf{Codeforces 706C --- Hard problem}
+
+(String DP / transition design)
+
+\vspace{0.3em}
+{\url{https://codeforces.com/problemset/problem/706/C}}
+
+\vspace{0.8em}
+
+\item \textbf{Codeforces 607B --- Zuma}
+
+(Interval DP)
+
+\vspace{0.3em}
+{\url{https://codeforces.com/problemset/problem/607/B}}
+
+\vspace{0.8em}
+
+\item \textbf{LeetCode 221 --- Maximal Square}
+
+(Grid DP)
+
+\vspace{0.3em}
+{\url{https://leetcode.com/problems/maximal-square/description/}}
+
+\vspace{0.8em}
+
+\item \textbf{LeetCode 1039 --- Minimum Score Triangulation of Polygon}
+
+(Interval DP)
+
+\vspace{0.3em}
+{\url{https://leetcode.com/problems/minimum-score-triangulation-of-polygon/description/}}
+
+\end{enumerate}
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+% ----------------------------------------------------
+\section*{IV. DP Contests}
+
+\textbf{Recommended for systematic practice.}
+
+\begin{itemize}
+\item \textbf{AtCoder Educational DP Contest}
+
+{\small\url{https://atcoder.jp/contests/dp/tasks}}
+
+\item \textbf{CSES --- Dynamic Programming}
+
+{\small\url{https://cses.fi/problemset/list/}}
+
+\end{itemize}
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+% ----------------------------------------------------
+\section*{V. Extended Homework}
+
+\textbf{Important.} The following problems are significantly more difficult.  
+They should only be attempted after completing all problems in the warm-up and
+core sections.
+
+These exercises introduce more advanced tree DP, state optimisation, and
+problem modelling.
+
+\medskip
+
+\textbf{Kutay's Note.}  
+If you have any questions about the problems or underlying concepts, feel free
+to contact me or the Director of Competitive Programmes (Marcell).
+
+\vspace{0.8em}
+
+\begin{enumerate}
+
+\item \textbf{Codeforces 161D --- Distance in Tree}
+
+(Tree DP + counting pairs by distance)
+
+\vspace{0.3em}
+{\small\url{https://codeforces.com/problemset/problem/161/D}}
+
+\vspace{0.8em}
+
+\item \textbf{Codeforces 461B --- Appleman and Tree}
+
+(Tree DP with colour states)
+
+\vspace{0.3em}
+{\small\url{https://codeforces.com/problemset/problem/461/B}}
+
+\vspace{0.8em}
+
+\item \textbf{Project Euler 186 and 265}
+
+(Advanced combinatorics and DP-style reasoning)
+
+\vspace{0.3em}
+{\small\url{https://projecteuler.net/problem=186}}
+
+\vspace{0.2em}
+{\small\url{https://projecteuler.net/problem=265}}
+
+\end{enumerate}
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+% ----------------------------------------------------
+\section*{VI. Extra Notes and Reading Material}
+
+\textbf{Extra Notes.}
+
+\begin{itemize}
+\item Always define the state before you start coding.
+\item Identify the transition, base cases, and the order in which states are
+      computed.
+\item For tree DP, root the tree and process children before parents.
+\item For rerooting, compute one downward pass and one upward pass.
+\item If the state space is large, look for symmetry, pruning, or a smaller
+      representation.
+\item Memoization is often easiest for top-down DP; tabulation is often easier
+      to debug.
+\item When a problem says \textit{tree}, think about whether the answer is
+      rooted, unrooted, or needs rerooting.
+\end{itemize}
+
+\medskip
+
+\textbf{Reading Material.}
+
+\begin{itemize}
+\item Codeforces blog on DP techniques:
+{\small\url{https://codeforces.com/blog/entry/20935}}
+\item Review the official editorials for the AtCoder Educational DP Contest
+      after solving each task.
+\item Revisit the CSES tree problems with a focus on deriving the state and
+      transition yourself.
+\end{itemize}
+
+\end{document}
