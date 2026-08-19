@@ -1,0 +1,189 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{hyperref}
+\renewcommand{\UrlFont}{\footnotesize}
+\usepackage{enumitem}
+\usepackage{titlesec}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
+\setlist[itemize]{noitemsep, topsep=4pt}
+\setlist[enumerate]{noitemsep, topsep=4pt}
+
+\title{KCPC-CS150 \\ Problem Sheet \\ Data Structures I – Disjoint Set Union (DSU)}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\noindent
+Developed by the KCPC Internal Committee, this problem sheet accompanies the \textit{Data Structures I} workshop.  
+Problems are divided into three categories:
+
+\begin{itemize}
+    \item Warm-up problems (basic graph connectivity)
+    \item Core practice set (standard DSU and MST applications)
+    \item Extended homework (advanced graph modelling and DSU techniques)
+\end{itemize}
+
+\hrule
+\vspace{1em}
+
+% ----------------------------------------------------
+\section*{I. Warm-up Problems}
+
+These problems introduce the concept of graph connectivity and connected components.
+
+\begin{enumerate}
+
+\item \textbf{AtCoder Practice2 A — Disjoint Set Union}
+
+(Classic DSU implementation)
+
+\vspace{0.3em}
+{\url{https://atcoder.jp/contests/practice2/tasks/practice2_a}}
+
+\end{enumerate}
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+% ----------------------------------------------------
+\section*{II. Core Workshop Practice Set}
+
+These problems should be attempted during the workshop.
+
+They focus on using \textbf{Disjoint Set Union (Union-Find)} and understanding graph connectivity and minimum spanning trees.
+
+\begin{enumerate}
+
+\item \textbf{CSES — Road Construction}
+
+(Dynamic connectivity with DSU)
+
+\vspace{0.3em}
+{\url{https://cses.fi/problemset/task/1676/}}
+
+\vspace{0.8em}
+
+\item \textbf{CSES — Road Reparation}
+
+(Minimum Spanning Tree — Kruskal)
+
+\vspace{0.3em}
+{\url{https://cses.fi/problemset/task/1675/}}
+
+\vspace{0.8em}
+
+\item \textbf{LeetCode 684 — Redundant Connection}
+
+(Cycle detection with DSU)
+
+\vspace{0.3em}
+{\url{https://leetcode.com/problems/redundant-connection/}}
+
+\vspace{0.8em}
+
+\item \textbf{Codeforces 977E — Cyclic Components}
+
+(Detecting special connected components)
+
+\vspace{0.3em}
+{\url{https://codeforces.com/problemset/problem/977/E}}
+
+\end{enumerate}
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+% ----------------------------------------------------
+\section*{III. Extended Homework}
+
+\textbf{Important.} The following problems are significantly more difficult.  
+They should only be attempted after completing all problems in the warm-up and core sections.
+
+These exercises introduce more advanced graph modelling and DSU-based techniques.
+
+\medskip
+
+\textbf{Matthew's Note.}  
+If you have any questions about the problems or underlying concepts, feel free to contact me or the Director of Competitive Programmes (Marcell).
+
+\vspace{0.8em}
+
+\begin{enumerate}
+
+\item \textbf{CSES — Building Roads}
+
+(Connected components and graph construction)
+
+\vspace{0.3em}
+{\small\url{https://cses.fi/problemset/task/1666/}}
+
+\vspace{0.8em}
+
+\item \textbf{Codeforces 1151B — Dima and a Bad XOR}
+
+(Graph reasoning + constructive logic)
+
+\vspace{0.3em}
+{\small\url{https://codeforces.com/problemset/problem/1151/B}}
+
+\vspace{0.8em}
+
+\item \textbf{Codeforces 1514D — Cut and Stick}
+
+(Advanced data structures + query processing)
+
+\vspace{0.3em}
+{\small\url{https://codeforces.com/problemset/problem/1514/D}}
+
+\vspace{0.8em}
+
+\item \textbf{Codeforces 343D — Water Tree}
+
+(Tree operations + advanced data structures)
+
+\vspace{0.3em}
+{\small\url{https://codeforces.com/problemset/problem/343/D}}
+
+\vspace{0.8em}
+
+\item \textbf{Codeforces 500B — New Year Permutation}
+
+(Graph connectivity + permutation reconstruction)
+
+\vspace{0.3em}
+{\small\url{https://codeforces.com/problemset/problem/500/B}}
+
+\vspace{0.8em}
+
+\item \textbf{HackerRank — Merging Communities}
+
+(Classic DSU with component size queries)
+
+\vspace{0.3em}
+{\small\url{https://www.hackerrank.com/challenges/merging-communities}}
+
+\end{enumerate}
+
+\vspace{1em}
+
+\hrule
+\vspace{1em}
+
+\noindent
+\textbf{Guidance:}
+
+\begin{itemize}
+\item Learn the Disjoint Set Union structure (Union-Find).
+\item Use \textbf{path compression} and \textbf{union by rank / size}.
+\item Recognise when connectivity queries can be solved with DSU instead of graph traversal.
+\item For MST problems, apply \textbf{Kruskal's algorithm}.
+\end{itemize}
+
+\end{document}
