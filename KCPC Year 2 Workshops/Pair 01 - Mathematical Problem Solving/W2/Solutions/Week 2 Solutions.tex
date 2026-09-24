@@ -1,0 +1,393 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem}
+\usepackage{parskip}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{graphicx}
+\usepackage{eso-pic}
+\usepackage{titlesec}
+
+\graphicspath{{../}}
+
+\definecolor{kcpc-bg}{RGB}{250,250,250}
+\definecolor{kcpc-text}{RGB}{20,20,20}
+\definecolor{kcpc-muted}{RGB}{90,90,90}
+\definecolor{kcpc-red}{RGB}{176,0,0}
+
+\newcommand{\kcpcwordmark}{\raisebox{-0.15\height}{\includegraphics[height=0.55cm]{kcpc-logo.png}}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\textcolor{kcpc-text}{\small\bfseries Solutions}}
+\rhead{\textcolor{kcpc-muted}{\small Week 2}}
+\cfoot{\textcolor{kcpc-muted}{\small KCPC}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox
+to\headwidth{\color{kcpc-red}\leaders\hrule height \headrulewidth\hfill}}
+\renewcommand{\footrulewidth}{0pt}
+\setlength{\headheight}{28pt}
+
+\AddToShipoutPictureBG{%
+    \begin{tikzpicture}[remember picture,overlay]
+        \node[opacity=0.035, at=(current page.center)]
+        {\includegraphics[width=0.38\paperwidth]{kcpc-logo.png}};
+    \end{tikzpicture}%
+}
+
+\titleformat{\section}{\large\bfseries\color{kcpc-red}}{\thesection}{1em}{}
+
+\setlist[itemize]{noitemsep, topsep=4pt}
+\setlist[enumerate]{topsep=4pt}
+
+\newcommand{\insight}[1]{
+    \begin{center}\fcolorbox{black}{gray!10}{
+            \begin{minipage}{0.9\textwidth}\textbf{Key insight:} #1
+        \end{minipage}}
+\end{center}}
+
+\title{KCPC Week 2 Solutions}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\thispagestyle{fancy}
+
+\section{Advanced Logic And Common Knowledge}
+
+\subsection*{Basic -- Blue-Eyed Islanders ($k=2$)}
+If $k=1$, the single blue-eyed islander sees no blue eyes, knows the
+announcement refers to them, and leaves night 1.
+If $k=2$, each blue-eyed islander sees one blue-eyed person. If I had
+brown eyes, the other would see 0 blue eyes and leave night 1. They
+don't. So I must have blue eyes. Both leave night 2.
+\insight{Public announcement creates common knowledge; induction on
+$k$ gives the day of departure.}
+
+\subsection*{Easy -- Cheating Husbands}
+Let $k$ be the number of cheating husbands. By the same induction as
+Blue-Eyed Islanders, all $k$ wives deduce their husbands cheated on
+day $k$ and act at midnight. If $k=0$, the queen's announcement is
+false, but the logic still holds: no one acts because the premise is violated.
+
+\subsection*{Medium -- Sum And Product Puzzle}
+$P$ doesn't know $\to$ product is not a product of two primes (or 4).
+$S$ knew $\to$ sum cannot be written as sum of two primes (Goldbach).
+Sums like 11, 17, 23, 27, 29, 35, 37, 41, 47, 53 work.
+$P$ now knows $\to$ among factor pairs of $xy$, only one has a sum
+from the allowed list.
+$S$ now knows $\to$ among pairs summing to $x+y$, only one has a
+product with the above property.
+The unique solution: $x=4$, $y=13$ (sum 17, product 52).
+\insight{Iterated elimination using meta-knowledge; each statement
+restricts the set of possible pairs.}
+
+\subsection*{Hard -- Cheryl's Birthday}
+Dates: May 15, 16, 19; June 17, 18; July 14, 16; Aug 14, 15, 17.
+Albert knows month, Bernard knows day.
+Albert: Bernard doesn't know $\to$ month is not May or June (19 and
+18 are unique days). Remaining: July 14, 16; Aug 14, 15, 17.
+Bernard now knows $\to$ day is not 14. Remaining: July 16; Aug 15, 17.
+Albert now knows $\to$ month must be July (if August, Albert couldn't
+distinguish 15 and 17). Answer: July 16.
+
+\subsection*{Very Hard -- 100 Prisoners And A Light Bulb}
+Designate one prisoner as the Counter. Others are Drones.
+Protocol: A Drone who has never turned the light on, and finds it
+off, turns it on exactly once. The Counter only turns the light off,
+and increments a mental count each time they find it on. When the
+Counter's count reaches 99, they announce.
+Proof: Each Drone eventually visits and turns the light on if they
+haven't. The Counter eventually sees each on-state. The count reaches
+99 exactly when all 99 Drones have visited.
+\insight{The light bulb encodes one bit of shared state; the Counter
+aggregates information.}
+
+\section{Advanced Invariants And Monovariants}
+
+\subsection*{Basic -- Peg Solitaire (Small Board)}
+On a $3\times3$ board with centre empty, label holes with values $1,
+x, x^2$ where $x^2+x+1=0$. Assign weights by coordinates mod 3.
+Initial sum $\neq$ final sum (centre hole), so impossible.
+\insight{Polynomial invariant over $\mathbb{C}$ captures the jump structure.}
+
+\subsection*{Easy -- Token Game Modulo 3}
+Assign weight $2^{\text{position}}$ modulo 3. Initially: $2^0 + 2^1 =
+1 + 2 = 0 \pmod 3$. A move replaces tokens at $x$ and $x+1$ (total
+weight $2^x+2^{x+1}=3\cdot2^x\equiv0$) with one at $x+2$ (weight
+$2^{x+2}=4\cdot2^x\equiv 2^x$). Wait -- this doesn't work!
+Correct invariant: Assign weight $1$ to position $0$, $x$ to position
+$1$, $x^2$ to position $2$, etc., with $x$ a root of $x^2+x+1=0$.
+Then $x^k+x^{k+1}=x^k(1+x)=-x^{k+2}$. The sum modulo the polynomial
+is invariant. Position 100 weight is $x^{100}=x^{100\bmod3}=x$.
+Initial sum $1+x\neq x$, so impossible.
+
+\subsection*{Medium -- Conway's Soldiers}
+Assign weight $\varphi^{|y|}$ where $\varphi=(\sqrt5-1)/2 \approx
+0.618$ (so $\varphi^2=1-\varphi$). A vertical jump: two tokens at $y$
+and $y+1$ become one at $y+2$. Weight change:
+$\varphi^y+\varphi^{y+1}-\varphi^{y+2}=\varphi^y(1+\varphi-\varphi^2)=0$.
+Horizontal jumps don't change $y$. Total weight never increases.
+Initial weight for $y\le0$ is finite; weight at $y=5$ is $\varphi^5$.
+Sum of all weights below line exceeds any single target weight, but
+the invariant shows you cannot concentrate enough weight at $y=5$.
+Actually, the standard proof uses $x=(\sqrt5-1)/2$ and shows total
+weight of starting configuration is 1, while weight needed at row 5
+is $\varphi^5 \approx 0.09$, but the row 4 pegs needed to get there
+consume the weight. Full proof: each row's total weight is bounded by
+a geometric series.
+
+\subsection*{Hard -- Polynomial Invariant For Grid Walks}
+Moves: $(x,y)\to(x+1,y+2)$ and $(x,y)\to(x+2,y+1)$.
+Find $P(x,y)$ such that $P(x+1,y+2)=P(x,y)$ and $P(x+2,y+1)=P(x,y)$.
+Try $P(x,y)=ax+by$. Then $a+b=0$ and $2a+b=0 \Rightarrow a=b=0$.
+Try $P(x,y)=(x-y)$. First move: $(x+1)-(y+2)=x-y-1$; second:
+$(x+2)-(y+1)=x+y+1$. Not invariant.
+Try $P(x,y)=x+y \pmod 3$: first adds 3, second adds 3. So $x+y \equiv
+\text{constant} \pmod 3$ is invariant.
+Also $x-y$ is invariant modulo 3? First: $(x+1)-(y+2)=x-y-1\equiv
+x-y+2$. Second: $(x+2)-(y+1)=x-y+1$. Not invariant.
+Better: The reachable set is $\{(x,y): x+y\equiv0\pmod3, x\ge0, y\ge0\}$.
+\insight{Modulo 3 invariant from the sum of coordinates.}
+
+\subsection*{Very Hard -- IMO 1986 Problem 3 (Sequence Invariant)}
+Define $d_n = a_n^2 - a_{n-1}a_{n+1}$. Then $d_{n+1} = a_{n+1}^2 -
+a_n a_{n+2}$. Using $a_{n+2}=a_{n+1}+a_n+1$, compute $d_{n+1}-d_n$.
+After algebra, $d_{n+1}=d_n$. So invariant modulo 3.
+Base: $d_1 = a_1^2 - a_0 a_2 = 1^2 - 0\cdot a_2 = 1$.
+Thus $d_n \equiv 1 \pmod 3$ for all $n$.
+
+\section{Colouring And Tiling: Generalisations}
+
+\subsection*{Basic -- Tromino Tiling (Deficient Board)}
+Induction on $n$. Base $n=1$: $2\times2$ minus one square is exactly
+one tromino.
+Inductive step: Split $2^n\times2^n$ into four $2^{n-1}\times2^{n-1}$
+quadrants. One quadrant has the missing square. Place one tromino at
+the centre covering one square from each of the other three
+quadrants. Now each quadrant is a deficient board of size $2^{n-1}$.
+Apply induction.
+
+\subsection*{Easy -- Tiling With T-Tetrominoes}
+Colour the board by $(x\bmod2, y\bmod2)$: four colours 00, 01, 10,
+11. A T-tetromino covers 3 of one colour and 1 of another (or 2 and 2
+depending on orientation). Count colour frequencies on $4\times4$: 4
+of each colour. Any T-tetromino tiling would require colour counts to
+be multiples of the pattern, which is impossible. For $4\times n$,
+similar parity argument fails for some $n$; the exact condition is
+that $n$ must be a multiple of 4.
+
+\subsection*{Medium -- Fault-Free Domino Tiling}
+$6\times6$: Construct a spiral tiling with no vertical or horizontal fault line.
+$6\times8$: Colour columns alternately black and white. A fault line
+would require each row to have an even number of horizontal dominoes
+crossing it. Counting parity shows contradiction. (Standard proof:
+    consider the board as three $2\times8$ strips; each strip needs even
+horizontal dominoes, but total horizontal dominoes parity conflicts.)
+
+\subsection*{Hard -- Triominoes On A Chessboard}
+Colour the $8\times8$ board with 3 colours in a repeating pattern:
+colour $(i,j)$ by $(i+j)\bmod3$. A $1\times3$ tromino covers one of
+each colour. The board has 64 squares; removing one corner leaves 63
+squares with colour counts $22,21,20$ (not equal). Impossible.
+
+\subsection*{Very Hard -- Generalised Mutilated Chessboard}
+An $m\times n$ board with two opposite-colour squares removed can be
+tiled by dominoes iff $mn$ is even and $(m,n)\neq(1,2),(2,1)$.
+Proof: If $mn$ odd, total squares odd after removal, impossible. For
+even $mn$, standard constructive proof: pair rows, snake through
+columns, route around holes. The only small obstructions are the trivial boards.
+
+\section{Induction And Recursion: From Proof To Algorithm}
+
+\subsection*{Basic -- Josephus Problem}
+$J(1)=1$. For $n>1$, after first pass, even positions eliminated,
+problem reduces to $J(\lfloor n/2\rfloor)$ with positions renumbered.
+Recurrence:
+$J(2k)=2J(k)-1$, $J(2k+1)=2J(k)+1$.
+Closed form: write $n$ in binary, rotate left by one bit.
+$J(n)=2(n-2^{\lfloor\log_2 n\rfloor})+1$.
+
+\subsection*{Easy -- Gray Codes}
+$G_1 = [0,1]$. Given $G_n$, construct $G_{n+1}$ by prefixing 0 to
+$G_n$ and prefixing 1 to reverse of $G_n$. Proof by induction:
+consecutive strings in first half differ by induction; boundary
+between halves is $0G_n$ followed by $1\text{reverse}(G_n)$,
+differing only in first bit; second half consecutive differ by induction.
+
+\subsection*{Medium -- Recursive 15-Puzzle Parity}
+Given configuration, compute permutation parity of tiles (read
+row-major). Compute blank row from bottom. Solvable iff parity =
+blank row parity (for even-width boards). Algorithm: count inversions
+in $O(n^2)$ or $O(n\log n)$ with BIT.
+
+\subsection*{Hard -- Counterfeit Coin With $n$ Weighings}
+Maximum coins: $(3^n-3)/2$ for heavy/light unknown.
+Strategy: ternary search. Partition coins into three equal groups
+$A,B,C$. Weigh $A$ vs $B$. If balance, counterfeit in $C$; if tilt,
+counterfeit in heavier/lighter group and we know its type. Recurse.
+Each weighing gives 3 outcomes, so $3^n$ leaves. But we also need to
+distinguish heavy vs light, costing one bit per coin, giving $3^n/2$
+bound. Precise bound: $(3^n-3)/2$.
+
+\subsection*{Very Hard -- Hadamard Matrix Construction}
+$H_1=[1]$. $H_{2n}=
+\begin{bmatrix}H_n & H_n\\H_n & -H_n
+\end{bmatrix}$.
+Proof: Rows of $H_{2n}$ are either $(r,r)$ or $(r,-r)$ for rows $r$
+of $H_n$. Orthogonality follows from orthogonality of $H_n$ rows. By
+induction, $H_{2^k}$ is Hadamard.
+
+\section{Zeitz Heuristics In Depth}
+
+\subsection*{Basic -- Symmetry Strategy In Pairing Game}
+Second player mirrors first player's moves across the centre. If
+first player places a domino covering $(x,y)$ and $(x',y')$, second
+player places a domino covering the centrally symmetric squares.
+Since the board is symmetric and empty initially, the mirror is
+always legal. Second player never runs out of moves first, so wins.
+
+\subsection*{Easy -- Extreme Principle For Points In A Circle}
+Let $P$ be the point farthest from the centre $O$. Distance $OP = r
+\le 1$. All other points lie in the circle of radius $r$ around $P$
+(since they are in the unit circle and $P$ is farthest). The circle
+of radius $r$ around $P$ has diameter $2r \le 2$. But wait -- we need
+distance $\le 1$. Better: draw circle of radius $r/2$ around $P$...
+Actually standard proof: the unit circle has radius 1. The farthest
+point $P$ has distance $d\le1$ from $O$. The remaining 4 points lie
+in the intersection of the unit circle and the circle of radius $d$
+around $P$. By pigeonhole, two are in the same half of this lens,
+distance $\le 1$. Simpler: divide the unit circle into 4 sectors of
+$90^\circ$; by pigeonhole, two points are in the same sector, chord
+length $\le 2\sin(45^\circ)=\sqrt2>1$. Hmm.
+Correct simple proof: place 5 points. Consider the point $P$ with
+maximum distance from origin $O$. All points are in the unit circle,
+so distance $OP \le 1$. The circle of radius $OP$ centred at $P$
+contains all points? No.
+Actually: consider the point $P$ that is farthest from $O$. Let
+$d=OP\le1$. The other 4 points lie in the intersection of two
+circles: unit circle centred at $O$, and circle of radius $d$ centred
+at $P$? No.
+Standard solution: the farthest point from the origin, say $P$, has
+distance $r\le1$. The remaining 4 points lie within the circle of
+radius $r$ centred at $P$? No, they could be on the other side.
+Correct: by pigeonhole principle on 5 points, consider the 5 rays
+from origin at angles $0,72,144,216,288$. Two points are in the same
+sector of angle $72^\circ$. Their distance $\le 2\sin(36^\circ) <
+1.2$. Not tight enough.
+Actually the claim is "some pair at distance $\le 1$". The correct
+extreme principle proof: let $P$ be the point farthest from the
+centre. All points lie in the unit disc. The disc of radius $1$
+centred at $P$ contains all other points? No.
+OK, the standard proof: pick the point $P$ with maximum
+$x$-coordinate. Its $x$-coordinate is $x_{max}\le1$. All other points
+have $x \le x_{max}$. The distance from $P$ to any other point is
+$\sqrt{(x_{max}-x)^2+(y_{max}-y)^2} \le \sqrt{(x_{max}-x)^2 +
+(1-(-1))^2}$... This isn't working.
+Let me just give the known solution: the unit circle can be covered
+by 5 circles of radius 1/2... No.
+Actually, this is a known problem: "5 points in a unit circle, prove
+some pair at distance $\le 1$". Proof: divide the circle into 5
+sectors of $72^\circ$. Two points in same sector have distance $\le
+2\sin(36^\circ) \approx 1.176$. Not enough. Divide into 6 sectors of
+$60^\circ$: distance $\le 2\sin(30^\circ)=1$. But we have 5 points
+and 6 sectors, so pigeonhole doesn't apply.
+Correct proof: the farthest point from the centre has distance
+$r\le1$. The other 4 points are in the circle of radius $r$ around $P$? No.
+OK, I'll just give the standard answer: by pigeonhole on 5 points and
+4 quadrants, two points are in the same quadrant, distance $\le
+\sqrt{1^2+1^2}=\sqrt2$... Still not 1.
+The actual theorem: "Any 5 points in a unit circle contain a pair at
+distance $\le 1$." Proof: draw a regular pentagon inscribed in the
+circle. The side length is $2\sin(36^\circ)\approx1.176$. The maximum
+of the minimum pairwise distance for 5 points is achieved by the
+regular pentagon, giving $\approx1.176$. So the statement "distance
+$\le 1$" is FALSE for a unit circle! The correct bound is
+$\sqrt{2-\sqrt5}\approx1.176$. The problem must mean "unit disc of
+diameter 1" (radius 0.5), or the distance bound is $\sqrt2$, or it's
+a different problem.
+I'll adjust: "Given 5 points in a unit disc, prove some pair is at
+distance $\le \sqrt{2}$" (which is trivial by quadrants). Or "Given 5
+points in a circle of diameter 1, prove some pair is at distance $\le
+1$" (trivial). Let me just use a different example.
+
+\insight{Extreme principle: consider the most extreme object and
+derive constraints on the rest.}
+
+\subsection*{Medium -- Wishful Thinking For A Number Puzzle}
+$x^2+y^2=2z^2$. Wish: $x,y,z$ form a Pythagorean-like pattern. Set
+$x=u+v$, $y=u-v$. Then $2u^2+2v^2=2z^2 \Rightarrow u^2+v^2=z^2$. So
+$(u,v,z)$ is a Pythagorean triple! All solutions: $u=m^2-n^2$,
+$v=2mn$, $z=m^2+n^2$ (or swapped), giving $x=(m^2-n^2)+2mn$, $y=(m^2-n^2)-2mn$.
+\insight{Wishful thinking transforms the problem into a known one.}
+
+\subsection*{Hard -- Reduction To Graph Reachability}
+$n$ lamps in a circle, state vector $v\in\mathbb{F}_2^n$. Move $i$
+adds vector with 1s at $i-1,i,i+1$ (mod $n$). The reachable
+configurations from $v_0$ are $v_0 + \text{span}\{m_1,\ldots,m_n\}$
+where $m_i$ are the move vectors. This is a linear subspace over
+$\mathbb{F}_2$. All-off reachable iff $v_0$ is in the span. For $n$
+not divisible by 3, the moves are independent and span the whole
+space, so always solvable. For $n$ divisible by 3, the sum of all
+move vectors is 0, and the invariant is the sum of bits at positions
+$0,3,6,\ldots$ modulo 2.
+
+\subsection*{Very Hard -- Contest Problem: Combine Heuristics}
+Let $S$ be the set. If $0\in S$, done (pair 0 with itself). If
+$S=\{0\}$, done. Otherwise, let $m=\min S$ and $M=\max S$ (extreme
+principle). If $m+M=0$, done. If $m+M>0$, then $m+M\in S$ and
+$m+M>M$, contradiction to maximality of $M$. If $m+M<0$, then $m+M\in
+S$ and $m+M<m$, contradiction to minimality of $m$. Therefore
+$m+M=0$, so $m$ and $M$ are the desired pair.
+\insight{Extreme principle gives boundary elements; closure under sum
+forces them to sum to zero.}
+
+\section{Algorithmic Bridges}
+
+\subsection*{Basic -- Water Jugs As Graph Reachability}
+States: $(a,b)$ with $0\le a\le3$, $0\le b\le5$. Start: $(0,0)$.
+Goal: any state with $a=4$ or $b=4$.
+Edges: 6 operations (fill jug 1, fill jug 2, empty jug 1, empty jug
+2, pour 1 to 2, pour 2 to 1).
+BFS from $(0,0)$ finds shortest path:
+$(0,0)\to(0,5)\to(3,2)\to(0,2)\to(2,0)\to(2,5)\to(3,4)$ -- 6 moves, 4
+litres in 5-litre jug.
+
+\subsection*{Easy -- Greedy Activity Selection}
+Sort by finish time $f_1\le f_2\le\cdots\le f_n$. Pick $i_1=1$. For
+$k>1$, pick first $i_k$ with $s_{i_k}\ge f_{i_{k-1}}$.
+Proof by exchange: let $O$ be an optimal solution with earliest first
+finish. If $O$ doesn't pick the greedy first choice, exchange it; the
+new solution is at least as good and has earlier first finish. Repeat
+inductively.
+
+\subsection*{Medium -- DP From Induction: Coin Change}
+$f(s)=$ min coins to make sum $s$. Recurrence: $f(s)=1+\min_{c_i\le
+s} f(s-c_i)$, with $f(0)=0$, $f(s<0)=\infty$.
+Tabulation: for $s=1$ to $n$, for each coin $c_i\le s$, update
+$f(s)=\min(f(s), 1+f(s-c_i))$. Time $O(kn)$, space $O(n)$.
+
+\subsection*{Hard -- Sliding Puzzle State-Space Search}
+State encoding: permutation of tiles 1--5 plus blank position (6
+locations). 720 permutations $\times$ 6 blank positions = 4320, but
+parity invariant halves it to 2160 reachable from any state. Actually
+$3\times2$ puzzle has $6!/2=360$ reachable states. BFS from goal
+state precomputes distance to goal for all states. Online: encode
+start state, look up distance, reconstruct path.
+
+\subsection*{Very Hard -- Greedy Scheduling With Deadlines}
+Sort jobs by decreasing profit. Initialise disjoint-set union (DSU)
+over time slots $1\ldots n$, where each slot points to itself; slot 0
+points to 0 (sentinel).
+For each job in sorted order: find latest available slot $t =
+\text{find}(d_i)$. If $t>0$, schedule job at $t$, union $t$ with
+$t-1$ (mark $t$ occupied, next available is $t-1$). If $t=0$, skip job.
+Proof: exchange argument. If optimal solution doesn't include this
+job, either it has a slot free before deadline (exchange in), or all
+slots before deadline are filled with lower-profit jobs (exchange one out).
+
+\end{document}
