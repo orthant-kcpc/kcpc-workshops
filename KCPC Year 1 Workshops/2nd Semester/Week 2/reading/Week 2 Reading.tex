@@ -1,0 +1,100 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=0.8in]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{graphicx}
+\usepackage{eso-pic}
+
+\graphicspath{{../}}
+
+\definecolor{kcpc-text}{RGB}{20,20,20}
+\definecolor{kcpc-muted}{RGB}{90,90,90}
+\definecolor{kcpc-red}{RGB}{176,0,0}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\textcolor{kcpc-text}{\small\bfseries Reading}}
+\rhead{\textcolor{kcpc-muted}{\small Week 2}}
+\cfoot{\textcolor{kcpc-muted}{\small KCPC}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox
+to\headwidth{\color{kcpc-red}\leaders\hrule height \headrulewidth\hfill}}
+\renewcommand{\footrulewidth}{0pt}
+\setlength{\headheight}{28pt}
+
+\AddToShipoutPictureBG{%
+    \begin{tikzpicture}[remember picture,overlay]
+        \node[opacity=0.035, at=(current page.center)]
+        {\includegraphics[width=0.38\paperwidth]{kcpc-logo.png}};
+    \end{tikzpicture}%
+}
+
+\titleformat{\section}{\large\bfseries\color{kcpc-red}}{}{0pt}{}
+\setlist[itemize]{noitemsep, topsep=4pt}
+\setlist[enumerate]{noitemsep, topsep=4pt}
+
+\title{KCPC Week 2 Reading\\Techniques for Investigation}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{fancy}
+
+\noindent
+This document contains recommended reading for Workshop 2: Techniques for Investigation. These texts deepen your mathematical problem solving toolkit, spanning heuristics, induction, spatial visualisation, invariance, symmetry, the extreme principle, and bitwise competitive programming.
+
+\section*{I. Core Problem-Solving Heuristics}
+
+\subsection*{The Art and Craft of Problem Solving (Paul Zeitz)}
+John Wiley \& Sons, 2nd Edition, 2006.
+
+\begin{itemize}
+    \item \textbf{Chapter 2: Strategies for Investigation} Psychological strategies, wishful thinking, ``make it easier'', drawing diagrams, and identifying patterns from small examples.
+    \item \textbf{Chapter 3: Tactics for Solving Problems} Symmetry (geometric and algebraic), parity, and the extreme principle.
+    \item \textbf{Chapter 7: Modular Arithmetic \& Functional Equations} Techniques for substituting zero or special values into multi-variable equations.
+\end{itemize}
+
+\subsection*{How to Solve It: A New Aspect of Mathematical Method (George P{\'o}lya)}
+Princeton University Press, 1945 / 2004.
+
+\begin{itemize}
+    \item \textbf{Part I: In the Classroom} Understanding the problem, devising a plan, carrying out the plan, and looking back.
+    \item \textbf{Heuristic Dictionary} Analogy, auxiliary problems, decomposing and recombining, inductive vs. deductive discovery, and specialization.
+\end{itemize}
+
+\section*{II. The Extreme Principle and Invariants}
+
+\subsection*{Problem-Solving Strategies (Arthur Engel)}
+Springer, 1998.
+
+\begin{itemize}
+    \item \textbf{Chapter 2: Coloring Proofs} Grid tilings, dominoes, trominoes, and invariant checkerboard colorings.
+    \item \textbf{Chapter 3: The Extremal Principle} Choosing minimal and maximal elements in finite graphs, discrete geometries, and number systems to produce immediate contradictions.
+\end{itemize}
+
+\section*{III. Bitwise Algorithms and Fibonacci Bases}
+
+\subsection*{CP-Algorithms: Bit Manipulation and Bitmasking}
+\url{https://cp-algorithms.com/algebra/all-submasks.html}
+
+\begin{itemize}
+    \item Bitwise operations ($\&, |, \oplus$), population count (\texttt{\_\_builtin\_popcountll}), and iterating over submasks in $O(3^N)$.
+    \item Structural explanation of $f(2n) = f(n)$ and $f(2n+1) = f(n)+1$ as bit-shift operations.
+\end{itemize}
+
+\subsection*{Competitive Programmer's Handbook (Antti Laaksonen)}
+\url{https://cses.fi/book/book.pdf}
+
+\begin{itemize}
+    \item \textbf{Chapter 10: Bit Manipulation} Bit representations, bitwise operations, and dynamic programming with bitmasks.
+    \item \textbf{Chapter 21: Number Theory} Fibonacci properties, Zeckendorf representation, and fast matrix exponentiation.
+\end{itemize}
+
+\end{document}
