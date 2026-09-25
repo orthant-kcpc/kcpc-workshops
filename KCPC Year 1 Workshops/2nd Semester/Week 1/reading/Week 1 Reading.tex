@@ -1,0 +1,112 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=0.8in]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{graphicx}
+\usepackage{eso-pic}
+
+\graphicspath{{../}}
+
+\definecolor{kcpc-text}{RGB}{20,20,20}
+\definecolor{kcpc-muted}{RGB}{90,90,90}
+\definecolor{kcpc-red}{RGB}{176,0,0}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\textcolor{kcpc-text}{\small\bfseries Reading}}
+\rhead{\textcolor{kcpc-muted}{\small Week 1}}
+\cfoot{\textcolor{kcpc-muted}{\small KCPC}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox
+to\headwidth{\color{kcpc-red}\leaders\hrule height \headrulewidth\hfill}}
+\renewcommand{\footrulewidth}{0pt}
+\setlength{\headheight}{28pt}
+
+\AddToShipoutPictureBG{%
+    \begin{tikzpicture}[remember picture,overlay]
+        \node[opacity=0.035, at=(current page.center)]
+        {\includegraphics[width=0.38\paperwidth]{kcpc-logo.png}};
+    \end{tikzpicture}%
+}
+
+\titleformat{\section}{\large\bfseries\color{kcpc-red}}{}{0pt}{}
+\setlist[itemize]{noitemsep, topsep=4pt}
+\setlist[enumerate]{noitemsep, topsep=4pt}
+
+\title{KCPC Week 1 Reading\\Introduction to Competitive Programming, Invariants, and Logic}
+\author{}
+\date{}
+
+\begin{document}
+
+\maketitle
+\thispagestyle{fancy}
+
+\noindent
+This document contains curated supplementary readings for Workshop 1. These texts expand upon the core themes introduced in the session: competitive programming fundamentals, invariant reasoning, epistemic logic (common knowledge), and impartial combinatorial games.
+
+\section*{I. Competitive Programming Fundamentals}
+
+\subsection*{Competitive Programmer's Handbook (Antti Laaksonen)}
+\url{https://cses.fi/book/book.pdf}
+
+\begin{itemize}
+    \item \textbf{Chapter 1: Introduction} Contest environment, basic language features, and input/output optimisation.
+    \item \textbf{Chapter 2: Time Complexity} Asymptotic notation ($O$-notation), estimating operation counts per second ($10^8$ ops/sec rule), and detecting TLE bounds.
+\end{itemize}
+
+\subsection*{Competitive Programming 4 (Steven Halim, Felix Halim, Suhendry)}
+\url{https://cpbook.net/}
+
+\begin{itemize}
+    \item \textbf{Chapter 1: Introduction} Contest categories (ICPC, IOI, Codeforces, AtCoder), standard submission verdicts, and typical problem pitfalls.
+\end{itemize}
+
+\section*{II. Invariants and Mathematical Heuristics}
+
+\subsection*{Problem-Solving Strategies (Arthur Engel)}
+\url{https://link.springer.com/book/10.1007/978-0-387-21607-2}
+
+\begin{itemize}
+    \item \textbf{Chapter 1: The Invariance Principle} Foundational treatment of invariants, monovariants, and coloring arguments in discrete dynamical processes.
+\end{itemize}
+
+\subsection*{The Art and Craft of Problem Solving (Paul Zeitz)}
+John Wiley \& Sons, 2006.
+
+\begin{itemize}
+    \item \textbf{Chapter 3: Tactics for Solving Problems} Symmetry, parity, extremal thinking, and simplifying assumptions.
+\end{itemize}
+
+\section*{III. Epistemic Logic and Common Knowledge}
+
+\subsection*{Reasoning About Knowledge (Fagin, Halpern, Moses, Vardi)}
+MIT Press, 2003. \url{https://mitpress.mit.edu/9780262562003/reasoning-about-knowledge/}
+
+\begin{itemize}
+    \item \textbf{Chapter 1: Introduction} The distinction between mutual knowledge and common knowledge; the formal mud-on-the-forehead puzzle.
+    \item \textbf{Chapter 2: A Model for Knowledge} Kripke structures and epistemic possible worlds.
+\end{itemize}
+
+\section*{IV. Combinatorial Game Theory}
+
+\subsection*{Game Theory (Thomas S. Ferguson)}
+\url{https://www.math.ucla.edu/~tom/Game_Theory/comb.pdf}
+
+\begin{itemize}
+    \item \textbf{Part I: Impartial Combinatorial Games} Subtraction games, normal-play conventions, $N$- and $P$-positions, and backward induction on directed acyclic graphs.
+\end{itemize}
+
+\subsection*{CP-Algorithms: Games on Arbitrary Graphs}
+\url{https://cp-algorithms.com/game_theory/games_on_graphs.html}
+
+\begin{itemize}
+    \item Topological determination of winning and losing states via retro-analysis / backward induction.
+\end{itemize}
+
+\end{document}
