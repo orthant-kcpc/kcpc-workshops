@@ -18,6 +18,6 @@ Navigate to the following directories depending on the workshop category you nee
 ## Workflow & Guidelines
 
 - **Templates & Conventions**: Existing workshops (such as [`KCPC Year 1 Workshops/2nd Semester/Week 5`](./KCPC%20Year%201%20Workshops/2nd%20Semester/Week%205)) serve as templates for LaTeX formatting (e.g. the KCPC Beamer theme, problem sheets, solutions, papers, and reading lists). Mirror these conventions when authoring new materials.
-- **Compilation & PDF Generation**: Whenever source files (`.tex` or `.typ`) are created or modified, compile them (e.g. using `latexmk`, `pdflatex`, or `typst compile`) into PDFs and place the output PDFs directly in the appropriate workshop root as specified in the folder layout.
+- **Compilation & PDF Generation**: Whenever source files (`.tex` or `.typ`) are created or modified, compile them into PDFs and place the output PDFs directly in the appropriate workshop root as specified in the folder layout. Run `make ROOT="path/to/workshop"` from the repository root to compile every LaTeX source below a workshop directory; omitting `ROOT` opens an interactive prompt. Typst workshops can be compiled directly with `typst compile`.
 - **Always Keep PDFs Up to Date**: Compiled PDFs must always be kept in sync with their source files—never commit or leave outdated PDFs.
 - **Keep AGENTS.md Up to Date**: If repository structure, conventions, or tooling change, update [`AGENTS.md`](./AGENTS.md) accordingly so it never falls out of date.

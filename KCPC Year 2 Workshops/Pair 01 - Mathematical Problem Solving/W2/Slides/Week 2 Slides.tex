@@ -1,0 +1,336 @@
+\documentclass{beamer}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{tikz}
+
+\graphicspath{{../}}
+
+% KCPC theme
+\usetheme{default}
+\useinnertheme{rectangles}
+\useoutertheme{default}
+
+\beamerdefaultoverlayspecification{<+->}
+
+\setbeamertemplate{navigation symbols}{}
+
+% Colours
+\definecolor{kcpc-bg}{RGB}{250,250,250}
+\definecolor{kcpc-text}{RGB}{20,20,20}
+\definecolor{kcpc-muted}{RGB}{90,90,90}
+\definecolor{kcpc-red}{RGB}{176,0,0}
+
+\setbeamercolor{background canvas}{bg=kcpc-bg}
+\setbeamercolor{normal text}{fg=kcpc-text}
+\setbeamercolor{frametitle}{fg=kcpc-text,bg=kcpc-bg}
+\setbeamercolor{title}{fg=kcpc-text}
+\setbeamercolor{subtitle}{fg=kcpc-muted}
+\setbeamercolor{structure}{fg=kcpc-red}
+
+\setbeamerfont{title}{series=\bfseries,size=\Large}
+\setbeamerfont{frametitle}{series=\bfseries,size=\large}
+
+\setlength{\parskip}{0.4em}
+
+\setbeamertemplate{itemize item}{$\rightarrow$}
+\setbeamertemplate{itemize subitem}{$\rightarrow$}
+
+\setbeamertemplate{headline}{
+    \vspace{0.2cm}
+    \hspace{0.2cm}
+    \textcolor{kcpc-muted}{\small\insertsection}
+    \hfill
+}
+
+\setbeamertemplate{footline}{
+    \hspace{0.2cm}
+    \textcolor{kcpc-muted}{\small KCPC}
+    \hfill
+    \vspace{0.3cm}
+}
+
+\setbeamertemplate{background}{
+    \begin{tikzpicture}[remember picture,overlay]
+        \node[
+            opacity=0.035,
+            at=(current page.center)
+        ] {
+            \includegraphics[width=0.55\paperwidth]{kcpc-logo.png}
+        };
+    \end{tikzpicture}
+}
+
+\AtBeginSection[]{
+    \begin{frame}[plain]
+        \vfill
+        \centering
+        {\Large\bfseries \insertsection}
+        \vfill
+    \end{frame}
+}
+
+\title{Mathematical Problem Solving II}
+\subtitle{Wishful Thinking, Symmetry, Extreme Principle, and Reduction}
+\author{KCPC}
+\date{Week 2}
+
+\begin{document}
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+\begin{frame}{Overview}
+    \tableofcontents
+\end{frame}
+
+\section{Week 1 Recap}
+
+\begin{frame}{Week 1 Recap}
+    \pause
+    \begin{itemize}
+        \item Last week we built a toolkit for reasoning about puzzles.
+            \begin{itemize}
+                \item Logic tracks knowledge and inference.
+                \item Invariants identify what cannot change.
+                \item Colouring turns geometry into counting.
+                \item Induction reduces the problem size.
+                \item Monovariants track progress towards a goal.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\section{Heuristic Methods}
+
+\begin{frame}{What are Heuristics?}
+    \pause
+    A \textbf{heuristic} is a strategy or rule of thumb that helps
+    you choose what to try when no solution is obvious. It does not
+    guarantee success, but it can expose useful structure.
+
+    The key question is: \textbf{what viewpoint makes the structure
+    of the problem easier to see?}
+
+    \pause
+    \begin{itemize}
+        \item \textbf{Wishful thinking:} imagine a simpler or nicer form.
+        \item \textbf{Symmetry:} pair objects or equivalent cases.
+        \item \textbf{Extreme principle:} inspect a boundary object.
+        \item \textbf{Reduction:} transform the problem into a familiar one.
+    \end{itemize}
+\end{frame}
+
+\section{Wishful Thinking}
+
+\begin{frame}{Wishful Thinking: Simplify Until Solvable}
+    \pause
+    \begin{itemize}
+        \item Assume the answer has a nice form. What would make this easy?
+            \begin{itemize}
+                \item ``If only the numbers were smaller...''
+                \item ``If only the constraints were simpler...''
+                \item ``What would the solution look like if I
+                    already knew it?''
+                \item Then find the reduction from the real problem to the
+                    simplified one.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Worked Example: Wishful Thinking -- Sum of Squares}
+    Construct infinitely many integer solutions to
+    $x^2 + y^2 = 2z^2$ with $x,y,z > 0$.
+
+    Wishful thinking: what if $x+y$ and $x-y$ had a nice structure?
+\end{frame}
+
+\begin{frame}{Solution: Sum Of Squares}
+    \pause
+    \begin{itemize}
+        \item Set $x = u+v$, $y = u-v$.
+        \item $x^2 + y^2 = (u+v)^2 + (u-v)^2 = 2u^2 + 2v^2 = 2z^2$.
+        \item So $u^2 + v^2 = z^2$ (a Pythagorean triple!)
+        \item Take $u = m^2-n^2$, $v = 2mn$, $z = m^2+n^2$.
+        \item Then $x = (m^2-n^2) + 2mn$, $y = (m^2-n^2) - 2mn$.
+        \item For example, fixing $n=1$ and taking $m\ge3$ gives
+            infinitely many positive solutions.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Student Exercises: Wishful Thinking}
+    \begin{itemize}
+        \item<1-> \textbf{Basic:} Complete the Square
+        \item<1-> \textbf{Easy:} Make the Sum Telescope
+        \item<1-> \textbf{Medium:} A Number Puzzle
+        \item<1-> \textbf{Hard:} Improve the Recurrence
+        \item<1-> \textbf{Very Hard:} Factor the Equation
+    \end{itemize}
+\end{frame}
+
+\section{Symmetry}
+
+\begin{frame}{Symmetry: Exploit Invariance Under Transformations}
+    \pause
+    \begin{itemize}
+        \item Look for operations that leave the problem unchanged.
+            \begin{itemize}
+                \item Pairing strategy: if the opponent moves, reply
+                    symmetrically.
+                \item Canonical form: transform to a standard representative.
+                \item Symmetric positions often have symmetric optimal moves.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Worked Example: Symmetry -- Pairing Game}
+    Two players alternately place a \textbf{horizontal} domino on a
+    $4\times4$ board. Dominoes cannot overlap. The player who cannot
+    move loses.
+    Show the second player has a winning strategy.
+\end{frame}
+
+\begin{frame}{Solution: Pairing Game}
+    \pause
+    \begin{itemize}
+        \item Mirror each move across the line between the middle two rows.
+        \item This swaps rows 1 and 4, and rows 2 and 3.
+        \item A horizontal domino stays in one row, so it never overlaps
+            its reflection across this line.
+        \item After each reply, the occupied squares are symmetric;
+            the first player's next legal move has a legal, empty mirror.
+        \item The second player never runs out of moves first, so wins.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Student Exercises: Symmetry}
+    \begin{itemize}
+        \item<1-> \textbf{Basic:} Pairing Game
+        \item<1-> \textbf{Easy:} Coins on a Circular Table
+        \item<1-> \textbf{Medium:} A Symmetric Integral
+        \item<1-> \textbf{Hard:} Odd Skew-Symmetric Matrices
+        \item<1-> \textbf{Very Hard:} Six People
+    \end{itemize}
+\end{frame}
+
+\section{Extreme Principle}
+
+\begin{frame}{Extreme Principle: The Boundary Holds The Answer}
+    \pause
+    \begin{itemize}
+        \item Consider the largest, smallest, leftmost, rightmost, or
+            most extreme object.
+            \begin{itemize}
+                \item The extremal object has restricted neighbours.
+                \item Often leads to contradiction or constructive
+                    greedy choice.
+                \item Works in geometry, combinatorics, number
+                    theory, and algorithms.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Worked Example: Extreme Principle -- A Finite Set}
+    Let $S$ be a finite, non-empty set of integers such that
+    $a+b\in S$ whenever $a,b\in S$.
+
+    Prove that $S=\{0\}$.
+\end{frame}
+
+\begin{frame}{Solution: A Finite Set}
+    \pause
+    \begin{itemize}
+        \item Examine the largest and smallest elements of $S$.
+        \item Let $M$ be the largest element. If $M>0$, then
+            $M+M=2M\in S$, contradicting maximality.
+        \item Therefore $M\le 0$.
+        \item Let $m$ be the smallest element. If $m<0$, then
+            $m+m=2m\in S$, contradicting minimality.
+        \item Therefore $m\ge 0$.
+        \item Hence $m=M=0$, so $S=\{0\}$.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Student Exercises: Extreme Principle}
+    \begin{itemize}
+        \item<1-> \textbf{Basic:} A Finite Set Closed Under Addition
+        \item<1-> \textbf{Easy:} Minimum Degree Forces a Cycle
+        \item<1-> \textbf{Medium:} An Empty Triangle
+        \item<1-> \textbf{Hard:} A Path Through a Tournament
+        \item<1-> \textbf{Very Hard:} Longest Paths Meet
+    \end{itemize}
+\end{frame}
+
+\section{Reduction}
+
+\begin{frame}{Reduction: Change The Representation}
+    \pause
+    \begin{itemize}
+        \item Replace the problem with an equivalent one that is easier to see.
+            \begin{itemize}
+                \item Graph modelling: vertices and edges instead of story.
+                \item Algebraic encoding: variables and equations
+                    instead of logic.
+                \item Modulo arithmetic: finite states instead of infinite.
+                \item This is the bridge to competitive programming.
+            \end{itemize}
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Worked Example: Reduction -- River Crossing}
+    A farmer must take a wolf, a goat, and a cabbage across a river.
+    The boat carries only the farmer and at most one item.
+
+    The wolf cannot be left with the goat, and the goat cannot be left
+    with the cabbage. How can everyone cross safely?
+\end{frame}
+
+\begin{frame}{Solution: River Crossing}
+    \pause
+    \begin{itemize}
+        \item Represent a situation by which riverbank contains the farmer,
+            wolf, goat, and cabbage.
+        \item Keep only safe situations and connect two when one legal boat
+            crossing changes one into the other.
+        \item The puzzle is now a path problem from the all-left state to the
+            all-right state.
+        \item One path is: goat over, farmer back, wolf over, goat back,
+            cabbage over, farmer back, goat over.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Student Exercises: Reduction}
+    \begin{itemize}
+        \item<1-> \textbf{Basic:} An Acquaintance Graph
+        \item<1-> \textbf{Easy:} The Bridges of K\"onigsberg
+        \item<1-> \textbf{Medium:} Water Jugs as Reachability
+        \item<1-> \textbf{Hard:} Lamps as Linear Algebra
+        \item<1-> \textbf{Very Hard:} Assignment as Maximum Flow
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Week 2 Complete}
+    \pause
+    \begin{itemize}
+        \item Wishful thinking simplifies the target structure.
+        \item Symmetry pairs equivalent positions and cases.
+        \item The extreme principle focuses on boundary objects.
+        \item Reduction changes a problem into a familiar representation.
+        \item Optional extensions continue in \textbf{Week 2 Advanced Slides}.
+    \end{itemize}
+\end{frame}
+
+\begin{frame}{Thanks for coming!}
+    \begin{center}
+        \Large
+        \textbf{See ya next week!}
+
+        I hope you enjoyed the workshop and found some useful new
+        ways to approach problems.
+    \end{center}
+\end{frame}
+
+\end{document}

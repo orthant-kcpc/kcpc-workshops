@@ -1,0 +1,343 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem}
+\usepackage{parskip}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{graphicx}
+\usepackage{eso-pic}
+\usepackage{titlesec}
+
+\graphicspath{{../}}
+
+\definecolor{kcpc-bg}{RGB}{250,250,250}
+\definecolor{kcpc-text}{RGB}{20,20,20}
+\definecolor{kcpc-muted}{RGB}{90,90,90}
+\definecolor{kcpc-red}{RGB}{176,0,0}
+
+\newcommand{\kcpcwordmark}{\raisebox{-0.15\height}{\includegraphics[height=0.55cm]{kcpc-logo.png}}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{\textcolor{kcpc-text}{\small\bfseries Problems}}
+\rhead{\textcolor{kcpc-muted}{\small Week 2}}
+\cfoot{\textcolor{kcpc-muted}{\small KCPC}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox
+to\headwidth{\color{kcpc-red}\leaders\hrule height \headrulewidth\hfill}}
+\renewcommand{\footrulewidth}{0pt}
+\setlength{\headheight}{28pt}
+
+\AddToShipoutPictureBG{%
+    \begin{tikzpicture}[remember picture,overlay]
+        \node[opacity=0.035, at=(current page.center)]
+        {\includegraphics[width=0.38\paperwidth]{kcpc-logo.png}};
+    \end{tikzpicture}%
+}
+
+\titleformat{\section}{\large\bfseries\color{kcpc-red}}{\thesection}{1em}{}
+
+\setlist[itemize]{noitemsep, topsep=4pt}
+\setlist[enumerate]{topsep=4pt}
+
+\title{KCPC Week 2 Problems\\Heuristics, Advanced Topics, and
+Algorithmic Bridges}
+\author{}
+\date{}
+
+\begin{document}
+\maketitle
+\thispagestyle{fancy}
+
+\section*{How To Use This Sheet}
+Start with the heuristic problems to complete the Pair 1 curriculum.
+The advanced and algorithmic sections then deepen those ideas if time
+permits. For algorithmic bridge problems, sketch the algorithm and
+argue correctness before writing code.
+
+\section{Wishful Thinking}
+
+\subsection*{Basic -- Complete The Square}
+For all real numbers $x$ and $y$, prove that
+\[
+x^2+y^2\ge \frac{(x+y)^2}{2}.
+\]
+Try to rewrite the difference as something that is clearly non-negative.
+
+\subsection*{Easy -- Make The Sum Telescope}
+Prove that
+\[
+\sum_{k=1}^{n}\frac{1}{k(k+1)}=\frac{n}{n+1}.
+\]
+Wish that each term were a difference of two simpler fractions.
+
+\subsection*{Medium -- A Number Puzzle}
+Construct infinitely many integer solutions to $x^2+y^2=2z^2$ with
+$x,y,z>0$. Wish that a Pythagorean triple were hidden in the equation.
+
+\subsection*{Hard -- Improve The Recurrence}
+Let $a_1=1$ and $a_{n+1}=2a_n+1$. Find a closed formula for $a_n$.
+Wish that the unwanted $+1$ were absorbed into the sequence.
+
+\subsection*{Very Hard -- Factor The Equation}
+For a fixed positive integer $n$, find all positive integer pairs
+$(x,y)$ satisfying
+\[
+\frac1x+\frac1y=\frac1n.
+\]
+Wish that the equation could be written as a product.
+
+\section{Symmetry}
+
+\subsection*{Basic -- Chomp: Poisoned Chocolate}
+On an $m\times n$ rectangular chocolate bar, the bottom-left square is
+poisoned. Players alternately choose a square and eat it together with
+all squares above and to its right. The player forced to eat the
+poisoned square loses. Show that the first player has a winning
+strategy for any $m,n\ge2$. Use a strategy-stealing argument.
+
+\subsection*{Easy -- Coins On A Circular Table}
+Two players alternately place identical non-overlapping circular coins
+on a circular table. The player who cannot move loses. Show that the
+first player has a winning strategy.
+
+\subsection*{Medium -- A Symmetric Integral}
+An integrable function $f:[0,1]\to\mathbb{R}$ satisfies
+$f(x)+f(1-x)=1$ for every $x\in[0,1]$. Evaluate
+$\int_0^1 f(x)\,dx$.
+
+\subsection*{Hard -- Odd Skew-Symmetric Matrices}
+Let $A$ be an $n\times n$ real matrix satisfying $A^{\mathsf T}=-A$.
+Prove that if $n$ is odd, then $\det A=0$.
+
+\subsection*{Very Hard -- Six People}
+Among any six people, prove that there are either three mutual
+acquaintances or three mutual strangers.
+
+\section{Extreme Principle}
+
+\subsection*{Basic -- Erd\H{o}s--Szekeres Monotone Subsequence}
+Prove that any sequence of $n^2+1$ distinct real numbers contains an
+increasing or decreasing subsequence of length $n+1$. (Hint: associate
+each term with the length of the longest increasing subsequence
+starting there.)
+
+\subsection*{Easy -- Minimum Degree Forces A Cycle}
+Prove that every finite graph in which every vertex has degree at
+least 2 contains a cycle. Start with a longest path.
+
+\subsection*{Medium -- An Empty Triangle}
+A finite set of points in the plane is not contained in one line.
+Prove that three of the points form a triangle whose interior contains
+none of the other points.
+
+\subsection*{Hard -- A Path Through A Tournament}
+In a tournament, every pair of vertices is joined by exactly one
+directed edge. Prove that every finite tournament has a directed path
+that visits every vertex exactly once.
+
+\subsection*{Very Hard -- Longest Paths Meet}
+Prove that any two longest paths in a finite connected graph share at
+least one vertex.
+
+\section{Reduction}
+
+\subsection*{Basic -- An Acquaintance Graph}
+At a party of $n\ge2$ people, acquaintance is mutual. Prove that two
+people have the same number of acquaintances at the party. Reduce the
+problem to a graph and consider the possible vertex degrees.
+
+\subsection*{Easy -- The Bridges Of K\"onigsberg}
+Reduce the bridges puzzle to a graph and prove that no walk crosses
+each of the seven bridges exactly once.
+
+\subsection*{Medium -- Missionaries And Cannibals}
+Three missionaries and three cannibals must cross a river using a
+boat that carries at most two people. On a bank with at least one
+missionary, cannibals must never outnumber missionaries. Model the
+problem as a state graph and find a safe crossing sequence.
+
+\subsection*{Hard -- Lamps As Linear Algebra}
+$n$ lamps are arranged in a circle. A move toggles lamp $i$ and its
+two neighbours. Given an initial configuration, give an algorithm to
+decide whether all lamps can be turned off.
+
+\subsection*{Very Hard -- Assignment As Maximum Flow}
+There are $n$ students and $n$ projects. Each student supplies a list
+of acceptable projects. Build a flow network for assigning every
+student a distinct acceptable project. State how its maximum flow
+determines whether an assignment exists.
+
+\newpage
+\section*{Advanced Material}
+The remaining problems are optional extensions. Their theory and
+worked examples are presented in \textit{Week 2 Advanced Slides}.
+
+\section{Advanced Logic And Common Knowledge}
+
+\subsection*{Basic -- Blue-Eyed Islanders ($k=2$)}
+There are 2 islanders with blue eyes, and the rest have brown. They
+cannot see their own eyes. A trusted outsider announces: ``At least
+one of you has blue eyes.'' Each day, anyone who knows their own eye
+colour leaves at midnight. What happens and on which day?
+
+\subsection*{Easy -- Cheating Husbands}
+In a village of 100 couples, some husbands have been unfaithful.
+Every wife knows which \emph{other} husbands have cheated, but not
+her own. The queen announces: ``At least one husband has been
+unfaithful.'' If a wife deduces her husband cheated, she must act at
+midnight. What happens?
+
+\subsection*{Medium -- Sum And Product Puzzle}
+Two integers $x,y$ with $2 \le x < y$ and $x+y \le 100$. Mr P knows
+the product $xy$; Mr S knows the sum $x+y$.
+P: ``I don't know the numbers.''
+S: ``I knew you didn't know.''
+P: ``Now I know the numbers.''
+S: ``Now I know them too.''
+Find $x$ and $y$.
+
+\subsection*{Hard -- Cheryl's Birthday}
+Cheryl gives Albert and Bernard this list of 10 possible dates:
+May 15, May 16, May 19; June 17, June 18; July 14, July 16;
+August 14, August 15, August 17. She whispers the month to Albert
+and the day to Bernard.
+Albert: ``I don't know the birthday, but I know Bernard doesn't know either.''
+Bernard: ``At first I didn't know, but now I do.''
+Albert: ``Now I also know.''
+When is Cheryl's birthday?
+
+\subsection*{Very Hard -- 100 Prisoners And A Light Bulb}
+100 prisoners are in solitary cells. There is a central room with a
+light bulb (initially off) and a switch. One prisoner at a time is
+chosen independently and uniformly at random to visit the room;
+they may toggle the switch and/or
+announce ``everyone has visited.'' If correct, all go free; if wrong,
+all die. They may agree a strategy beforehand. Design a protocol that
+never announces incorrectly and eventually frees everyone with
+probability 1.
+
+\section{Advanced Invariants And Monovariants}
+
+\subsection*{Basic -- Peg Solitaire (Small Board)}
+On a $3\times3$ board with the centre empty, pegs jump orthogonally
+over adjacent pegs into empty squares, removing the jumped peg. Can
+you finish with one peg in the centre?
+
+\subsection*{Easy -- Token Game}
+Tokens on integer points. A move: choose $x$ with tokens at $x$ and
+$x+1$; remove them and place one at $x+2$. Start with one token at 0
+and one at 1. Can you ever have a token at 100? How many moves are
+possible?
+
+\subsection*{Medium -- Conway's Soldiers}
+On an infinite checkerboard with $x,y\in\mathbb Z$, pegs occupy all
+squares with $y \le 0$.
+A peg jumps orthogonally over another into an empty square, removing
+the jumped peg. Can a peg ever reach $y=5$? (Hint: for a target
+$(x_0,5)$, use weights $\varphi^{|x-x_0|+|y-5|}$ where
+$\varphi=(\sqrt5-1)/2$.)
+
+\subsection*{Hard -- Polynomial Invariant For (x+2,y-1)}
+A token starts at $(0,0)$ on the integer grid $\mathbb Z^2$. A move
+changes $(x,y)$ to $(x+2,y-1)$.
+Find a non-constant polynomial $P(x,y)$ such that $P(x+2,y-1)=P(x,y)$
+for all $x,y$. Characterise all reachable positions using this
+invariant.
+
+\subsection*{Very Hard -- A Sequence Invariant}
+Given integer sequence $a_0, a_1, \ldots$ with $a_0 = 0$, $a_1 = 1$,
+and $a_{n+1} = a_n + a_{n-1} + 1$ for $n\ge1$, prove that
+\[
+(-1)^{n-1}\bigl((a_n+1)^2-(a_{n-1}+1)(a_{n+1}+1)\bigr)=1
+\quad(n\ge1).
+\]
+
+\section{Colouring And Tiling: Generalisations}
+
+\subsection*{Basic -- Mutilated Chessboard: Four Corners Removed}
+An $8\times8$ chessboard has all four corner squares removed. Can the
+remaining board be tiled by dominoes? If so, give a tiling.
+
+\subsection*{Easy -- Tiling With T-Tetrominoes}
+Tile a $4\times4$ board by T-tetrominoes (four squares in a T shape).
+Extend your construction to every $4\times(4k)$ board, $k\ge1$.
+
+\subsection*{Medium -- Fault-Free Domino Tiling}
+A domino tiling of a rectangle has a fault line if an internal
+horizontal or vertical grid line from one side to the other cuts no
+dominoes. Prove that a $6\times6$ board has no fault-free tiling,
+but a $6\times8$ board does.
+
+\subsection*{Hard -- Triominoes On A Chessboard}
+Can an $8\times8$ chessboard with one corner removed be tiled by
+straight trominoes ($1\times3$ rectangles)? Use a 3-colouring of the board.
+
+\subsection*{Very Hard -- Generalised Mutilated Chessboard}
+For which positive $m,n$ can an $m\times n$ board \emph{always} be
+tiled by dominoes after any two squares of opposite chessboard colours
+are removed? An empty tiling is allowed. Prove your characterisation.
+
+\section{Induction And Recursion: From Proof To Algorithm}
+
+\subsection*{Basic -- Josephus Problem}
+$n$ people stand in a circle. Eliminate every second person until one
+remains. Where should you stand to survive? Find a recurrence and
+closed form for $J(n)$.
+
+\subsection*{Easy -- Gray Codes}
+An $n$-bit Gray code lists all $2^n$ binary strings so consecutive
+strings differ in one bit. Give a recursive construction. Prove it
+works by induction.
+
+\subsection*{Medium -- Recursive 15-Puzzle Parity}
+Given a $4\times4$ 15-puzzle configuration, design a recursive
+algorithm to determine if it is solvable. Use the invariant from Week 1.
+
+\subsection*{Hard -- Counterfeit Coin With $n$ Weighings}
+Generalise the 12-coin, 3-weighing problem. With $n\ge2$ weighings on a
+balance scale, what is the maximum number of coins among which you
+can find one counterfeit (heavy or light)? Give a strategy achieving the bound.
+
+\subsection*{Very Hard -- Hadamard Matrix Construction}
+A Hadamard matrix of order $n$ is an $n\times n$ matrix with entries
+$\pm1$ whose rows are mutually orthogonal. Give a recursive
+construction for $n=2^k$ and prove it works.
+
+\section{Algorithmic Bridges}
+
+\subsection*{Basic -- A Maze As A Graph}
+You are given a rectangular grid of open and blocked cells, together
+with a start and finish cell. You may move one cell up, down, left, or
+right through open cells. Model the maze as a graph, describe how BFS
+finds the minimum number of moves, and explain why the answer is optimal.
+
+\subsection*{Easy -- Greedy Activity Selection}
+You have $n$ half-open intervals $[s_i, f_i)$ with $s_i<f_i$.
+Choose a maximum-size subset of non-overlapping intervals. Prove
+that picking the interval with
+earliest finish time, then recursing, is optimal. (Exchange argument.)
+
+\subsection*{Medium -- DP From Induction: Coin Change}
+Given coin values $c_1, \ldots, c_k$ and target $n$, find the minimum
+number of coins to make exactly $n$. Define $f(n)$ recursively,
+identify overlapping subproblems, and give a tabulation algorithm.
+
+\subsection*{Hard -- Sliding Puzzle State-Space Search}
+$2\times3$ sliding puzzle with tiles 1--5 and one empty. From a given
+start state, find the minimum moves to reach the goal. Describe the
+state encoding, transitions, and why BFS works. (There are 360
+reachable states from any fixed goal.)
+
+\subsection*{Very Hard -- Greedy Scheduling With Deadlines}
+$n$ jobs, each takes 1 unit of time, has an integer deadline $d_i\ge1$
+and positive profit $p_i$. You may schedule at most one job per time
+slot. A job only earns profit if completed by its deadline. Design a greedy algorithm
+to maximise total profit and prove it correct. (Hint: consider jobs
+in decreasing profit order; use a disjoint-set union to find latest free slot.)
+
+\end{document}
