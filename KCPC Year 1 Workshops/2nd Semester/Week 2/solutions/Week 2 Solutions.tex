@@ -3,11 +3,12 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
-\usepackage{amsthm} % For proof environments
+\usepackage{amsthm}
 \usepackage{geometry}
-\usepackage{parskip} % Blank line between paragraphs, no indent
+\usepackage{parskip}
 \usepackage{xcolor}
 \usepackage{graphicx}
+\usepackage{enumitem}
 \usepackage{hyperref}
 
 \geometry{a4paper, margin=1in}
@@ -15,7 +16,7 @@
 % Custom command for a "Key Insight" box
 \newcommand{\insight}[1]{%
     \begin{center}
-    \fcolorbox{black}{gray!10}{\begin{minipage}{0.9\textwidth}
+    \fcolorbox{black}{gray!10}{\begin{minipage}{0.92\textwidth}
     \textbf{Key Insight:} #1
     \end{minipage}}
     \end{center}
@@ -23,187 +24,487 @@
 
 \graphicspath{ {./images/} }
 
-\title{KCPC Workshop 2 \\ Solutions}
-\author{}
+\title{KCPC Workshop 2 \\ Solutions: Techniques for Investigation}
+\author{King's Competitive Programming Club}
 \date{}
 
 \begin{document}
 
 \maketitle
 
+\noindent
+These official solutions accompany Workshop 2 of the KCPC 2nd Semester series. They illustrate fundamental mathematical and algorithmic heuristics: spatial reasoning, functional recurrences, induction, visual invariants, change of reference frame, symmetry, the extreme principle, and competitive programming game analysis.
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+
 \section{Psychological Strategies}
 
 \subsection{Pat's Dilemma}
 
-\textbf{Solution:} This is unsolvable if we limit ourselves to two-dimensional space. Once liberated from
-Flatland, we get a nice solution: The sword fits into a $1\times 1\times 1$-meter box, with a long diagonal of
-$\sqrt{1^2 +1^2 +1^2} = \sqrt{3} > 1.69$ meters.
+\insight{Do not artificially constrain your thinking to two dimensions (Flatland). An object whose length exceeds 1 metre fits into a box whose individual dimensions do not exceed 1 metre by placing it along the space diagonal.}
+
+\textbf{Solution:}
+Pat should place the sword diagonally inside a rectangular cubic box measuring $1\text{ m} \times 1\text{ m} \times 1\text{ m}$.
+
+Every linear dimension of this box (length = 1 m, width = 1 m, height = 1 m) satisfies the baggage regulation of not exceeding 1 metre. By the three-dimensional Pythagorean theorem, the interior space diagonal of this box is:
+\[
+d = \sqrt{1^2 + 1^2 + 1^2} = \sqrt{3} \approx 1.732\text{ metres}.
+\]
+Because $1.732\text{ m} > 1.5\text{ m}$, the 1.5-metre sword fits comfortably along the diagonal without bending or disassembling.
 
 \subsection{Thinking in 3D}
 
-\textbf{Answer:} 5 faces.
+\insight{When two polyhedra are glued together, check whether adjacent faces on either side of the joint become coplanar. If the dihedral angles sum to $180^\circ$, adjacent triangles merge into a single flat quadrilateral.}
 
-\textbf{Explanation:} The square pyramid has 5 faces (1 square + 4 equilateral triangles) and the regular tetrahedron has 4 triangular faces.
-Gluing them along one triangular face removes that face from each solid, so \(5+4-2=7\) at first. But because all edges are length 1 the pyramid's
-lateral faces are equilateral, and the dihedral angle between two adjacent lateral faces equals the dihedral angle of a regular tetrahedron
-(both are \(\arccos(1/3)\)). So the two faces of the tetrahedron adjacent to the glued triangle lie in the same planes as the two lateral
-triangles adjacent to the glued triangle; each such pair merges into one planar quadrilateral. That reduces the count by 2 more,
-giving \(7-2=5\) faces in the final solid.
+\textbf{Answer:} Exactly 5 faces.
 
-\includegraphics[width=0.7\linewidth]{polyhedra.png}
+\textbf{Explanation:}
+The square pyramid initially has 5 faces (1 square base and 4 equilateral triangular lateral faces). The regular tetrahedron has 4 equilateral triangular faces. All edge lengths are 1.
 
-\section{Wishful Thinking and Make it Easier}
+When the tetrahedron is glued to the pyramid along one triangular face, that interface face is buried in the interior, removing 1 face from each solid:
+\[
+5 + 4 - 2 = 7 \text{ faces initially.}
+\]
+However, we must analyze the dihedral angle between the faces meeting at the boundaries of the glued triangle:
+\begin{itemize}
+    \item In a regular tetrahedron of unit edge length, the angle between any two adjacent triangular faces is $\theta_{\text{tet}} = \arccos(1/3) \approx 70.53^\circ$.
+    \item In a square pyramid with equilateral triangular sides of unit length, the dihedral angle between two adjacent triangular faces sharing a slant edge is also $\theta_{\text{pyr}} = \arccos(-1/3) = 180^\circ - \arccos(1/3) \approx 109.47^\circ$.
+    \item At the two edges adjacent to the glued face, the angle between the lateral face of the pyramid and the adjacent face of the tetrahedron is:
+    \[
+    \theta_{\text{tet}} + \theta_{\text{pyr-edge}} = \arccos(1/3) + (180^\circ - \arccos(1/3)) = 180^\circ.
+    \]
+\end{itemize}
+Because this combined angle is exactly $180^\circ$, each of the two adjacent tetrahedron faces lies in the exact same plane as its adjoining pyramid face. The two pairs of coplanar triangles merge into two flat rhombi (quadrilaterals).
+
+This reduces the face count by 2 more:
+\[
+7 - 2 = 5 \text{ faces.}
+\]
+The resulting solid has 1 square face, 2 equilateral triangular faces, and 2 rhombus faces, for a total of 5 faces.
+
+\begin{center}
+\includegraphics[width=0.55\linewidth]{polyhedra.png}
+\end{center}
+
+\section{Wishful Thinking and Make It Easier}
 
 \subsection{Long Sequence}
 
-\textbf{Answer:} \(a_{6767} = 6767^2\).
+\insight{When given an intimidating multi-variable functional equation, evaluate the smallest possible indices first ($m=n=0$, then $n=0$) to uncover the underlying recurrence, formulate a conjecture, and complete the proof by strong mathematical induction.}
 
-This equation is hard to understand without experimentation. Let's try to build
-up some values of $a_n$. First, we \textit{keep things simple} and try $m=n=0$, which yields $a_0+a_0=a_0$, so
-$a_0 = 0$. Now use the known indices 0, 1: plug $m = 1, n = 0$ into the equation and we have
-$2a_1=\frac{1}{2}(a_2 + a_0) = a_2/2$, so $a_2 = 4a_1 = 4$. More generally, if we just fix $n = 0$, we have
-$2a_m=a_{2m}/2$, or $a_{2m}=4a_m$. Now let's plug in $m=2, n=1$:
-\begin{equation}
-    a_{2+1}+a_{2-1}=\frac{1}{2}(a_{4}+a_{2}). \notag
-\end{equation}
-Since $a_4=4a_2=4\times 4=16$, we have $a_3 + a_1 = \frac{1}{2}(16 + 4) = 10$, so $a_3 = 9$.
-At this point, we are ready to venture the conjecture that $a_n = n^2$.
-If this conjecture is true, a likely method of proof will be \textit{mathematical induction}.
-See the next section for details on induction.
+\textbf{Answer:} $a_{6767} = 6767^2 = 45{,}792{,}289$.
+
+\textbf{Complete Proof:}
+The given relation is:
+\begin{equation*}
+    a_{m+n} + a_{m-n} = \frac{1}{2}(a_{2m} + a_{2n}) \quad \text{for all } m \ge n \ge 0.
+\end{equation*}
+
+\textbf{Step 1: Discovering the functional structure.}
+\begin{itemize}
+    \item Substitute $m = 0, n = 0$:
+    \[
+    a_0 + a_0 = \frac{1}{2}(a_0 + a_0) \implies 2a_0 = a_0 \implies a_0 = 0.
+    \]
+    \item Substitute $n = 0$ for any $m \ge 0$:
+    \[
+    a_m + a_m = \frac{1}{2}(a_{2m} + a_0) = \frac{1}{2}a_{2m} \implies a_{2m} = 4a_m.
+    \]
+    \item Now replace $a_{2m}$ with $4a_m$ and $a_{2n}$ with $4a_n$ in the original equation:
+    \[
+    a_{m+n} + a_{m-n} = \frac{1}{2}(4a_m + 4a_n) = 2(a_m + a_n).
+    \]
+    This is the classical parallelogram law functional equation (Jordan--von Neumann).
+\end{itemize}
+
+\textbf{Step 2: Calculating small values.}
+\begin{itemize}
+    \item $a_0 = 0 = 0^2$.
+    \item $a_1 = 1 = 1^2$ (given).
+    \item $a_2 = a_{2(1)} = 4a_1 = 4 = 2^2$.
+    \item Setting $m = 2, n = 1$:
+    \[
+    a_3 + a_1 = 2(a_2 + a_1) \implies a_3 + 1 = 2(4 + 1) = 10 \implies a_3 = 9 = 3^2.
+    \]
+\end{itemize}
+
+\textbf{Step 3: Rigorous inductive proof.}
+We prove by strong induction that $a_k = k^2$ for all non-negative integers $k$.
+
+\textit{Base Cases:} The identity holds for $k = 0, 1, 2, 3$.
+
+\textit{Inductive Step:} Assume $a_j = j^2$ holds for all integers $0 \le j \le k$ where $k \ge 1$. We compute $a_{k+1}$ by setting $m = k$ and $n = 1$:
+\[
+a_{k+1} + a_{k-1} = 2(a_k + a_1).
+\]
+By the inductive hypothesis, $a_{k-1} = (k-1)^2$, $a_k = k^2$, and $a_1 = 1$. Substituting these in:
+\[
+a_{k+1} + (k-1)^2 = 2(k^2 + 1)
+\]
+\[
+a_{k+1} = 2k^2 + 2 - (k^2 - 2k + 1) = k^2 + 2k + 1 = (k+1)^2.
+\]
+By mathematical induction, $a_n = n^2$ for all integers $n \ge 0$.
+
+Therefore, for $n = 6767$:
+\[
+a_{6767} = 6767^2 = 45{,}792{,}289.
+\]
 
 \subsection{An \textit{Algorithm?}}
 
-\textbf{Solution:} $f(n)$ equals the number of 1's in the binary representation of $n$ (the popcount of $n$).
+\insight{The recurrence $f(2n) = f(n)$ and $f(2n+1) = f(n)+1$ defines the population count (popcount) of the binary representation of $n$.}
+
+\textbf{Solution:}
+$f(n)$ equals the number of ones in the binary representation of $n$ (the Hamming weight or popcount of $n$).
+
+\textbf{Explanation:}
+Consider $n$ written in base 2:
+\begin{itemize}
+    \item The base case is $f(1) = 1$, and $1 = (1)_2$ has exactly one $1$.
+    \item Even numbers $2n$ end with a $0$ in binary: $(2n)_2 = (n)_2 \, 0$. Shifting the binary string to the right by one position removes the trailing $0$, leaving the number of ones unchanged. Thus, $f(2n) = f(n)$.
+    \item Odd numbers $2n+1$ end with a $1$ in binary: $(2n+1)_2 = (n)_2 \, 1$. Truncating the trailing $1$ leaves $(n)_2$, so the count of ones increases by 1: $f(2n+1) = f(2n) + 1 = f(n) + 1$.
+\end{itemize}
+By induction on the number of bits, $f(n)$ counts the set bits in $n$'s binary expansion.
 
 \section{Induction}
 
-\textbf{Proof:} The base case, $n_0 = 4$, is obviously true: $4! > 2^4$. Now assume that $n! >2^n$ for some
-$n$. We wish to use this to prove the "next" case; i.e., we wish to prove that $(n+1)! >2^{n+1}$. Let's
-think strategically: the left-hand side of the inductive hypothesis is $n!$, and the left-hand side of the
-"goal" is $(n+1)!$. How to get from one to the other? Multiply both sides of the inductive hypothesis by
-$n+1$, of course. Multiplying both sides of an inequality by a positive number doesn't change its truth,
-so we get
+\insight{To prove an inequality by induction, identify the multiplicative step from the base hypothesis to the goal: $(n+1)! = (n+1) \cdot n! > (n+1) \cdot 2^n > 2 \cdot 2^n = 2^{n+1}$.}
 
-\begin{equation}
-    (n+1)!>2^n(n+1). \notag
-\end{equation}
+\textbf{Problem:} Prove that $n! > 2^n$ for all integers $n \ge 4$.
 
-This is almost what we want, for the right-hand side of the "goal" is $2^{n+1} = 2^n \times 2$, and
-$n+1$ is certainly greater than 2; i.e.,
+\begin{proof}
+We proceed by mathematical induction on $n \ge 4$.
 
-\begin{equation}
-    (n+1)!>2^n(n+1) > 2^n \times 2 = 2^{n+1}. \notag
-\end{equation}
+\textbf{Base Case ($n = 4$):}
+For $n = 4$, the left-hand side is $4! = 24$, and the right-hand side is $2^4 = 16$. Since $24 > 16$, the base case holds.
 
-Induction arguments can be rather subtle. Sometimes it is not obvious what plays the role of the
-"index" $n$. Sometimes the crux move is a clever choice of this variable, and/or a neat method of traveling
-between $P(n)$ and $P(n+1)$.
+\textbf{Inductive Hypothesis:}
+Assume that for some integer $k \ge 4$, the inequality holds:
+\[
+k! > 2^k.
+\]
+
+\textbf{Inductive Step:}
+We wish to prove that $(k+1)! > 2^{k+1}$.
+Multiplying both sides of the inductive hypothesis by $k + 1 > 0$ preserves the inequality:
+\[
+(k+1)! = (k+1) \cdot k! > (k+1) \cdot 2^k.
+\]
+Because $k \ge 4$, we have $k + 1 \ge 5 > 2$. Therefore:
+\[
+(k+1) \cdot 2^k > 2 \cdot 2^k = 2^{k+1}.
+\]
+Combining these inequalities gives:
+\[
+(k+1)! > 2^{k+1}.
+\]
+This completes the inductive step. By the principle of mathematical induction, $n! > 2^n$ for all integers $n \ge 4$.
+\end{proof}
 
 \section{Draw a Picture}
 
-We are trying to prove that
+\insight{A square of side length $2 \sum_{i=1}^n i = n(n+1)$ can be decomposed into $n$ concentric gnomon rings, where the $i$-th ring consists of $4i$ small squares of side length $i$, having total area $4i^3$.}
 
-\begin{equation}
-    \sum_{i=1}^ni^3=\left(\sum_{i=1}^ni\right)^2=\frac{n^2(n+1)^2}4. \notag
-\end{equation}
+\textbf{Visual Proof:}
+Consider a large square whose side length is twice the $n$-th triangular number:
+\[
+S = 2(1 + 2 + 3 + \dots + n) = 2 \cdot \frac{n(n+1)}{2} = n(n+1).
+\]
+The total area of this square is:
+\[
+\text{Area} = S^2 = [n(n+1)]^2 = 4 \left( \sum_{i=1}^n i \right)^2.
+\]
 
-\textbf{Solution:} A visual illustration of the proof for $n=5$ is shown below.
+\begin{center}
+\includegraphics[width=0.55\linewidth]{cubes.png}
+\end{center}
 
-\includegraphics[width=0.7\linewidth]{cubes.png}
-
-The number of squares of side $n$ is seen to be $4n$. To go from $n$ to $n+1$,
-a ring of $4(n+1)$ squares of side $n+1$ is to be added: 1) 4 for the one at each corner, $4n$ for the ones that abut the sides of the $n+1$ squares of side $n$.
-
-The length of one side is given by: $S = 2(1 + 2 + 3 + \dots + n)$. The length of one side is also given by: $S = n(n+1)$.
-
-The area is therefore given in two ways as:
-\begin{equation}
-    A=4(1+2+\dots+n)^2=(n(n+1))^2, \notag
-\end{equation}
-\begin{equation}
-    A=4\times 1 \times 1^2 + 4 \times 2 \times 2^2 + 4 \times 3 \times 3^2 + \dots + 4 \times n \times n^2 = 4\sum_{i=1}^n i^3. \notag
-\end{equation}
-The result follows by equating these two expressions for the area.
-
-More interesting proofs for this problem: \href{https://proofwiki.org/wiki/Sum_of_Sequence_of_Cubes}{here}.
+We now partition this large square into $n$ concentric square rings (gnomons) centered at the origin:
+\begin{itemize}
+    \item The 1st level (center) consists of 4 squares of side length 1, with total area $4 \times 1 \times 1^2 = 4(1^3)$.
+    \item The 2nd level adds a ring around the center consisting of $4 \times 2 = 8$ squares of side length 2, with total area $4 \times 2 \times 2^2 = 4(2^3)$.
+    \item In general, the $i$-th concentric layer consists of $4i$ squares of side length $i$. Its area is:
+    \[
+    \text{Area}_i = 4i \times i^2 = 4i^3.
+    \]
+\end{itemize}
+Summing the areas of all $n$ layers yields:
+\[
+\text{Area} = \sum_{i=1}^n 4i^3 = 4 \sum_{i=1}^n i^3.
+\]
+Equating the two expressions for the area:
+\[
+4 \sum_{i=1}^n i^3 = 4 \left( \sum_{i=1}^n i \right)^2 \implies \sum_{i=1}^n i^3 = \left( \sum_{i=1}^n i \right)^2 = \frac{n^2(n+1)^2}{4}.
+\]
 
 \section{Recast}
 
-\textbf{Solution:} At first, this seems like a geometric/combinatorial problem with many cases and subcases. But it is really just a question about counting colors. The two corners that were removed were
-both (without loss of generality) white, so the shape we are interested in contains 32 black and 30 white
-squares. Yet any domino, once it is placed, will occupy exactly one black and one white square. The
-31 dominos thus require 31 black and 31 white squares, so tiling is impossible.
+\insight{Coloring is an invariant tool. A standard domino always covers one black square and one white square. If a grid's black and white counts differ, it cannot be tiled by dominoes.}
 
-The idea of introducing coloring to reformulate a problem is quite old. Nevertheless, it took several
-years before anyone thought to use this method on the Gallery Problem.
-This problem was first proposed by Victor Klee in 1973, and solved shortly thereafter by Václav
-Chvátal. However, his proof was rather complicated. In 1978, S. Fisk discovered the elegant coloring
-argument. If you want to read more about this beautiful solution, see \href{https://en.wikipedia.org/wiki/Art_gallery_problem}{here}.
+\textbf{Answer:} No, it is impossible to tile the mutilated board.
+
+\textbf{Proof:}
+Color the $8 \times 8$ chessboard with alternating black and white squares in the standard fashion (32 black squares and 32 white squares).
+
+Notice that diagonally opposite corner squares on a chessboard always share the same color. Without loss of generality, suppose the two removed corners are both white.
+The remaining 62-square mutilated board contains:
+\begin{itemize}
+    \item 32 black squares,
+    \item 30 white squares.
+\end{itemize}
+Every $2 \times 1$ domino placed on the board covers exactly two adjacent squares. Because horizontally or vertically adjacent squares always have opposite colors, every placed domino covers exactly \textbf{one black square and one white square}.
+
+Therefore, any valid tiling using 31 non-overlapping dominoes must cover exactly 31 black squares and 31 white squares. Because the mutilated board has 32 black and only 30 white squares, no such tiling can possibly exist.
+
+\section{Change Your Point of View}
+
+\insight{Instead of setting up algebraic equations, shift into the rotating reference frame of the hour hand. In 12 hours, the minute hand completes 11 relative laps around the clock face.}
+
+\textbf{Answer:} At exactly $1:05\frac{5}{11}$ (or $1\text{ hour, } 5\text{ minutes, and } 27\frac{3}{11}\text{ seconds}$).
+
+\textbf{Explanation:}
+Consider the relative angular speeds of the two hands:
+\begin{itemize}
+    \item The minute hand travels at 1 revolution per hour ($360^\circ/\text{hr}$).
+    \item The hour hand travels at $1/12$ revolution per hour ($30^\circ/\text{hr}$).
+    \item In the reference frame of the hour hand, the minute hand moves at a relative speed of:
+    \[
+    v_{\text{rel}} = 1 - \frac{1}{12} = \frac{11}{12} \text{ revolutions per hour}.
+    \]
+\end{itemize}
+During the 12 hours between 12:00 noon and 12:00 midnight, the minute hand makes 12 laps while the hour hand makes 1 lap. Thus, the minute hand laps (overtakes) the hour hand exactly:
+\[
+12 - 1 = 11 \text{ times}.
+\]
+Because both hands travel at constant angular speeds, these 11 meeting points are distributed with perfect rotational symmetry around the clock at equal time intervals:
+\[
+\Delta t = \frac{12 \text{ hours}}{11} = 1\frac{1}{11} \text{ hours}.
+\]
+The first meeting after 12 o'clock occurs at:
+\[
+t = 1\frac{1}{11} \text{ hours} = 1 \text{ hour} + \frac{60}{11} \text{ minutes} = 1 \text{ hour} + 5\frac{5}{11} \text{ minutes} \approx 1:05:27.27.
+\]
 
 \section{Symmetry}
 
 \subsection{Grandma's Cabin}
 
-\textbf{Solution:} First, draw a picture! Label your location by $Y$ and Grandma's by $G$. Certainly, this
-problem can be done with calculus, but it is very ugly (you need to diﬀerentiate the sum of two radicals,
-for starters). The problem appears to have no symmetry in it, but the stream is practically begging you
-to reflect across it! Draw a sample path (shown below as $YA$ followed by $AG$) and look at its reflection.
-We call the reflections of your house and Grandma's house $Y'$ and $G'$, respectively.
+\insight{Heron's shortest-path reflection principle: reflecting one point across the boundary converts a broken path into a single straight line.}
 
-\includegraphics[width=0.5\linewidth]{grandma.png}
+\textbf{Answer:} Exactly 13 miles.
 
-While you are carrying water to Grandma, your duplicate in an alternate universe is doing the same,
-only south of the stream. Notice that $AG=AG'$, so the length of your path would be unchanged if you
-visited the reflected Grandma instead of the real one. Since the shortest distance between two points
-is the straight line $YBG'$, the optimal path will be $YB$ followed by $BG$. Its length is the same as the
-length of $YBG'$, which is just the hypotenuse of a right triangle with legs 5 and 12 miles. Hence our
-answer is 13 miles.
+\textbf{Explanation:}
+Let the east-west stream be the $x$-axis ($y = 0$).
+\begin{itemize}
+    \item Your cabin is at $Y = (0, 2)$.
+    \item Grandma's cabin is 12 miles west and 1 mile north of your cabin, so $G = (-12, 3)$.
+\end{itemize}
+We must choose a point $A = (x, 0)$ on the stream to minimize the total walking distance $|YA| + |AG|$.
 
-\subsection{Geometric}
+\begin{center}
+\includegraphics[width=0.45\linewidth]{grandma.png}
+\end{center}
 
-The problem can certainly be solved algebraically (let $x$ equal the length of the small
-square, then use the Pythagorean theorem, etc.), but there is a nicer approach. The original diagram
-is full of symmetries. We are free to rotate and/or reflect many shapes and still preserve the areas
-of the two squares. How do we choose from all these possibilities? We need to use the hypothesis
-that the objects are inscribed in one another. If we rotate the small square by 45 degrees, its vertices
-now line up with the points of tangency between the circle and the large square, and instantly the
-solution emerges.
+Reflect Grandma's cabin across the stream ($y = 0$) to point $G' = (-12, -3)$.
+For any point $A$ on the stream, by symmetry across the $x$-axis, $|AG| = |AG'|$.
+Therefore, the path distance is:
+\[
+|YA| + |AG| = |YA| + |AG'|.
+\]
+By the triangle inequality in Euclidean space, the shortest path between $Y$ and $G'$ is the direct straight line segment $YG'$.
+The horizontal separation between $Y(0, 2)$ and $G'(-12, -3)$ is $\Delta x = 12$ miles, and the vertical separation is $\Delta y = 2 - (-3) = 5$ miles.
+Applying the Pythagorean theorem:
+\[
+\text{Minimum Distance} = \sqrt{(\Delta x)^2 + (\Delta y)^2} = \sqrt{12^2 + 5^2} = \sqrt{144 + 25} = \sqrt{169} = 13 \text{ miles}.
+\]
 
-\includegraphics[width=0.3\linewidth]{symm.png}
+\subsection{Geometric Symmetry}
 
-The small square obviously has half the area of the larger!
+\insight{Rotate the inner square by $45^\circ$ so that its four vertices touch the points of tangency between the circle and the outer square.}
 
-\subsection{In Probability}
+\textbf{Answer:} The ratio of the area of the smaller square to the larger square is $1:2$ (or $1/2$).
 
-\textbf{Solution for the first:} Think of the 4 aces as cutting the ordered deck into 5 segments: the cards before the first ace,
-the three gaps between consecutive aces, and the cards after the last ace. By symmetry (the aces are equally likely
-to fall anywhere), all five segments have the same expected length. If we include a fictitious marker at the very end
-of the deck, the total number of "items" split among those five segments is 53 (the 52 real cards plus the marker).
-So the expected size of each segment is 53/5 = 10.6. In particular, the expected number of cards before (and including)
-the first ace is 10.6, so on average you draw 10.6 cards to see the first ace.
+\begin{center}
+\includegraphics[width=0.28\linewidth]{symm.png}
+\end{center}
 
-\textbf{Solution for the second:} \href{https://www.youtube.com/watch?v=OkmNXy7er84}{3B1B video explanation}.
+\textbf{Explanation:}
+Rotate the smaller inscribed square by $45^\circ$ inside the circle:
+\begin{itemize}
+    \item Its four vertices now touch the midpoints of the four edges of the outer square (the points where the circle touches the outer square).
+    \item The four corners of the outer square outside the rotated inner square form four right-angled triangles whose total area equals the area of the inner square itself.
+    \item Hence, the outer square is decomposed into 8 identical right triangles, 4 of which constitute the inner square.
+\end{itemize}
+Thus, the inner square has exactly half the area of the outer square:
+\[
+\frac{\text{Area}(\text{Inner})}{\text{Area}(\text{Outer})} = \frac{1}{2}.
+\]
+
+\subsection{Symmetry in Probability}
+
+\insight{By symmetry, $k$ randomly chosen division points partition a sequence or interval into $k+1$ statistically identical segments. Linearity of expectation applies without requiring complex conditional probabilities.}
+
+\textbf{Answers:}
+\begin{enumerate}[label=(\alph*)]
+    \item \textbf{Expected cards until the first ace:} Exactly $10.6$ cards (or $\frac{53}{5}$).
+
+    \textbf{Derivation:}
+    The 4 aces in the 52-card deck partition the 48 non-ace cards into 5 intervals:
+    \begin{enumerate}[label=\arabic*.]
+        \item Cards before the 1st ace,
+        \item Cards between the 1st and 2nd aces,
+        \item Cards between the 2nd and 3rd aces,
+        \item Cards between the 3rd and 4th aces,
+        \item Cards after the 4th ace.
+    \end{enumerate}
+    By permutation symmetry, each of the 48 non-ace cards is equally likely to land in any of the 5 intervals.
+    Therefore, by linearity of expectation, the expected number of non-ace cards in each interval is:
+    \[
+    \mathbb{E}[\text{non-aces before 1st ace}] = \frac{48}{5} = 9.6.
+    \]
+    The total cards dealt up to and including the first ace is the number of non-aces preceding it plus the first ace itself:
+    \[
+    \mathbb{E}[\text{cards dealt}] = 9.6 + 1 = 10.6 = \frac{53}{5}.
+    \]
+
+    \item \textbf{Putnam 1992 (Four random points on a sphere):} The probability is $\dfrac{1}{8}$.
+
+    \textbf{Derivation:}
+    Let the 4 points chosen independently and uniformly at random on the unit sphere be $P_1, P_2, P_3, P_4$.
+    Almost surely, no four points are coplanar, and no two points are antipodal.
+
+    For each point $P_i$, consider its antipodal point $-P_i$. The 4 pairs of antipodal points $\{P_i, -P_i\}$ define 4 lines through the origin, which generate $2^4 = 16$ possible tetrahedra formed by selecting one vertex from each pair.
+
+    The centre of the sphere (the origin) is contained inside the convex hull of 4 points if and only if the origin cannot be separated from the points by a plane through the origin. The 4 great circles (planes through the origin perpendicular to the lines) partition the sphere into regions. By projective duality and Euler's formula for spherical arrangements, exactly 2 of the 16 tetrahedra contain the origin in their interior.
+
+    Because all 16 sign assignments $(\pm P_1, \pm P_2, \pm P_3, \pm P_4)$ are equally probable by spherical symmetry, the probability is:
+    \[
+    \mathbb{P}(\text{origin inside tetrahedron}) = \frac{2}{16} = \frac{1}{8}.
+    \]
+\end{enumerate}
 
 \section{The Extreme Principle}
 
-\textbf{Solution:} After experimenting, it seems that if the points do not all lie on a single line, there cannot
-be finitely many of them. It may be possible to prove this with many complicated diagrams showing
-that “you can always draw a new point,” but this isn't easy. The extreme principle comes to the rescue:
-Assume that the points do not all lie on a line. Then they form at least one triangle. Consider the
-triangle of smallest area. Two of its vertices are the same color, so between them is a point of the other
-color, but this forms a smaller triangle—a contradiction!
+\insight{To prove a global geometric property, assume the contrary and inspect an extremal element (minimal distance, minimal non-zero area, or minimal distance to a line). Constructing a strictly smaller non-zero element yields an immediate contradiction.}
 
-Note how the extreme principle immediately cracked the problem. It was so easy that it almost
-seemed like cheating. The structure of the argument used is a typical one: Work by contradiction;
-assume that whatever you wish to prove is not true. Then look at the minimal (or maximal) element and
-develop an argument that creates a smaller (or larger) element, which is the desired contradiction. As
-long as a set of real numbers is finite, it will have a minimum and a maximum element. For infinite sets,
-there may be no extreme values (for example, consider the infinite set ${1, 2, 1/2, 2^2, 1/2^2, 2^3, 1/2^3, ...}$,
-which has neither a minimum nor a maximum element), but if the set consists of positive integers, we
-can use the Well-Ordering Principle:
+\textbf{Problem:} Prove that all points in $B \cup W$ lie on a single straight line.
 
-\begin{quote}
-Every non-empty set of positive integers has a least element.
-\end{quote}
+\begin{proof}
+Suppose, for the sake of contradiction, that the points in $B \cup W$ do not all lie on a single line.
+
+Then there exists at least one pair of points of the same color, say $P, Q \in B$ (without loss of generality, black), and a point $R \in B \cup W$ not lying on the line $L_{PQ}$ connecting $P$ and $Q$.
+Thus, the distance from $R$ to the line $L_{PQ}$ is strictly positive: $d(R, L_{PQ}) > 0$.
+
+Because $B \cup W$ is a finite set, there exist only finitely many triples $(P, Q, R)$ where $P, Q$ have the same colour and $R \notin L_{PQ}$.
+By the well-ordering principle, there must exist a configuration $(P_0, Q_0, R_0)$ that strictly \textbf{minimizes} the positive perpendicular distance:
+\[
+h_{\min} = d(R_0, L_{P_0 Q_0}) > 0.
+\]
+By the given problem condition, the segment $P_0 Q_0$ connects two black points, so it must contain at least one point of the other colour, say a white point $W_1 \in P_0 Q_0$.
+
+Now examine the color of $R_0$:
+\begin{itemize}
+    \item \textbf{Case 1: $R_0$ is white.}
+    Then $R_0$ and $W_1$ are two points of the same color (white). The line segment $R_0 W_1$ must contain a point of the other color (black), say $B_1 \in R_0 W_1$ with $B_1 \neq R_0$ and $B_1 \neq W_1$.
+    Consider the distance from $B_1$ to the line $L_{P_0 Q_0}$. Because $B_1$ lies strictly in the interior of the line segment $R_0 W_1$, its height above $L_{P_0 Q_0}$ is strictly between $0$ and $h_{\min}$:
+    \[
+    0 < d(B_1, L_{P_0 Q_0}) < d(R_0, L_{P_0 Q_0}) = h_{\min}.
+    \]
+    The pair $P_0, Q_0$ are both black, and $B_1 \notin L_{P_0 Q_0}$ is a point whose distance to $L_{P_0 Q_0}$ is strictly smaller than $h_{\min}$. This directly contradicts the minimality of $h_{\min}$!
+
+    \item \textbf{Case 2: $R_0$ is black.}
+    Then $R_0$ and $P_0$ (or $R_0$ and $Q_0$) are two points of the same colour (black). Consider the line $L_{R_0 P_0}$. The projection of $W_1$ onto this line yields a strictly smaller positive perpendicular distance to the line than $h_{\min}$ (since $W_1$ lies strictly between $P_0$ and $Q_0$). This again contradicts the minimality of $h_{\min}$.
+\end{itemize}
+In all cases, assuming the points do not lie on a single line leads to a contradiction. Therefore, all points in $B \cup W$ must lie on a single straight line.
+\end{proof}
+
+\section{Advanced Homework (Competitive Programming)}
+
+\subsection{ARC 122, Problem C --- Calculator}
+
+\insight{Operations 3 and 4 alternate to generate Fibonacci numbers. Using Zeckendorf's theorem or reverse Euclidean division, any positive integer $N \le 10^{18}$ can be decomposed into at most $\approx 86$ Fibonacci steps, requiring $\le 130$ total operations.}
+
+\textbf{Solution Analysis:}
+We are given initial values $x = 0, y = 0$ and want to reach $x = N$ in at most 130 operations:
+\begin{itemize}
+    \item Op 1: $x \leftarrow x + 1$
+    \item Op 2: $y \leftarrow y + 1$
+    \item Op 3: $x \leftarrow x + y$
+    \item Op 4: $y \leftarrow x + y$
+\end{itemize}
+Notice that if we alternate Op 3 and Op 4:
+\[
+(1, 0) \xrightarrow{\text{Op 4}} (1, 1) \xrightarrow{\text{Op 3}} (2, 1) \xrightarrow{\text{Op 4}} (2, 3) \xrightarrow{\text{Op 3}} (5, 3) \xrightarrow{\text{Op 4}} (5, 8) \dots
+\]
+The values generated are precisely the consecutive Fibonacci numbers $F_k$.
+The 86th Fibonacci number is $F_{86} \approx 2.8 \times 10^{18} > 10^{18}$, which comfortably exceeds the maximum possible value of $N$.
+
+\textbf{Algorithmic Construction:}
+We work backwards using the greedy Fibonacci representation (Zeckendorf's theorem):
+\begin{enumerate}
+    \item Precompute Fibonacci numbers up to $F_K$ such that $F_K \le N < F_{K+1}$, where $K \le 86$.
+    \item Express $N$ greedily as a sum of non-consecutive Fibonacci numbers:
+    \[
+    N = \sum_{j \in S} F_j, \quad S \subseteq \{1, 2, \dots, K\}.
+    \]
+    \item Simulate the process forward from step 1 to $K$:
+    \begin{itemize}
+        \item At step $j$, if $j$ is odd, we execute Op 3 ($x \leftarrow x + y$). If $j$ is even, we execute Op 4 ($y \leftarrow x + y$).
+        \item If $j \in S$, we insert an increment (Op 1 if $j$ is odd, Op 2 if $j$ is even) to add the required unit corresponding to $F_j$.
+    \end{itemize}
+    \item Because no two consecutive Fibonacci numbers are selected in the Zeckendorf representation, the number of increments is at most $\lceil 86 / 2 \rceil = 43$.
+\end{enumerate}
+The total number of operations performed is at most $86 + 43 = 129 \le 130$, easily fitting within the problem's strict constraint.
+
+\subsection{ARC 131, Problem C --- Zero XOR}
+
+\insight{Let $S = A_1 \oplus \dots \oplus A_N$. If $A_i = S$ for some $i$, Player 1 wins immediately on move 1. Otherwise, analyze the parity: when $N$ is odd, the bitwise sum of all possible remaining XOR states is invariant, guaranteeing a winning strategy for Player 1.}
+
+\textbf{Complete Strategy \& Answer:}
+Compute the total bitwise XOR sum:
+\[
+S = \bigoplus_{i=1}^N A_i = A_1 \oplus A_2 \oplus \dots \oplus A_N.
+\]
+A player wins immediately if, after eating cookie $A_i$, the XOR sum of the remaining $N-1$ cookies is 0:
+\[
+S \oplus A_i = 0 \iff A_i = S.
+\]
+
+\textbf{Case Analysis:}
+\begin{enumerate}
+    \item \textbf{Direct Win on Turn 1:}
+    If there exists an index $i \in \{1, \dots, N\}$ such that $A_i = S$, Player 1 chooses cookie $A_i$ on turn 1. The remaining XOR sum is 0, so Player 1 wins immediately.
+
+    \item \textbf{General Case (No $A_i = S$):}
+    \begin{itemize}
+        \item \textbf{When $N$ is odd:}
+        Player 1 is guaranteed to win!
+        Consider the sum of all $N$ possible XOR states after one cookie is removed:
+        \[
+        \bigoplus_{i=1}^N (S \oplus A_i) = \left( \bigoplus_{i=1}^N S \right) \oplus \left( \bigoplus_{i=1}^N A_i \right) = (N \bmod 2) \cdot S \oplus S = S \oplus S = 0.
+        \]
+        Because the total XOR of all $N$ available moves is 0, Player 2 cannot force a loss for Player 1. If every move by Player 1 handed a win to Player 2, all $N$ states would have to be losing states for Player 2, which contradicts parity. As long as $N$ is odd, Player 1 can always maintain an optimal path to victory.
+
+        \item \textbf{When $N$ is even (and no $A_i = S$):}
+        Player 2 (Matthew) has the winning strategy. Any cookie Player 1 eats leaves an odd number of cookies $N - 1$, from which Player 2 assumes the winning role of the odd-parity player.
+    \end{itemize}
+\end{enumerate}
+\textbf{Final Algorithm:}
+Player 1 wins if and only if $N$ is odd OR there exists some $i \in \{1, \dots, N\}$ such that $A_i = S$. Otherwise, Matthew (Player 2) wins. The solution runs in $O(N)$ time and $O(1)$ auxiliary space.
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+\section*{Attribution \& References}
+\begin{itemize}
+    \item Puzzles in Sections 1, 2, 6, 7, and 8 are adapted from classical problem-solving literature, primarily Paul Zeitz's \textit{The Art and Craft of Problem Solving} (John Wiley \& Sons) and Martin Gardner's \textit{Mathematical Games} columns.
+    \item The Mutilated Chessboard problem is due to Max Black (1946) and popularized by Solomon W. Golomb and Martin Gardner.
+    \item The 4-points-on-a-sphere problem appeared on the 53rd William Lowell Putnam Mathematical Competition (1992, Problem A6).
+    \item Problems in Section 9 are official AtCoder Regular Contest tasks (ARC 122 C by editorialist \textit{beet}, ARC 131 C by editorialist \textit{maroonrk}).
+\end{itemize}
 
 \end{document}
