@@ -75,11 +75,18 @@ and 2 pairs of grey gloves. You choose gloves in the dark.
         pair of each colour?
 \end{enumerate}
 
-\subsection*{Medium -- Two Doors}
-You face two doors. One leads out; one does not. One guard always
-tells the truth, and the other always lies. You do not know which
-guard is which. You may ask one guard one yes/no question. How can
-you identify the safe door?
+\subsection*{Medium -- Three People: Knights, Knaves, and Spies}
+Three inhabitants, Alice, Bob, and Carol, each belong to one of
+three types: \textbf{Knight} (always tells the truth), \textbf{Knave}
+(always lies), or \textbf{Spy} (may tell truth or lie). They make
+the following statements:
+\begin{enumerate}[label=(\alph*)]
+    \item Alice says: ``Bob is a Knave.''
+    \item Bob says: ``Carol is a Knight.''
+    \item Carol says: ``Alice is a Spy.''
+\end{enumerate}
+Assuming exactly one is a Knight, one is a Knave, and one is a Spy,
+determine who is who.
 
 \subsection*{Hard -- Islander Statements}
 Ten islanders each make one statement. Islander $i$ says: ``At least
@@ -155,10 +162,10 @@ of opposite colours always be tiled by dominoes?
 
 \section{Induction And Monovariants}
 
-\subsection*{Basic -- Breaking A Chocolate Bar}
-An $n\times m$ chocolate bar must be broken into unit squares. Each
-break is straight and breaks one existing piece. What is the minimum
-number of breaks?
+\subsection*{Basic -- Polygon Triangulation}
+A convex $n$-gon is divided into triangles by drawing non-intersecting
+diagonals. Prove by induction that the number of triangles is always
+$n-2$, regardless of the triangulation.
 
 \subsection*{Easy -- Induction Inequality}
 Prove that $n!>2^n$ for every integer $n>3$.

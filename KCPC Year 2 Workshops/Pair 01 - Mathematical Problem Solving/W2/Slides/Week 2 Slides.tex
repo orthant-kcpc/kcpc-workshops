@@ -74,13 +74,9 @@
 }
 
 \title{Mathematical Problem Solving II}
-\subtitle{Advanced Invariants, Heuristics, and Algorithmic Thinking}
+\subtitle{Wishful Thinking, Symmetry, Extreme Principle, and Reduction}
 \author{KCPC}
 \date{Week 2}
-
-\newcommand{\concept}[1]{\textbf{Concept:} #1}
-\newcommand{\apply}[1]{\textbf{How it applies:} #1}
-\newcommand{\heuristic}[1]{\textbf{Heuristic:} #1}
 
 \begin{document}
 
@@ -92,269 +88,101 @@
     \tableofcontents
 \end{frame}
 
-\section{Week 1 Recap and What Comes Next}
+\section{Week 1 Recap}
 
 \begin{frame}{Week 1 Recap}
-    Last week we built a toolkit for reasoning about puzzles:
     \pause
     \begin{itemize}
-        \item Logic: track knowledge, what is true, what is inferred.
-        \item Invariants: find what cannot change; prove impossibility.
-        \item Colouring: turn geometry into counting.
-        \item Induction: reduce the problem size step by step.
-        \item Monovariants: track progress towards a goal.
+        \item Last week we built a toolkit for reasoning about puzzles.
+            \begin{itemize}
+                \item Logic tracks knowledge and inference.
+                \item Invariants identify what cannot change.
+                \item Colouring turns geometry into counting.
+                \item Induction reduces the problem size.
+                \item Monovariants track progress towards a goal.
+            \end{itemize}
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Heuristics}
+\section{Heuristic Methods}
+
+\begin{frame}{What are Heuristics?}
+    \pause
+    A \textbf{heuristic} is a strategy or rule of thumb that helps
+    you choose what to try when no solution is obvious. It does not
+    guarantee success, but it can expose useful structure.
+
+    The key question is: \textbf{what viewpoint makes the structure
+    of the problem easier to see?}
+
     \pause
     \begin{itemize}
-        \item Wishful thinking: simplify the problem; assume a nice form.
-        \item Symmetry: pair objects; look for transformations that leave
-            the problem unchanged.
-        \item Extreme principle: focus on the most extreme object.
-        \item Reduction: change representation to expose structure.
+        \item \textbf{Wishful thinking:} imagine a simpler or nicer form.
+        \item \textbf{Symmetry:} pair objects or equivalent cases.
+        \item \textbf{Extreme principle:} inspect a boundary object.
+        \item \textbf{Reduction:} transform the problem into a familiar one.
     \end{itemize}
 \end{frame}
 
-\begin{frame}{This Week: Deeper Tools And Algorithmic Bridges}
-    \begin{itemize}
-        \item Strengthen each Week 1 tool with harder problems and
-            generalisations.
-        \item See how mathematical insight becomes an algorithmic idea.
-        \item Practise the full cycle: model, reason, implement, verify.
-        \item Connect to standard CP platforms: CSES, Codeforces, AtCoder.
-    \end{itemize}
-\end{frame}
-
-\section{Advanced Logic And Common Knowledge}
-
-\begin{frame}{Logic Beyond Two Doors}
-    \concept{Common knowledge is what everyone knows, everyone knows
-    everyone knows, etc.}
-
-    \begin{itemize}
-        \item Public announcements change the state of knowledge.
-        \item Reasoning depth: ``I know that you know that I know...''
-        \item Often reduces to a fixed-point: when no new deductions
-            are possible.
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{Worked Example: Muddy Children (Public Announcement)}
-    $n$ children play outside. $k$ of them have mud on their foreheads.
-    Each sees the others but not themselves.
-
-    Father announces: ``At least one of you has mud.'' Then he
-    repeatedly asks: ``Does anyone know their own state?''
-
-    \vspace{0.5em}
-    What happens?
-\end{frame}
-
-\begin{frame}{Muddy Children: Applying The Concept}
-    \apply{Induction on the number of muddy children $k$.}
-
-    \begin{itemize}
-        \item If $k=1$: that child sees no mud, knows they must be the
-            one. Answers yes on round 1.
-        \item If $k=2$: each sees one muddy child. If I were clean, the
-            other would see 0 and answer on round 1. They don't. So I must
-            be muddy. Both answer on round 2.
-        \item Induction: if $k$, all $k$ answer on round $k$.
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{Student Exercises: Advanced Logic}
-    \begin{itemize}
-        \item Basic: Blue-Eyed Islanders (public announcement, $k=2$).
-        \item Easy: Cheating Husbands (induction on public knowledge).
-        \item Medium: Sum and Product Puzzle (Freudenthal's problem).
-        \item Hard: Cheryl's Birthday (iterated elimination).
-        \item Very Hard: 100 Prisoners and a Light Bulb (protocol design).
-    \end{itemize}
-\end{frame}
-
-\section{Advanced Invariants And Monovariants}
-
-\begin{frame}{Generalising Invariants}
-    \concept{An invariant can be a number, a parity, a polynomial, a
-    vector modulo $m$, or a potential function.}
-
-    \begin{itemize}
-        \item Modulo invariants: track values mod $2, 3, 4, \ldots$
-        \item Polynomial invariants: e.g., $x^2+y^2$ for rotation.
-        \item Potential functions: sum of weights that never increases.
-        \item Multiple invariants together can prove stronger results.
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{Worked Example: Peg Solitaire}
-    On a cross-shaped board, a peg jumps over an adjacent peg into an
-    empty hole, removing the jumped peg.
-
-    Can a single peg be moved to the centre from the standard starting position?
-\end{frame}
-
-\begin{frame}{Peg Solitaire: Applying The Concept}
-    \apply{Assign weights to holes; total weight never increases.}
-
-    \begin{itemize}
-        \item Label each hole with a value from $\{1, x, x^2\}$ where $x$
-            satisfies $x^2+x+1=0$.
-        \item Any legal jump preserves the sum of values of occupied holes.
-        \item Compute the initial sum and the target sum.
-        \item They differ, so the target is unreachable.
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{Student Exercises: Advanced Invariants}
-    \begin{itemize}
-        \item Basic: Peg solitaire on a smaller board.
-        \item Easy: Token game with modular invariant.
-        \item Medium: Conway's Soldiers (checker jumping).
-        \item Hard: Polynomial invariant for grid walks.
-        \item Very Hard: Invariant for the IMO 1986 Problem 3
-            (integer sequence).
-    \end{itemize}
-\end{frame}
-
-\section{Colouring And Tiling: Generalisations}
-
-\begin{frame}{Beyond Two Colours}
-    \concept{Colouring with 3, 4, or more colours captures more structure.}
-
-    \begin{itemize}
-        \item Triominoes and 3-colourings.
-        \item Tetrominoes and 4-colourings.
-        \item Modular colourings: colour $(i,j)$ by $(i+j)\bmod m$ or
-            $(i+2j)\bmod m$.
-        \item Each tile shape interacts with colours in a predictable way.
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{Worked Example: Tiling With Trominoes}
-    Can a $5\times8$ board be tiled by $2\times2$ squares and
-    L-shaped trominoes?
-\end{frame}
-
-\begin{frame}{Tromino Tiling: Applying The Concept}
-    \apply{Use a 4-colouring based on coordinates mod 2.}
-
-    \begin{itemize}
-        \item Colour each cell $(i,j)$ by $(i\bmod 2, j\bmod 2)$: four
-            colour classes.
-        \item A $2\times2$ square covers one of each colour.
-        \item A tromino covers three different colours, missing one.
-        \item Count how many cells of each colour the board has.
-        \item The counts show tiling is impossible.
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{Student Exercises: Advanced Colouring}
-    \begin{itemize}
-        \item Basic: Tiling a deficient board with trominoes.
-        \item Easy: 3-colouring for dominoes on a torus.
-        \item Medium: Tiling with T-tetrominoes.
-        \item Hard: Fault-free tilings.
-        \item Very Hard: Generalised mutilated chessboard.
-    \end{itemize}
-\end{frame}
-
-\section{Induction And Recursion: From Proof To Algorithm}
-
-\begin{frame}{Induction As A Design Principle}
-    \concept{If I can solve size $n$ using a solution for size $n-1$, I
-    have a recursive algorithm.}
-
-    \begin{itemize}
-        \item Proof by induction $\leftrightarrow$ recursive function.
-        \item Base case $\leftrightarrow$ terminating condition.
-        \item Inductive step $\leftrightarrow$ recursive call and combination.
-        \item Strong induction $\leftrightarrow$ divide-and-conquer or DP.
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{Worked Example: Tower Of Hanoi}
-    Three pegs, $n$ disks of decreasing size. Move stack from peg A to peg C.
-\end{frame}
-
-\begin{frame}{Tower Of Hanoi: Applying The Concept}
-    \apply{Recursive solution from induction on $n$.}
-
-    \begin{itemize}
-        \item Move top $n-1$ disks from A to B.
-        \item Move largest disk from A to C.
-        \item Move $n-1$ disks from B to C.
-        \item Minimum moves: $2^n-1$ (prove by induction).
-    \end{itemize}
-
-    The recursive structure \emph{is} the algorithm.
-\end{frame}
-
-\begin{frame}{Student Exercises: Induction To Algorithm}
-    \begin{itemize}
-        \item Basic: Josephus problem (eliminate every second person).
-        \item Easy: Gray codes (recursive construction).
-        \item Medium: Recursive algorithm for the 15-puzzle parity.
-        \item Hard: Optimal strategy for the counterfeit coin with
-            $n$ weighings.
-        \item Very Hard: Recursive construction of Hadamard matrices.
-    \end{itemize}
-\end{frame}
-
-\section{Heuristics In Depth}
+\section{Wishful Thinking}
 
 \begin{frame}{Wishful Thinking: Simplify Until Solvable}
-    \heuristic{Assume the answer has a nice form. What would make this easy?}
-
+    \pause
     \begin{itemize}
-        \item ``If only the numbers were smaller...''
-        \item ``If only the constraints were simpler...''
-        \item ``What would the solution look like if I already knew it?''
-        \item Then find the reduction from the real problem to the
-            simplified one.
+        \item Assume the answer has a nice form. What would make this easy?
+            \begin{itemize}
+                \item ``If only the numbers were smaller...''
+                \item ``If only the constraints were simpler...''
+                \item ``What would the solution look like if I
+                    already knew it?''
+                \item Then find the reduction from the real problem to the
+                    simplified one.
+            \end{itemize}
     \end{itemize}
 \end{frame}
 
 \begin{frame}{Worked Example: Wishful Thinking -- Sum of Squares}
-    Find all integer solutions to $x^2 + y^2 = 2z^2$ with $x,y,z > 0$.
+    Construct infinitely many integer solutions to
+    $x^2 + y^2 = 2z^2$ with $x,y,z > 0$.
 
-    \vspace{0.5em}
     Wishful thinking: what if $x+y$ and $x-y$ had a nice structure?
 \end{frame}
 
-\begin{frame}{Wishful Thinking: Applying The Concept}
-    \apply{Set $x = u+v$, $y = u-v$.}
-
+\begin{frame}{Solution: Sum Of Squares}
+    \pause
     \begin{itemize}
+        \item Set $x = u+v$, $y = u-v$.
         \item $x^2 + y^2 = (u+v)^2 + (u-v)^2 = 2u^2 + 2v^2 = 2z^2$.
-        \item So $u^2 + v^2 = z^2$ -- a Pythagorean triple!
-        \item All solutions: $u = m^2-n^2$, $v = 2mn$, $z = m^2+n^2$
-            (or swapped).
+        \item So $u^2 + v^2 = z^2$ (a Pythagorean triple!)
+        \item Take $u = m^2-n^2$, $v = 2mn$, $z = m^2+n^2$.
         \item Then $x = (m^2-n^2) + 2mn$, $y = (m^2-n^2) - 2mn$.
+        \item For example, fixing $n=1$ and taking $m\ge3$ gives
+            infinitely many positive solutions.
     \end{itemize}
 \end{frame}
 
 \begin{frame}{Student Exercises: Wishful Thinking}
     \begin{itemize}
-        \item<1-> Basic: Solve $x^2 + y^2 = z^2$ in positive integers.
-        \item<1-> Easy: Find all $n$ such that $n^2 + (n+1)^2$ is a
-            perfect square.
-        \item<1-> Medium: $x^2 + y^2 + z^2 = 2xyz$ (use wishful
-            thinking to reduce).
-        \item<1-> Hard: Integer solutions to $a^2 + b^2 = 3c^2$.
-        \item<1-> Very Hard: Parametrise rational points on $x^3 + y^3 = 9$.
+        \item<1-> \textbf{Basic:} Complete the Square
+        \item<1-> \textbf{Easy:} Make the Sum Telescope
+        \item<1-> \textbf{Medium:} A Number Puzzle
+        \item<1-> \textbf{Hard:} Improve the Recurrence
+        \item<1-> \textbf{Very Hard:} Factor the Equation
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Symmetry: Exploit Invariance Under Transformations}
-    \heuristic{Look for operations that leave the problem unchanged.}
+\section{Symmetry}
 
+\begin{frame}{Symmetry: Exploit Invariance Under Transformations}
+    \pause
     \begin{itemize}
-        \item Pairing strategy: if the opponent moves, reply symmetrically.
-        \item Canonical form: transform to a standard representative.
-        \item Symmetric positions often have symmetric optimal moves.
+        \item Look for operations that leave the problem unchanged.
+            \begin{itemize}
+                \item Pairing strategy: if the opponent moves, reply
+                    symmetrically.
+                \item Canonical form: transform to a standard representative.
+                \item Symmetric positions often have symmetric optimal moves.
+            \end{itemize}
     \end{itemize}
 \end{frame}
 
@@ -364,10 +192,10 @@
     Show the second player has a winning strategy.
 \end{frame}
 
-\begin{frame}{Symmetry: Applying The Concept}
-    \apply{Mirror every move across the centre.}
-
+\begin{frame}{Solution: Pairing Game}
+    \pause
     \begin{itemize}
+        \item Mirror every move across the centre.
         \item The $4\times4$ board is centrally symmetric.
         \item If the first player places a domino covering $(x,y)$
             and $(x',y')$,
@@ -381,199 +209,129 @@
 
 \begin{frame}{Student Exercises: Symmetry}
     \begin{itemize}
-        \item<1-> Basic: Pairing game on a $2\times n$ board.
-        \item<1-> Easy: Symmetry strategy in Chomp (poisoned chocolate).
-        \item<1-> Medium: Second player wins on even$\times$even board with
-            centrally symmetric tiles.
-        \item<1-> Hard: Symmetry in the game of Nim with paired heaps.
-        \item<1-> Very Hard: Strategy stealing argument for Hex.
+        \item<1-> \textbf{Basic:} Pairing Game
+        \item<1-> \textbf{Easy:} Coins on a Circular Table
+        \item<1-> \textbf{Medium:} A Symmetric Integral
+        \item<1-> \textbf{Hard:} Odd Skew-Symmetric Matrices
+        \item<1-> \textbf{Very Hard:} Six People
     \end{itemize}
 \end{frame}
+
+\section{Extreme Principle}
 
 \begin{frame}{Extreme Principle: The Boundary Holds The Answer}
-    \heuristic{Consider the largest, smallest, leftmost, rightmost, or
-    most extreme object.}
-
+    \pause
     \begin{itemize}
-        \item The extremal object has restricted neighbours.
-        \item Often leads to contradiction or constructive greedy choice.
-        \item Works in geometry, combinatorics, number theory, and algorithms.
+        \item Consider the largest, smallest, leftmost, rightmost, or
+            most extreme object.
+            \begin{itemize}
+                \item The extremal object has restricted neighbours.
+                \item Often leads to contradiction or constructive
+                    greedy choice.
+                \item Works in geometry, combinatorics, number
+                    theory, and algorithms.
+            \end{itemize}
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Worked Example: Extreme Principle -- Points in a Circle}
-    Given 5 points in a unit circle, prove that some pair is at distance
-    $\le 1$.
+\begin{frame}{Worked Example: Extreme Principle -- A Finite Set}
+    Let $S$ be a finite, non-empty set of integers such that
+    $a+b\in S$ whenever $a,b\in S$.
 
-    \vspace{0.5em}
-    Consider the point farthest from the centre...
+    Prove that $S=\{0\}$.
 \end{frame}
 
-\begin{frame}{Extreme Principle: Applying The Concept}
-    \apply{Let $P$ be the point with maximum distance from the centre $O$.}
-
+\begin{frame}{Solution: A Finite Set}
+    \pause
     \begin{itemize}
-        \item Let $OP = r \le 1$. All points lie in the unit circle
-            centred at $O$.
-        \item The other 4 points lie in the intersection of the unit circle
-            and the circle of radius $r$ centred at $P$.
-        \item This intersection is contained in a circle of radius $r/2$...
-        \item (Standard proof: divide into 5 sectors of $72^\circ$, or use
-                the fact that the maximum minimum distance for 5 points in a
-                unit circle is $2\sin(36^\circ) > 1$; the claim as stated needs
-                unit circle of diameter 1. Adjusting: for 5 points in a circle
-            of diameter 1, some pair is at distance $\le 1/2$.)
+        \item Examine the largest and smallest elements of $S$.
+        \item Let $M$ be the largest element. If $M>0$, then
+            $M+M=2M\in S$, contradicting maximality.
+        \item Therefore $M\le 0$.
+        \item Let $m$ be the smallest element. If $m<0$, then
+            $m+m=2m\in S$, contradicting minimality.
+        \item Therefore $m\ge 0$.
+        \item Hence $m=M=0$, so $S=\{0\}$.
     \end{itemize}
 \end{frame}
 
 \begin{frame}{Student Exercises: Extreme Principle}
     \begin{itemize}
-        \item<1-> Basic: 5 points in a unit square; some pair at distance
-            $\le \sqrt{2}/2$.
-        \item<1-> Easy: In any set of 10 integers, some subset sums to a
-            multiple of 10 (consider extreme partial sums).
-        \item<1-> Medium: Maximum area triangle inscribed in a circle is
-            equilateral (extreme principle on area).
-        \item<1-> Hard: In a tournament, there is a ``king'' (vertex
-            distance $\le 2$ to all others).
-        \item<1-> Very Hard: Sylvester-Gallai theorem (extreme point gives
-            contradiction).
+        \item<1-> \textbf{Basic:} A Finite Set Closed Under Addition
+        \item<1-> \textbf{Easy:} Minimum Degree Forces a Cycle
+        \item<1-> \textbf{Medium:} An Empty Triangle
+        \item<1-> \textbf{Hard:} A Path Through a Tournament
+        \item<1-> \textbf{Very Hard:} Longest Paths Meet
     \end{itemize}
 \end{frame}
+
+\section{Reduction}
 
 \begin{frame}{Reduction: Change The Representation}
-    \heuristic{Replace the problem with an equivalent one that is
-    easier to see.}
-
+    \pause
     \begin{itemize}
-        \item Graph modelling: vertices and edges instead of story.
-        \item Algebraic encoding: variables and equations instead of logic.
-        \item Modulo arithmetic: finite states instead of infinite.
-        \item This is the bridge to competitive programming.
+        \item Replace the problem with an equivalent one that is easier to see.
+            \begin{itemize}
+                \item Graph modelling: vertices and edges instead of story.
+                \item Algebraic encoding: variables and equations
+                    instead of logic.
+                \item Modulo arithmetic: finite states instead of infinite.
+                \item This is the bridge to competitive programming.
+            \end{itemize}
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Worked Example: Reduction -- Lamps in a Circle}
-    $n$ lamps in a circle, each on or off. A move toggles lamp $i$ and
-    its two neighbours. From a given configuration, can you reach all off?
+\begin{frame}{Worked Example: Reduction -- River Crossing}
+    A farmer must take a wolf, a goat, and a cabbage across a river.
+    The boat carries only the farmer and at most one item.
+
+    The wolf cannot be left with the goat, and the goat cannot be left
+    with the cabbage. How can everyone cross safely?
 \end{frame}
 
-\begin{frame}{Reduction: Applying The Concept}
-    \apply{Model as linear algebra over $\mathbb{F}_2$.}
-
+\begin{frame}{Solution: River Crossing}
+    \pause
     \begin{itemize}
-        \item State vector $v \in \mathbb{F}_2^n$. Move $i$ adds vector
-            $m_i$ with 1s at positions $i-1, i, i+1$ (mod $n$).
-        \item Reachable configurations from $v_0$ are $v_0 +
-            \text{span}\{m_1,\ldots,m_n\}$.
-        \item This is a linear subspace. All-off reachable iff $v_0$
-            is in the span.
-        \item For $n$ not divisible by 3, the moves are independent and span
-            the whole space -- always solvable.
-        \item For $n$ divisible by 3, the sum of all move vectors is 0, and
-            the invariant is the sum of bits at positions
-            $0,3,6,\ldots$ modulo 2.
+        \item Represent a situation by which riverbank contains the farmer,
+            wolf, goat, and cabbage.
+        \item Keep only safe situations and connect two when one legal boat
+            crossing changes one into the other.
+        \item The puzzle is now a path problem from the all-left state to the
+            all-right state.
+        \item One path is: goat over, farmer back, wolf over, goat back,
+            cabbage over, farmer back, goat over.
     \end{itemize}
 \end{frame}
 
 \begin{frame}{Student Exercises: Reduction}
     \begin{itemize}
-        \item<1-> Basic: Water jugs as graph reachability.
-        \item<1-> Easy: Lights Out puzzle on a $3\times3$ grid.
-        \item<1-> Medium: Reduce 15-puzzle parity to permutation sign.
-        \item<1-> Hard: Reduction from subset sum to knapsack.
-        \item<1-> Very Hard: Prove equivalence of two formulations of
-            the same contest problem (reduction to known NP-complete problem).
+        \item<1-> \textbf{Basic:} An Acquaintance Graph
+        \item<1-> \textbf{Easy:} The Bridges of K\"onigsberg
+        \item<1-> \textbf{Medium:} Water Jugs as Reachability
+        \item<1-> \textbf{Hard:} Lamps as Linear Algebra
+        \item<1-> \textbf{Very Hard:} Assignment as Maximum Flow
     \end{itemize}
 \end{frame}
 
-\section{From Mathematical Insight To Algorithmic Thinking}
-
-\begin{frame}{The Bridge To Competitive Programming}
+\begin{frame}{Week 2 Complete}
+    \pause
     \begin{itemize}
-        \item Mathematical proof $\to$ algorithm is often mechanical.
-        \item The invariant \emph{is} the loop invariant.
-        \item The induction \emph{is} the recursion or DP recurrence.
-        \item The reduction \emph{is} the modelling step.
+        \item Wishful thinking simplifies the target structure.
+        \item Symmetry pairs equivalent positions and cases.
+        \item The extreme principle focuses on boundary objects.
+        \item Reduction changes a problem into a familiar representation.
+        \item Optional extensions continue in \textbf{Week 2 Advanced Slides}.
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Modelling A Puzzle As A Graph (Algorithmic Bridge)}
-    \concept{Many puzzles become graph reachability or shortest path.}
+\begin{frame}{Thanks for coming!}
+    \begin{center}
+        \Large
+        \textbf{See ya next week!}
 
-    \begin{itemize}
-        \item State = complete description of the current situation.
-        \item Edge = one legal move.
-        \item Solution = path from start state to goal state.
-        \item BFS finds the shortest solution.
-        \item An invariant proves two states are in different components.
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{Worked Example: Water Jugs As A Graph}
-    Two jugs of capacities 3 and 5. Target: measure exactly 4 units.
-    Allowed: fill, empty, pour.
-
-    \vspace{0.5em}
-    States: $(a,b)$ where $0\le a\le3$, $0\le b\le5$.
-    Edges: the six legal operations.
-    BFS from $(0,0)$ to any state with $a=4$ or $b=4$.
-\end{frame}
-
-\begin{frame}{Greedy Choices From The Extreme Principle (Algorithmic Bridge)}
-    \concept{The extreme principle often justifies a greedy choice.}
-
-    \begin{itemize}
-        \item Activity selection: earliest finish time is the extreme interval.
-        \item Coin change (canonical systems): largest coin is the
-            extreme choice.
-        \item Fractional knapsack: highest value/weight ratio is the
-            extreme item.
-        \item Proof: exchange argument shows the extreme choice is safe.
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{Recurrence From Induction (Algorithmic Bridge)}
-    \concept{Inductive proofs directly give recurrences.}
-
-    \begin{itemize}
-        \item Define $f(n)$ = answer for size $n$.
-        \item Inductive step: $f(n) = \text{combination of } f(\text{smaller})$.
-        \item Memoise or tabulate to avoid recomputation.
-        \item This is dynamic programming.
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{Student Exercises: Algorithmic Bridges}
-    \begin{itemize}
-        \item Basic: BFS on water jug states (implement conceptually).
-        \item Easy: Greedy activity selection from extreme principle.
-        \item Medium: DP from induction: coin change / ways to make sum.
-        \item Hard: State-space search for a sliding puzzle.
-        \item Very Hard: Design and analyse a greedy algorithm for a
-            scheduling problem.
-    \end{itemize}
-\end{frame}
-
-\begin{frame}{Wrap-Up}
-    Pair 1 complete: Logic, Invariants, Heuristics.
-    \begin{itemize}
-        \item Logic tracks knowledge; common knowledge enables coordination.
-        \item Invariants prove impossibility; monovariants prove progress.
-        \item Colouring turns geometry into arithmetic.
-        \item Induction reduces problems; recursion builds algorithms.
-        \item Heuristics: wishful thinking, symmetry, extreme, reduction.
-    \end{itemize}
-
-    Algorithmic bridges:
-    \begin{itemize}
-        \item State-space modelling $\to$ graph algorithms (Pair 3).
-        \item Greedy from extreme principle $\to$ greedy algorithms (Pair 2/7).
-        \item Induction to recurrence $\to$ dynamic programming (Pair 4/8).
-    \end{itemize}
-
-    Next: Pair 2 -- Core CP Fundamentals: Prefix Sums, Two Pointers,
-    Binary Search.
+        I hope you enjoyed the workshop and found some useful new
+        ways to approach problems.
+    \end{center}
 \end{frame}
 
 \end{document}

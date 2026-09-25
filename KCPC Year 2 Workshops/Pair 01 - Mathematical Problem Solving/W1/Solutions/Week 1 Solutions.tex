@@ -43,11 +43,7 @@ to\headwidth{\color{kcpc-red}\leaders\hrule height \headrulewidth\hfill}}
 \setlist[itemize]{noitemsep, topsep=4pt}
 \setlist[enumerate]{topsep=4pt}
 
-\newcommand{\insight}[1]{
-    \begin{center}\fcolorbox{black}{gray!10}{
-            \begin{minipage}{0.9\textwidth}\textbf{Key insight:} #1
-        \end{minipage}}
-\end{center}}
+\newcommand{\insight}[1]{\par\medskip\noindent\textbf{Key insight:} #1}
 
 \title{KCPC Week 1 Solutions}
 \author{}
@@ -72,13 +68,23 @@ For one matching pair of each colour, the worst case is all 10 black
 gloves, all 6 brown gloves, and 2 grey gloves of the same hand. The
 next grey glove completes the final pair, so the answer is 19.
 
-\subsection*{Medium -- Two Doors}
-Ask either guard: ``Would the other guard say this door is safe?'' If
-the chosen door is safe, the truth-teller truthfully reports that the
-liar would say no, while the liar lies about the truth-teller's yes
-and also says no. If the chosen door is unsafe, both possibilities
-produce yes. Therefore the answer identifies the unsafe door; choose
-the other one.
+\subsection*{Medium -- Three People: Knights, Knaves, and Spies}
+Let the types be $K$ (Knight), $N$ (Knave), $S$ (Spy). Exactly one of
+each exists. Alice says ``Bob is $N$''; Bob says ``Carol is $K$''; Carol
+says ``Alice is $S$''.
+
+Suppose Alice is $K$. Then Bob is $N$, so Bob lies. Bob says ``Carol is
+$K$'', so Carol is not $K$. Carol must be $S$. Then Alice is $K$, Bob
+is $N$, Carol is $S$ -- consistent. Carol says ``Alice is $S$'', which
+is false; as Spy she may lie. This works.
+
+Suppose Bob is $K$. Then Carol is $K$, contradiction (two Knights).
+
+Suppose Carol is $K$. Then Alice is $S$, so Alice is not $K$. Bob must
+be $K$ (only one $K$), but then Carol is $K$ -- contradiction.
+
+The only consistent assignment: Alice = Knight, Bob = Knave, Carol = Spy.
+\insight{Test each possible assignment of the unique Knight; contradictions narrow it down.}
 
 \subsection*{Hard -- Islander Statements}
 Let $L$ be the number of liars. Statement $i$ is true exactly when
@@ -178,10 +184,15 @@ joined and the remaining board tiled by dominoes.
 
 \section{Induction And Monovariants}
 
-\subsection*{Basic -- Breaking A Chocolate Bar}
-Every break increases the number of pieces by exactly 1. Starting
-from 1 piece and ending with $nm$ pieces requires $nm-1$ breaks, and
-any sequence of legal breaks achieving unit squares uses that many.
+\subsection*{Basic -- Polygon Triangulation}
+Base case $n=3$: a triangle is already triangulated, with $3-2=1$
+triangle. Assume any convex $k$-gon triangulates into $k-2$ triangles
+for $3\le k<n$. For an $n$-gon, pick any diagonal that splits it into a
+$k$-gon and an $(n-k+2)$-gon with $3\le k\le n-1$. By induction, the
+triangulation has $(k-2)+((n-k+2)-2)+1 = n-2$ triangles (the $+1$ is the
+triangle formed by the diagonal and the two vertices). All triangulations
+have the same count.
+\insight{Induction on the number of sides; any diagonal reduces the problem to smaller polygons.}
 
 \subsection*{Easy -- Induction Inequality}
 Base case: $4!=24>16=2^4$. Assume $n!>2^n$ for some $n\ge4$. Then

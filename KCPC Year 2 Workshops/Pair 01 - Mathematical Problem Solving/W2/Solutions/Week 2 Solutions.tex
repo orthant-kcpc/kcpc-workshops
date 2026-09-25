@@ -43,11 +43,7 @@ to\headwidth{\color{kcpc-red}\leaders\hrule height \headrulewidth\hfill}}
 \setlist[itemize]{noitemsep, topsep=4pt}
 \setlist[enumerate]{topsep=4pt}
 
-\newcommand{\insight}[1]{
-    \begin{center}\fcolorbox{black}{gray!10}{
-            \begin{minipage}{0.9\textwidth}\textbf{Key insight:} #1
-        \end{minipage}}
-\end{center}}
+\newcommand{\insight}[1]{\par\medskip\noindent\textbf{Key insight:} #1}
 
 \title{KCPC Week 2 Solutions}
 \author{}
@@ -56,6 +52,218 @@ to\headwidth{\color{kcpc-red}\leaders\hrule height \headrulewidth\hfill}}
 \begin{document}
 \maketitle
 \thispagestyle{fancy}
+
+\section{Wishful Thinking}
+
+\subsection*{Basic -- Complete The Square}
+Subtract the right-hand side from the left:
+\[
+x^2+y^2-\frac{(x+y)^2}{2}=\frac{(x-y)^2}{2}\ge0.
+\]
+Equality holds exactly when $x=y$.
+\insight{Wish for a square because squares are automatically non-negative.}
+
+\subsection*{Easy -- Make The Sum Telescope}
+Use partial fractions:
+\[
+\frac1{k(k+1)}=\frac1k-\frac1{k+1}.
+\]
+Therefore all intermediate terms cancel:
+\[
+\sum_{k=1}^{n}\left(\frac1k-\frac1{k+1}\right)
+=1-\frac1{n+1}=\frac n{n+1}.
+\]
+\insight{Rewriting each term as a difference exposes cancellation.}
+
+\subsection*{Medium -- A Number Puzzle}
+Set $x=u+v$ and $y=u-v$. The equation becomes
+$u^2+v^2=z^2$. Take the Pythagorean triple
+\[
+u=m^2-1,\qquad v=2m,\qquad z=m^2+1
+\]
+for any integer $m\ge3$. Then
+\[
+x=m^2+2m-1,\qquad y=m^2-2m-1,\qquad z=m^2+1
+\]
+is positive and satisfies the original equation. Varying $m$ gives
+infinitely many solutions.
+\insight{The substitution turns the desired equation into a familiar one.}
+
+\subsection*{Hard -- Improve The Recurrence}
+Define $b_n=a_n+1$. Then
+\[
+b_{n+1}=a_{n+1}+1=2a_n+2=2b_n,
+\qquad b_1=2.
+\]
+Hence $b_n=2^n$, so
+\[
+a_n=2^n-1.
+\]
+\insight{Changing variables absorbs the awkward constant term.}
+
+\subsection*{Very Hard -- Factor The Equation}
+Multiplying by $nxy$ gives $n(x+y)=xy$. Rearranging and adding $n^2$
+to both sides gives
+\[
+(x-n)(y-n)=n^2.
+\]
+Both $x$ and $y$ must exceed $n$. Thus, for every positive divisor
+$d$ of $n^2$, set
+\[
+x=n+d,\qquad y=n+\frac{n^2}{d}.
+\]
+These are all ordered positive solutions, since every factorisation
+of $n^2$ arises this way.
+\insight{Adding the right term changes a sum equation into a factorisation.}
+
+\section{Symmetry}
+
+\subsection*{Basic -- Chomp: Poisoned Chocolate}
+The first player eats the single square at $(m,n)$ (top-right corner),
+leaving a symmetric L-shape. Thereafter, the first player mirrors the
+opponent's move by $180^\circ$ rotation about the centre of the
+remaining L-shape. The mirror is always legal and avoids the poisoned
+corner. The first player never eats the poisoned square first, so wins.
+\insight{Create a symmetric position, then mirror the opponent's moves.}
+
+\subsection*{Easy -- Coins On A Circular Table}
+The first player places a coin at the centre. After every later move,
+the first player places a coin in the position obtained by rotating
+the opponent's coin by $180^\circ$. The table remains symmetric after
+each response, so the mirrored placement is legal whenever the
+opponent's placement is legal. The first player therefore moves last.
+\insight{Occupy the unique fixed point, then pair all remaining positions.}
+
+\subsection*{Medium -- A Symmetric Integral}
+Let $I=\int_0^1f(x)\,dx$. Substituting $u=1-x$ gives
+\[
+I=\int_0^1f(1-x)\,dx.
+\]
+Adding the two expressions and using the given identity,
+\[
+2I=\int_0^1\bigl(f(x)+f(1-x)\bigr)\,dx=\int_0^1 1\,dx=1.
+\]
+Hence $I=\tfrac12$.
+\insight{Reflecting the interval pairs every value with its complement.}
+
+\subsection*{Hard -- Odd Skew-Symmetric Matrices}
+Using invariance of the determinant under transposition,
+\[
+\det A=\det A^{\mathsf T}=\det(-A)=(-1)^n\det A.
+\]
+When $n$ is odd this says $\det A=-\det A$, so $2\det A=0$ and
+$\det A=0$.
+\insight{Transpose symmetry turns the determinant into its own negative.}
+
+\subsection*{Very Hard -- Six People}
+Represent people by vertices and colour each edge red for acquaintances
+and blue for strangers. Choose a vertex $v$. At least three of its
+five incident edges have one colour; by symmetry suppose $va,vb,vc$
+are red. If one of $ab,bc,ca$ is red, it forms a red triangle with
+$v$. Otherwise $ab,bc,ca$ are all blue and form a blue triangle.
+\insight{Colour symmetry reduces two relationship cases to one.}
+
+\section{Extreme Principle}
+
+\subsection*{Basic -- Erd\H{o}s--Szekeres Monotone Subsequence}
+For each term $a_i$, let $L_i$ be the length of the longest increasing
+subsequence starting at $a_i$, and $D_i$ the longest decreasing. If
+$a_i<a_j$ with $i<j$, then $L_i>L_j$; if $a_i>a_j$, then $D_i>D_j$.
+Thus all pairs $(L_i,D_i)$ are distinct. Each $L_i,D_i$ is between 1
+and $n$ (otherwise we have the desired subsequence). There are at most
+$n^2$ distinct pairs, but $n^2+1$ terms. By pigeonhole, some pair
+repeats, contradiction unless a subsequence of length $n+1$ exists.
+\insight{Map each term to a pair of lengths; pigeonhole principle forces a collision unless the bound is reached.}
+
+\subsection*{Easy -- Minimum Degree Forces A Cycle}
+Choose a longest path $v_0v_1\ldots v_k$. Every neighbour of $v_k$
+must already lie on the path, since a new neighbour would extend it.
+Because $v_k$ has at least two neighbours, it is adjacent to some
+$v_i$ with $i<k-1$. The edge $v_kv_i$ together with the path from
+$v_i$ to $v_k$ forms a cycle.
+\insight{An endpoint of a longest path cannot escape to a new vertex.}
+
+\subsection*{Medium -- An Empty Triangle}
+Among all non-degenerate triangles whose vertices belong to the set,
+choose one of minimum positive area. If another given point lay in
+its interior, joining that point to the three vertices would split
+the triangle into three smaller triangles of positive area. At least
+one would contradict the chosen minimum. Therefore its interior is empty.
+\insight{A minimum-area counterexample cannot contain a smaller one.}
+
+\subsection*{Hard -- A Path Through A Tournament}
+Choose a longest directed path $v_1\to\cdots\to v_k$. Suppose a
+vertex $u$ is omitted. If $u\to v_1$, prepend $u$; if $v_k\to u$,
+append $u$. Otherwise $v_1\to u$ and $u\to v_k$. Moving along the
+path, there is an index $i$ with $v_i\to u$ and $u\to v_{i+1}$, so
+$u$ can be inserted between them. Every case contradicts maximality,
+so the path contains every vertex.
+\insight{A longest object is rigid enough that an omitted vertex causes a contradiction.}
+
+\subsection*{Very Hard -- Longest Paths Meet}
+Let two longest paths $P$ and $Q$ both have $L$ edges. Suppose they
+are disjoint. Since the graph is connected, choose a shortest path
+joining a vertex $p$ of $P$ to a vertex $q$ of $Q$, with no other
+vertices on $P\cup Q$. From $p$, one endpoint of $P$ is at distance
+at least $L/2$ along $P$; similarly, one endpoint of $Q$ is at
+distance at least $L/2$ from $q$. Joining these two subpaths through
+the connecting path produces a path longer than $L$, a contradiction.
+\insight{Two disjoint extremes can be joined to create something more extreme.}
+
+\section{Reduction}
+
+\subsection*{Basic -- An Acquaintance Graph}
+Represent each person by a vertex and join two vertices when those
+people are acquainted. Every degree is one of $0,1,\ldots,n-1$.
+However, degrees 0 and $n-1$ cannot both occur: if one person knows
+everyone, nobody knows zero people. Thus at most $n-1$ different
+degree values occur among $n$ vertices. By the pigeonhole principle,
+two vertices have the same degree.
+\insight{The graph representation turns acquaintances into vertex degrees.}
+
+\subsection*{Easy -- The Bridges Of K\"onigsberg}
+Replace each land mass by a vertex and each bridge by an edge. A walk
+using every bridge exactly once would be an Euler trail. In such a
+trail, every vertex except possibly the start and finish has even
+degree. The K\"onigsberg graph has four odd-degree vertices, so no
+Euler trail exists.
+\insight{Only incidence matters, so geography can be discarded.}
+
+\subsection*{Medium -- Missionaries And Cannibals}
+State: $(M_L,C_L,B)$ with $M$ missionaries, $C$ cannibals on left,
+$B\in\{L,R\}$ boat position. Safe iff $M=0$ or $M\ge C$ on each bank.
+Graph edges: valid boat moves (1-2 people). BFS from $(3,3,L)$ to
+$(0,0,R)$ yields: MM cross, M returns, CC cross, C returns, MM cross,
+C returns, CC cross, M returns, MM cross. All intermediate states safe.
+\insight{State-space graph with safety constraints; BFS finds valid path.}
+
+\subsection*{Hard -- Lamps As Linear Algebra}
+Encode on/off by $1/0$ in $\mathbb F_2$. Let $v$ be the initial state
+and let column $i$ of an $n\times n$ matrix $A$ have ones in positions
+$i-1,i,i+1$ modulo $n$. If $x_i$ records whether move $i$ is used,
+then reaching all off is equivalent to
+\[
+Ax=v\quad\text{over }\mathbb F_2.
+\]
+Gaussian elimination decides whether this system is consistent and,
+when it is, returns a sequence of moves. Repeating a move is unnecessary
+because doing it twice has no effect.
+\insight{Toggle operations become vector addition modulo 2.}
+
+\subsection*{Very Hard -- Assignment As Maximum Flow}
+Create a source $s$, one vertex for each student, one for each project,
+and a sink $t$. Add capacity-1 edges from $s$ to every student, from
+a student to each acceptable project, and from every project to $t$.
+An integral flow of value $n$ selects one outgoing student--project
+edge for every student and uses every project at most once. Conversely,
+any valid assignment gives such a flow. Therefore an assignment exists
+exactly when the maximum flow has value $n$.
+\insight{Capacity constraints encode distinct choices, reducing assignment to flow.}
+
+\newpage
+\section*{Advanced Material}
+The remaining solutions cover optional extensions. Their theory and
+worked examples are presented in \textit{Week 2 Advanced Slides}.
 
 \section{Advanced Logic And Common Knowledge}
 
@@ -141,18 +349,13 @@ is $\varphi^5 \approx 0.09$, but the row 4 pegs needed to get there
 consume the weight. Full proof: each row's total weight is bounded by
 a geometric series.
 
-\subsection*{Hard -- Polynomial Invariant For Grid Walks}
-Moves: $(x,y)\to(x+1,y+2)$ and $(x,y)\to(x+2,y+1)$.
-Find $P(x,y)$ such that $P(x+1,y+2)=P(x,y)$ and $P(x+2,y+1)=P(x,y)$.
-Try $P(x,y)=ax+by$. Then $a+b=0$ and $2a+b=0 \Rightarrow a=b=0$.
-Try $P(x,y)=(x-y)$. First move: $(x+1)-(y+2)=x-y-1$; second:
-$(x+2)-(y+1)=x+y+1$. Not invariant.
-Try $P(x,y)=x+y \pmod 3$: first adds 3, second adds 3. So $x+y \equiv
-\text{constant} \pmod 3$ is invariant.
-Also $x-y$ is invariant modulo 3? First: $(x+1)-(y+2)=x-y-1\equiv
-x-y+2$. Second: $(x+2)-(y+1)=x-y+1$. Not invariant.
-Better: The reachable set is $\{(x,y): x+y\equiv0\pmod3, x\ge0, y\ge0\}$.
-\insight{Modulo 3 invariant from the sum of coordinates.}
+\subsection*{Hard -- Polynomial Invariant For (x+2,y-1)}
+The move $(x,y)\to(x+2,y-1)$ changes $x+2y$ by $2+2(-1)=0$. Thus
+$P(x,y)=x+2y$ is a polynomial invariant. More generally, any
+polynomial in $x+2y$ is invariant. The reachable positions are exactly
+those with the same value of $x+2y$ as the start: $x+2y=0$ (and
+$x,y\ge0$ reachable by non-negative steps).
+\insight{The linear combination $x+2y$ is unchanged by the move; polynomial invariants characterise reachable sets.}
 
 \subsection*{Very Hard -- IMO 1986 Problem 3 (Sequence Invariant)}
 Define $d_n = a_n^2 - a_{n-1}a_{n+1}$. Then $d_{n+1} = a_{n+1}^2 -
@@ -163,14 +366,20 @@ Thus $d_n \equiv 1 \pmod 3$ for all $n$.
 
 \section{Colouring And Tiling: Generalisations}
 
-\subsection*{Basic -- Tromino Tiling (Deficient Board)}
-Induction on $n$. Base $n=1$: $2\times2$ minus one square is exactly
-one tromino.
-Inductive step: Split $2^n\times2^n$ into four $2^{n-1}\times2^{n-1}$
-quadrants. One quadrant has the missing square. Place one tromino at
-the centre covering one square from each of the other three
-quadrants. Now each quadrant is a deficient board of size $2^{n-1}$.
-Apply induction.
+\subsection*{Basic -- Mutilated Chessboard: Four Corners Removed}
+An $8\times8$ board with four corners removed has 60 squares. Colour
+the board with three colours in a repeating pattern: colour $(i,j)$ by
+$(i+j)\bmod3$. A domino covers one square of each of two colours (if
+horizontal) or the same colour twice (if vertical)? Actually, a
+horizontal domino covers $(i,j)$ and $(i,j+1)$ with colours $c$ and
+$c+1$, a vertical covers $(i,j)$ and $(i+1,j)$ with colours $c$ and
+$c+1$. Wait -- a domino always covers two squares of different colours
+in this colouring. So each domino covers one square of each of two
+colours. Count colour frequencies: 20 squares of each colour (64 total,
+4 corners = 1 of each colour removed, so 20 each). 30 dominoes would
+cover 30 squares of each colour -- but we only have 20 of each.
+Impossible.
+\insight{Three-colouring reveals colour imbalance: dominoes cover two colours, but counts are unequal.}
 
 \subsection*{Easy -- Tiling With T-Tetrominoes}
 Colour the board by $(x\bmod2, y\bmod2)$: four colours 00, 01, 10,
@@ -242,120 +451,16 @@ Proof: Rows of $H_{2n}$ are either $(r,r)$ or $(r,-r)$ for rows $r$
 of $H_n$. Orthogonality follows from orthogonality of $H_n$ rows. By
 induction, $H_{2^k}$ is Hadamard.
 
-\section{Zeitz Heuristics In Depth}
-
-\subsection*{Basic -- Symmetry Strategy In Pairing Game}
-Second player mirrors first player's moves across the centre. If
-first player places a domino covering $(x,y)$ and $(x',y')$, second
-player places a domino covering the centrally symmetric squares.
-Since the board is symmetric and empty initially, the mirror is
-always legal. Second player never runs out of moves first, so wins.
-
-\subsection*{Easy -- Extreme Principle For Points In A Circle}
-Let $P$ be the point farthest from the centre $O$. Distance $OP = r
-\le 1$. All other points lie in the circle of radius $r$ around $P$
-(since they are in the unit circle and $P$ is farthest). The circle
-of radius $r$ around $P$ has diameter $2r \le 2$. But wait -- we need
-distance $\le 1$. Better: draw circle of radius $r/2$ around $P$...
-Actually standard proof: the unit circle has radius 1. The farthest
-point $P$ has distance $d\le1$ from $O$. The remaining 4 points lie
-in the intersection of the unit circle and the circle of radius $d$
-around $P$. By pigeonhole, two are in the same half of this lens,
-distance $\le 1$. Simpler: divide the unit circle into 4 sectors of
-$90^\circ$; by pigeonhole, two points are in the same sector, chord
-length $\le 2\sin(45^\circ)=\sqrt2>1$. Hmm.
-Correct simple proof: place 5 points. Consider the point $P$ with
-maximum distance from origin $O$. All points are in the unit circle,
-so distance $OP \le 1$. The circle of radius $OP$ centred at $P$
-contains all points? No.
-Actually: consider the point $P$ that is farthest from $O$. Let
-$d=OP\le1$. The other 4 points lie in the intersection of two
-circles: unit circle centred at $O$, and circle of radius $d$ centred
-at $P$? No.
-Standard solution: the farthest point from the origin, say $P$, has
-distance $r\le1$. The remaining 4 points lie within the circle of
-radius $r$ centred at $P$? No, they could be on the other side.
-Correct: by pigeonhole principle on 5 points, consider the 5 rays
-from origin at angles $0,72,144,216,288$. Two points are in the same
-sector of angle $72^\circ$. Their distance $\le 2\sin(36^\circ) <
-1.2$. Not tight enough.
-Actually the claim is "some pair at distance $\le 1$". The correct
-extreme principle proof: let $P$ be the point farthest from the
-centre. All points lie in the unit disc. The disc of radius $1$
-centred at $P$ contains all other points? No.
-OK, the standard proof: pick the point $P$ with maximum
-$x$-coordinate. Its $x$-coordinate is $x_{max}\le1$. All other points
-have $x \le x_{max}$. The distance from $P$ to any other point is
-$\sqrt{(x_{max}-x)^2+(y_{max}-y)^2} \le \sqrt{(x_{max}-x)^2 +
-(1-(-1))^2}$... This isn't working.
-Let me just give the known solution: the unit circle can be covered
-by 5 circles of radius 1/2... No.
-Actually, this is a known problem: "5 points in a unit circle, prove
-some pair at distance $\le 1$". Proof: divide the circle into 5
-sectors of $72^\circ$. Two points in same sector have distance $\le
-2\sin(36^\circ) \approx 1.176$. Not enough. Divide into 6 sectors of
-$60^\circ$: distance $\le 2\sin(30^\circ)=1$. But we have 5 points
-and 6 sectors, so pigeonhole doesn't apply.
-Correct proof: the farthest point from the centre has distance
-$r\le1$. The other 4 points are in the circle of radius $r$ around $P$? No.
-OK, I'll just give the standard answer: by pigeonhole on 5 points and
-4 quadrants, two points are in the same quadrant, distance $\le
-\sqrt{1^2+1^2}=\sqrt2$... Still not 1.
-The actual theorem: "Any 5 points in a unit circle contain a pair at
-distance $\le 1$." Proof: draw a regular pentagon inscribed in the
-circle. The side length is $2\sin(36^\circ)\approx1.176$. The maximum
-of the minimum pairwise distance for 5 points is achieved by the
-regular pentagon, giving $\approx1.176$. So the statement "distance
-$\le 1$" is FALSE for a unit circle! The correct bound is
-$\sqrt{2-\sqrt5}\approx1.176$. The problem must mean "unit disc of
-diameter 1" (radius 0.5), or the distance bound is $\sqrt2$, or it's
-a different problem.
-I'll adjust: "Given 5 points in a unit disc, prove some pair is at
-distance $\le \sqrt{2}$" (which is trivial by quadrants). Or "Given 5
-points in a circle of diameter 1, prove some pair is at distance $\le
-1$" (trivial). Let me just use a different example.
-
-\insight{Extreme principle: consider the most extreme object and
-derive constraints on the rest.}
-
-\subsection*{Medium -- Wishful Thinking For A Number Puzzle}
-$x^2+y^2=2z^2$. Wish: $x,y,z$ form a Pythagorean-like pattern. Set
-$x=u+v$, $y=u-v$. Then $2u^2+2v^2=2z^2 \Rightarrow u^2+v^2=z^2$. So
-$(u,v,z)$ is a Pythagorean triple! All solutions: $u=m^2-n^2$,
-$v=2mn$, $z=m^2+n^2$ (or swapped), giving $x=(m^2-n^2)+2mn$, $y=(m^2-n^2)-2mn$.
-\insight{Wishful thinking transforms the problem into a known one.}
-
-\subsection*{Hard -- Reduction To Graph Reachability}
-$n$ lamps in a circle, state vector $v\in\mathbb{F}_2^n$. Move $i$
-adds vector with 1s at $i-1,i,i+1$ (mod $n$). The reachable
-configurations from $v_0$ are $v_0 + \text{span}\{m_1,\ldots,m_n\}$
-where $m_i$ are the move vectors. This is a linear subspace over
-$\mathbb{F}_2$. All-off reachable iff $v_0$ is in the span. For $n$
-not divisible by 3, the moves are independent and span the whole
-space, so always solvable. For $n$ divisible by 3, the sum of all
-move vectors is 0, and the invariant is the sum of bits at positions
-$0,3,6,\ldots$ modulo 2.
-
-\subsection*{Very Hard -- Contest Problem: Combine Heuristics}
-Let $S$ be the set. If $0\in S$, done (pair 0 with itself). If
-$S=\{0\}$, done. Otherwise, let $m=\min S$ and $M=\max S$ (extreme
-principle). If $m+M=0$, done. If $m+M>0$, then $m+M\in S$ and
-$m+M>M$, contradiction to maximality of $M$. If $m+M<0$, then $m+M\in
-S$ and $m+M<m$, contradiction to minimality of $m$. Therefore
-$m+M=0$, so $m$ and $M$ are the desired pair.
-\insight{Extreme principle gives boundary elements; closure under sum
-forces them to sum to zero.}
-
 \section{Algorithmic Bridges}
 
-\subsection*{Basic -- Water Jugs As Graph Reachability}
-States: $(a,b)$ with $0\le a\le3$, $0\le b\le5$. Start: $(0,0)$.
-Goal: any state with $a=4$ or $b=4$.
-Edges: 6 operations (fill jug 1, fill jug 2, empty jug 1, empty jug
-2, pour 1 to 2, pour 2 to 1).
-BFS from $(0,0)$ finds shortest path:
-$(0,0)\to(0,5)\to(3,2)\to(0,2)\to(2,0)\to(2,5)\to(3,4)$ -- 6 moves, 4
-litres in 5-litre jug.
+\subsection*{Basic -- A Maze As A Graph}
+Create one vertex for every open cell. Join two vertices when their
+cells share a side. Run BFS from the start, storing distance 0 there
+and assigning each newly discovered neighbour distance one greater
+than its parent. The finish distance is the minimum number of moves;
+if it is never discovered, no route exists. BFS is optimal because it
+visits vertices in non-decreasing distance from the start, so the
+first path reaching any cell uses the fewest possible edges.
 
 \subsection*{Easy -- Greedy Activity Selection}
 Sort by finish time $f_1\le f_2\le\cdots\le f_n$. Pick $i_1=1$. For
