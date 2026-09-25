@@ -44,7 +44,7 @@ to\headwidth{\color{kcpc-red}\leaders\hrule height \headrulewidth\hfill}}
 \setlist[itemize]{noitemsep, topsep=4pt}
 \setlist[enumerate]{topsep=4pt}
 
-\title{KCPC Week 2 Problems\\Advanced Invariants, Heuristics, and
+\title{KCPC Week 2 Problems\\Heuristics, Advanced Topics, and
 Algorithmic Bridges}
 \author{}
 \date{}
@@ -54,9 +54,128 @@ Algorithmic Bridges}
 \thispagestyle{fancy}
 
 \section*{How To Use This Sheet}
-Each section builds on Week 1 techniques. Try the problems in order;
-later ones generalise earlier ideas. For algorithmic bridge problems,
-sketch the algorithm and argue correctness before writing code.
+Start with the heuristic problems to complete the Pair 1 curriculum.
+The advanced and algorithmic sections then deepen those ideas if time
+permits. For algorithmic bridge problems, sketch the algorithm and
+argue correctness before writing code.
+
+\section{Wishful Thinking}
+
+\subsection*{Basic -- Complete The Square}
+For all real numbers $x$ and $y$, prove that
+\[
+x^2+y^2\ge \frac{(x+y)^2}{2}.
+\]
+Try to rewrite the difference as something that is clearly non-negative.
+
+\subsection*{Easy -- Make The Sum Telescope}
+Prove that
+\[
+\sum_{k=1}^{n}\frac{1}{k(k+1)}=\frac{n}{n+1}.
+\]
+Wish that each term were a difference of two simpler fractions.
+
+\subsection*{Medium -- A Number Puzzle}
+Construct infinitely many integer solutions to $x^2+y^2=2z^2$ with
+$x,y,z>0$. Wish that a Pythagorean triple were hidden in the equation.
+
+\subsection*{Hard -- Improve The Recurrence}
+Let $a_1=1$ and $a_{n+1}=2a_n+1$. Find a closed formula for $a_n$.
+Wish that the unwanted $+1$ were absorbed into the sequence.
+
+\subsection*{Very Hard -- Factor The Equation}
+For a fixed positive integer $n$, find all positive integer pairs
+$(x,y)$ satisfying
+\[
+\frac1x+\frac1y=\frac1n.
+\]
+Wish that the equation could be written as a product.
+
+\section{Symmetry}
+
+\subsection*{Basic -- Chomp: Poisoned Chocolate}
+On an $m\times n$ rectangular chocolate bar, the bottom-left square is
+poisoned. Players alternately choose a square and eat it together with
+all squares above and to its right. The player forced to eat the
+poisoned square loses. Show that the first player has a winning
+strategy for any $m,n\ge2$. Use a symmetry strategy.
+
+\subsection*{Easy -- Coins On A Circular Table}
+Two players alternately place identical non-overlapping circular coins
+on a circular table. The player who cannot move loses. Show that the
+first player has a winning strategy.
+
+\subsection*{Medium -- A Symmetric Integral}
+An integrable function $f:[0,1]\to\mathbb{R}$ satisfies
+$f(x)+f(1-x)=1$ for every $x\in[0,1]$. Evaluate
+$\int_0^1 f(x)\,dx$.
+
+\subsection*{Hard -- Odd Skew-Symmetric Matrices}
+Let $A$ be an $n\times n$ real matrix satisfying $A^{\mathsf T}=-A$.
+Prove that if $n$ is odd, then $\det A=0$.
+
+\subsection*{Very Hard -- Six People}
+Among any six people, prove that there are either three mutual
+acquaintances or three mutual strangers.
+
+\section{Extreme Principle}
+
+\subsection*{Basic -- Erd\H{o}s--Szekeres Monotone Subsequence}
+Prove that any sequence of $n^2+1$ distinct real numbers contains an
+increasing or decreasing subsequence of length $n+1$. (Hint: associate
+each term with the length of the longest increasing subsequence
+starting there.)
+
+\subsection*{Easy -- Minimum Degree Forces A Cycle}
+Prove that every finite graph in which every vertex has degree at
+least 2 contains a cycle. Start with a longest path.
+
+\subsection*{Medium -- An Empty Triangle}
+A finite set of points in the plane is not contained in one line.
+Prove that three of the points form a triangle whose interior contains
+none of the other points.
+
+\subsection*{Hard -- A Path Through A Tournament}
+In a tournament, every pair of vertices is joined by exactly one
+directed edge. Prove that every finite tournament has a directed path
+that visits every vertex exactly once.
+
+\subsection*{Very Hard -- Longest Paths Meet}
+Prove that any two longest paths in a finite connected graph share at
+least one vertex.
+
+\section{Reduction}
+
+\subsection*{Basic -- An Acquaintance Graph}
+At a party of $n\ge2$ people, acquaintance is mutual. Prove that two
+people have the same number of acquaintances at the party. Reduce the
+problem to a graph and consider the possible vertex degrees.
+
+\subsection*{Easy -- The Bridges Of K\"onigsberg}
+Reduce the bridges puzzle to a graph and prove that no walk crosses
+each of the seven bridges exactly once.
+
+\subsection*{Medium -- Missionaries And Cannibals}
+Three missionaries and three cannibals must cross a river using a
+boat that carries at most two people. If cannibals ever outnumber
+missionaries on either bank, the missionaries are eaten. Model the
+problem as a state graph and find a safe crossing sequence.
+
+\subsection*{Hard -- Lamps As Linear Algebra}
+$n$ lamps are arranged in a circle. A move toggles lamp $i$ and its
+two neighbours. Given an initial configuration, give an algorithm to
+decide whether all lamps can be turned off.
+
+\subsection*{Very Hard -- Assignment As Maximum Flow}
+There are $n$ students and $n$ projects. Each student supplies a list
+of acceptable projects. Build a flow network for assigning every
+student a distinct acceptable project. State how its maximum flow
+determines whether an assignment exists.
+
+\newpage
+\section*{Advanced Material}
+The remaining problems are optional extensions. Their theory and
+worked examples are presented in \textit{Week 2 Advanced Slides}.
 
 \section{Advanced Logic And Common Knowledge}
 
@@ -117,10 +236,11 @@ A peg jumps orthogonally over another into an empty square, removing
 the jumped peg. Can a peg ever reach $y=5$? (Hint: assign weights
 $x^{|y|}$ with $x=(\sqrt{5}-1)/2$.)
 
-\subsection*{Hard -- Polynomial Invariant For Grid Walks}
-A token starts at $(0,0)$. A move changes $(x,y)$ to $(x+1,y+2)$ or
-$(x+2,y+1)$. Characterise all reachable positions. (Hint: find a
-polynomial $P(x,y)$ invariant under both moves.)
+\subsection*{Hard -- Polynomial Invariant For (x+2,y-1)}
+A token starts at $(0,0)$. A move changes $(x,y)$ to $(x+2,y-1)$.
+Find a non-constant polynomial $P(x,y)$ such that $P(x+2,y-1)=P(x,y)$
+for all $x,y$. Characterise all reachable positions using this
+invariant.
 
 \subsection*{Very Hard -- IMO 1986 Problem 3 (Sequence Invariant)}
 Given integer sequence $a_0, a_1, \ldots$ with $a_0 = 0$, $a_1 = 1$,
@@ -129,9 +249,10 @@ a_{n-1}a_{n+1}$ is invariant modulo 3, and find its value.
 
 \section{Colouring And Tiling: Generalisations}
 
-\subsection*{Basic -- Tromino Tiling (Deficient Board)}
-A $2^n \times 2^n$ board has one square removed. Prove it can be
-tiled by L-shaped trominoes (three squares in an L). (Inductive construction.)
+\subsection*{Basic -- Mutilated Chessboard: Four Corners Removed}
+An $8\times8$ chessboard has all four corner squares removed. Can the
+remaining board be tiled by dominoes? If not, prove why not using a
+3-colouring. If so, give a tiling.
 
 \subsection*{Easy -- Tiling With T-Tetrominoes}
 Can a $4\times4$ board be tiled by T-tetrominoes (four squares in a T
@@ -177,39 +298,13 @@ A Hadamard matrix of order $n$ is an $n\times n$ matrix with entries
 $\pm1$ whose rows are mutually orthogonal. Give a recursive
 construction for $n=2^k$ and prove it works.
 
-\section{Zeitz Heuristics In Depth}
-
-\subsection*{Basic -- Symmetry Strategy In Pairing Game}
-Two players alternately place a domino on a $4\times4$ board.
-Dominoes cannot overlap. The player who cannot move loses. Show the
-second player has a winning strategy by symmetry.
-
-\subsection*{Easy -- Extreme Principle For Points In A Circle}
-Given 5 points in a unit circle, prove that some pair is at distance
-$\le 1$. (Consider the extreme point farthest from the centre.)
-
-\subsection*{Medium -- Wishful Thinking For A Number Puzzle}
-Find all integer solutions to $x^2 + y^2 = 2z^2$ with $x,y,z > 0$.
-(Wishful thinking: assume $x,y,z$ form a Pythagorean-like structure;
-reduce to a known form.)
-
-\subsection*{Hard -- Reduction To Graph Reachability}
-$n$ lamps in a circle, each on or off. A move toggles lamp $i$ and
-its two neighbours. From a given configuration, can you reach all
-off? Model as a graph and use linear algebra over $\mathbb{F}_2$.
-
-\subsection*{Very Hard -- Contest Problem: Combine Heuristics}
-(From a past olympiad) A finite set of integers has the property that
-for any two distinct elements, their sum is also in the set. Prove
-the set is either $\{0\}$ or contains at least two elements whose sum
-is 0. Use symmetry, extreme principle, and reduction.
-
 \section{Algorithmic Bridges}
 
-\subsection*{Basic -- Water Jugs As Graph Reachability}
-Two jugs of capacities 3 and 5. Allowed: fill, empty, pour between
-them. Model as a graph with states $(a,b)$. Use BFS conceptually to
-find a sequence to measure exactly 4 units.
+\subsection*{Basic -- A Maze As A Graph}
+You are given a rectangular grid of open and blocked cells, together
+with a start and finish cell. You may move one cell up, down, left, or
+right through open cells. Model the maze as a graph, describe how BFS
+finds the minimum number of moves, and explain why the answer is optimal.
 
 \subsection*{Easy -- Greedy Activity Selection}
 You have $n$ intervals $[s_i, f_i]$. Choose a maximum-size subset of
