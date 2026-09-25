@@ -1,95 +1,92 @@
-# Introductory brainteaser
+# KCPC Workshop 1 — Problems: Introductory Problem Solving & Logic
 
-## Left handed people
+Welcome to Workshop 1 of the KCPC 2nd Semester series! This problem set explores foundational problem-solving mindsets essential to competitive programming: finding invariants, using mathematical induction, thinking through logic and common knowledge, and backward induction in game theory.
 
-In a room of 100 people, 99% are left handed.
+---
 
-**Question:** How many people should leave the room to bring the
-percentage down to 98%?
+## 1. Introductory Brainteaser
 
-# Induction and Logic Puzzles
+### Left-Handed People
+**Prerequisites:** Basic algebra and percentage arithmetic.
 
-## The Locker Problem
+In a room of 100 people, 99% are left-handed. 
 
-There are 100 lockers in a high school with 100 students.
+**Question:** How many left-handed people must leave the room to bring the percentage of left-handed people down to exactly 98%?
 
--   The first student opens all lockers.
+---
 
--   The second student closes all even-numbered lockers (2, 4, 6,
-    8\...).
+## 2. Induction and Logic Puzzles
 
--   The third student toggles every third locker (closes if open, opens
-    if closed).
+### The Locker Problem
+**Prerequisites:** Divisors, prime factorisation, perfect squares.
 
--   The $n$-th student toggles every $n$-th locker ($n, 2n, 3n \dots$).
+There are 100 closed lockers numbered 1 through 100 in a high school hallway, and 100 students numbered 1 through 100.
+- The first student opens all 100 lockers.
+- The second student closes every second locker (2, 4, 6, 8, ...).
+- The third student toggles every third locker (3, 6, 9, 12, ...), closing it if it is open and opening it if it is closed.
+- In general, the $k$-th student toggles every $k$-th locker ($k, 2k, 3k, \dots$).
 
-This continues until all 100 students have had a turn.
+This continues until all 100 students have had their turn.
 
-**Question 1:** How many lockers are open at the end of this exercise?\
-**Question 2:** What is the general answer for $N$ lockers and $N$
-students?
+**Question 1:** How many lockers remain open at the end of this exercise, and which ones are they?  
+**Question 2:** What is the general answer for $N$ lockers and $N$ students?
 
-## The Three Wise Men
+### The Three Wise Men
+**Prerequisites:** Propositional logic, deduction by contradiction, common knowledge.
 
-The King called the three wisest men to his court to decide who would
-become his new advisor. He placed a hat on each head such that each man
-could see the other two hats, but not his own. Each hat was either white
-or blue. The king guaranteed that at least one person was wearing a blue
-hat. The contest was declared fair to all three men, and they were
-forbidden from speaking. After sitting in silence for a long time, one
-man stood up and correctly announced the color of his hat.
+The King wishes to choose a chief advisor from among three wise men. He places a hat on each wise man's head. Each man can clearly see the hats of the other two men, but cannot see his own. The King announces publicly to all three men:
+1. Each hat is either blue or white.
+2. At least one of the three hats is blue.
+3. All three men are perfectly rational, possess identical deductive abilities, and this is common knowledge among them.
+4. No communication or signaling of any kind is permitted.
 
-**Question:** What color did he announce, and how did he deduce it?
+The King seats them in a circle and instructs them: "If you deduce the colour of your own hat, announce it immediately."
 
-## Muddy Children
+A discrete, noticeable period of silence elapses where no one speaks. Then, after sitting in silence through this thinking period, one wise man stands up and correctly announces the colour of his hat.
 
-A group of attentive children is told that some of them (at least one)
-have muddy faces. Each child can see the faces of the others, but cannot
-tell if his or her own face is muddy. The children are told that those
-with muddy faces must step forward, but any child with a clean face who
-steps forward will be punished. At the count of three, every child who
-believes that his or her face is muddy must step forward simultaneously;
-any child who signals to another in any way will be punished. If any
-child with a muddy face has not stepped forward, the process will be
-repeated. At a given iteration, all muddy children and only them step
-forward.
+**Question:** What colour hat was he wearing, and what was his exact deductive reasoning?
 
-**Question:** What is their thought process and on which turn do they
-step forward?
+### Muddy Children
+**Prerequisites:** Epistemic logic, mathematical induction on knowledge states.
 
-# Invariance and Physics
+A group of $n$ children are playing outside, and $k$ of them ($1 \le k \le n$) get mud on their foreheads. Each child can see every other child's forehead, but cannot see their own.
+1. A parent gathers all $n$ children and announces publicly: "*At least one of you has mud on your forehead.*"
+2. The parent then repeats the following question in synchronized rounds: "*Does any child know with absolute certainty that they have mud on their forehead?*"
+3. At each round, the question is asked once. All children answer simultaneously at the count of three by stepping forward if they know they are muddy, or remaining still if they do not.
+4. No child communicates, signals, or looks at reflections.
+5. All children are perfectly truthful, logically omniscient, and this fact is common knowledge among all of them.
 
-## Ants on a Ruler
+**Question:** On which round do the muddy children step forward, and what is the step-by-step deductive process that leads to this outcome?
 
-100 ants are dropped simultaneously at arbitrary positions on a straight
-ruler of fixed length $L$. Each ant walks at a constant speed $v$,
-choosing an initial direction (left or right) at random. Whenever two
-ants collide, they instantly reverse directions and continue at the same
-speed $v$. Ants fall off the ruler as soon as they reach either end.
+---
 
-**Question:** Determine the time $T$ one must wait to be certain that
-all ants have fallen off the ruler, regardless of their initial
-positions and directions.
+## 3. Invariance and Physics
 
-## The Fly and the Cyclists
+### Ants on a Ruler
+**Prerequisites:** Kinematic intuition, invariants, reduction to equivalent states.
 
-Two cyclists, $A$ and $B$, are exactly 20 miles apart. They pedal toward
-each other at a constant speed of 10 mph each. At the moment they start,
-a fly on Cyclist $B$'s wheel takes flight at 15 mph toward Cyclist $A$.
-Upon reaching $A$, it reverses toward $B$, continuing this
-back-and-forth shuttle until the cyclists collide.
+There are 100 ants dropped simultaneously at arbitrary distinct positions along a straight, narrow ruler of length $L$. Each ant begins walking at a constant speed $v$, choosing an initial direction (left or right) arbitrarily.
+- Whenever two ants collide head-on, they instantly reverse directions and continue walking at the same speed $v$.
+- Ants fall off the ruler as soon as they reach either end ($0$ or $L$).
 
-**Question:** What is the total distance the fly traveled before the
-collision?
+**Question:** Determine the exact maximum time $T$ one must wait to guarantee that all 100 ants have fallen off the ruler, regardless of their initial positions and directions.
 
-# Game Theory
+### The Fly and the Cyclists
+**Prerequisites:** Problem reformulation, identifying the invariant time variable.
 
-## Simple Stick Game
+Two cyclists, $A$ and $B$, start 20 miles apart on a straight road and pedal toward each other, each at a constant speed of 10 mph. At the exact instant they start, a fly on Cyclist $B$'s front wheel takes off and flies at a constant speed of 15 mph straight toward Cyclist $A$. As soon as the fly touches Cyclist $A$, it instantaneously reverses direction and flies back toward Cyclist $B$, shuttling back and forth between them until the two bicycles collide.
 
-Consider a game where there is initially a heap of $n$ sticks. Players
-$A$ and $B$ move alternately, and player $A$ begins. On each move, the
-player must remove 1, 2, or 3 sticks from the heap. The player who
-removes the last stick wins the game.
+**Question:** What is the total distance traveled by the fly before the cyclists collide?
 
-**Question:** Determine which player has a winning strategy based on the
-initial value of $n$.
+---
+
+## 4. Game Theory
+
+### Simple Stick Game
+**Prerequisites:** Impartial combinatorial games, backward induction, modular arithmetic.
+
+Consider a two-player game played with a heap of $n$ sticks. Two players, $A$ and $B$, take turns alternately, with Player $A$ making the first move.
+- On each turn, a player must remove either 1, 2, or 3 sticks from the heap.
+- The player who takes the last remaining stick wins the game (normal play convention).
+
+**Question:** For which initial values of $n$ does Player $A$ have a guaranteed winning strategy, and what is the optimal strategy for both players?
