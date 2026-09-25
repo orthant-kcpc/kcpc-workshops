@@ -187,22 +187,21 @@
 \end{frame}
 
 \begin{frame}{Worked Example: Symmetry -- Pairing Game}
-    Two players alternately place a domino on a $4\times4$ board.
-    Dominoes cannot overlap. The player who cannot move loses.
+    Two players alternately place a \textbf{horizontal} domino on a
+    $4\times4$ board. Dominoes cannot overlap. The player who cannot
+    move loses.
     Show the second player has a winning strategy.
 \end{frame}
 
 \begin{frame}{Solution: Pairing Game}
     \pause
     \begin{itemize}
-        \item Mirror every move across the centre.
-        \item The $4\times4$ board is centrally symmetric.
-        \item If the first player places a domino covering $(x,y)$
-            and $(x',y')$,
-            the second player places one covering the centrally
-            symmetric squares.
-        \item This move is always legal because the board was symmetric and the
-            first player's move was legal.
+        \item Mirror each move across the line between the middle two rows.
+        \item This swaps rows 1 and 4, and rows 2 and 3.
+        \item A horizontal domino stays in one row, so it never overlaps
+            its reflection across this line.
+        \item After each reply, the occupied squares are symmetric;
+            the first player's next legal move has a legal, empty mirror.
         \item The second player never runs out of moves first, so wins.
     \end{itemize}
 \end{frame}

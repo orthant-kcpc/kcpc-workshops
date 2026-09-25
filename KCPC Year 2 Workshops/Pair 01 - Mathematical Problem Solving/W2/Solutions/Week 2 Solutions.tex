@@ -119,12 +119,17 @@ of $n^2$ arises this way.
 \section{Symmetry}
 
 \subsection*{Basic -- Chomp: Poisoned Chocolate}
-The first player eats the single square at $(m,n)$ (top-right corner),
-leaving a symmetric L-shape. Thereafter, the first player mirrors the
-opponent's move by $180^\circ$ rotation about the centre of the
-remaining L-shape. The mirror is always legal and avoids the poisoned
-corner. The first player never eats the poisoned square first, so wins.
-\insight{Create a symmetric position, then mirror the opponent's moves.}
+Suppose the second player has a winning strategy. If the first player
+eats only the top-right square, this strategy specifies a reply at
+some unpoisoned square $q$. The first player could instead have chosen
+$q$ as their opening move: every move at $q$ also eats the top-right
+square, so the resulting board is exactly the board after those two
+hypothetical moves. It is now the second player's turn, whereas in the
+hypothetical game it was the first player's turn. The first player
+can therefore take over the supposed winning \emph{second-player}
+strategy, a contradiction. Thus the first player has a winning
+strategy, although this argument does not specify their first move.
+\insight{A hypothetical winning reply can be stolen as the first move.}
 
 \subsection*{Easy -- Coins On A Circular Table}
 The first player places a coin at the centre. After every later move,
@@ -231,10 +236,23 @@ Euler trail exists.
 
 \subsection*{Medium -- Missionaries And Cannibals}
 State: $(M_L,C_L,B)$ with $M$ missionaries, $C$ cannibals on left,
-$B\in\{L,R\}$ boat position. Safe iff $M=0$ or $M\ge C$ on each bank.
-Graph edges: valid boat moves (1-2 people). BFS from $(3,3,L)$ to
-$(0,0,R)$ yields: MM cross, M returns, CC cross, C returns, MM cross,
-C returns, CC cross, M returns, MM cross. All intermediate states safe.
+$B\in\{L,R\}$ boat position. On each bank, safety requires that
+there are no missionaries or that missionaries are at least as
+numerous as cannibals. Graph edges are valid crossings with one or
+two passengers. A BFS from $(3,3,L)$ to $(0,0,R)$ gives the following
+11 crossings (\texttt{M} = missionary, \texttt{C} = cannibal):
+\[
+\begin{gathered}
+\texttt{CC}\to,\quad \texttt{C}\leftarrow,\quad
+\texttt{CC}\to,\quad \texttt{C}\leftarrow,\quad
+\texttt{MM}\to,\quad \texttt{MC}\leftarrow,\\
+\texttt{MM}\to,\quad \texttt{C}\leftarrow,\quad
+\texttt{CC}\to,\quad \texttt{C}\leftarrow,\quad
+\texttt{CC}\to.
+\end{gathered}
+\]
+Checking the counts on each bank after every crossing shows that
+none ever leaves a missionary outnumbered.
 \insight{State-space graph with safety constraints; BFS finds valid path.}
 
 \subsection*{Hard -- Lamps As Linear Algebra}
@@ -279,20 +297,30 @@ $k$ gives the day of departure.}
 \subsection*{Easy -- Cheating Husbands}
 Let $k$ be the number of cheating husbands. By the same induction as
 Blue-Eyed Islanders, all $k$ wives deduce their husbands cheated on
-day $k$ and act at midnight. If $k=0$, the queen's announcement is
-false, but the logic still holds: no one acts because the premise is violated.
+day $k$ and act at midnight. The queen's truthful announcement
+ensures that $k\ge1$.
 
 \subsection*{Medium -- Sum And Product Puzzle}
-$P$ doesn't know $\to$ product is not a product of two primes (or 4).
-$S$ knew $\to$ sum cannot be written as sum of two primes (Goldbach).
-Sums like 11, 17, 23, 27, 29, 35, 37, 41, 47, 53 work.
-$P$ now knows $\to$ among factor pairs of $xy$, only one has a sum
-from the allowed list.
-$S$ now knows $\to$ among pairs summing to $x+y$, only one has a
-product with the above property.
-The unique solution: $x=4$, $y=13$ (sum 17, product 52).
-\insight{Iterated elimination using meta-knowledge; each statement
-restricts the set of possible pairs.}
+The information limit $x+y\le100$ makes systematic elimination
+possible. Start with all pairs
+$\Omega_0=\{(x,y):2\le x<y,\ x+y\le100\}$. Keep in $\Omega_1$
+only pairs whose product occurs for \emph{at least two} pairs in
+$\Omega_0$ (P's first statement). Keep in $\Omega_2$ only pairs for
+which \emph{every} $\Omega_0$ pair with the same sum belongs to
+$\Omega_1$ (S knew P could not know). The possible sums in
+$\Omega_2$ are
+\[
+11,17,23,27,29,35,37,41,47,53.
+\]
+Keep in $\Omega_3$ only pairs whose product occurs \emph{once} in
+$\Omega_2$ (P now knows). Finally keep in $\Omega_4$ only pairs
+whose sum occurs \emph{once} in $\Omega_3$ (S now knows). Enumerating
+the pairs under the given bound yields $\Omega_4=\{(4,13)\}$.
+For example, product 52 has factor pairs $(2,26)$ and $(4,13)$;
+only the latter has a sum surviving S's first statement. The answer
+is $x=4$, $y=13$. These filters spell out exactly which set of
+possibilities each speaker has at every stage.
+\insight{Filter a finite set of possible worlds after each public statement.}
 
 \subsection*{Hard -- Cheryl's Birthday}
 Dates: May 15, 16, 19; June 17, 18; July 14, 16; Aug 14, 15, 17.
@@ -310,138 +338,236 @@ off, turns it on exactly once. The Counter only turns the light off,
 and increments a mental count each time they find it on. When the
 Counter's count reaches 99, they announce.
 Proof: Each Drone eventually visits and turns the light on if they
-haven't. The Counter eventually sees each on-state. The count reaches
-99 exactly when all 99 Drones have visited.
+haven't, with probability 1: independent uniform visits give each
+prisoner infinitely many opportunities. Each on-state waits until
+the Counter next visits, at which point they turn it off and record
+the signal. Consequently all 99 Drones eventually signal, and the
+count reaches 99 exactly when all 99 have visited. Every announcement
+is correct, and the protocol terminates almost surely.
 \insight{The light bulb encodes one bit of shared state; the Counter
 aggregates information.}
 
 \section{Advanced Invariants And Monovariants}
 
 \subsection*{Basic -- Peg Solitaire (Small Board)}
-On a $3\times3$ board with centre empty, label holes with values $1,
-x, x^2$ where $x^2+x+1=0$. Assign weights by coordinates mod 3.
-Initial sum $\neq$ final sum (centre hole), so impossible.
-\insight{Polynomial invariant over $\mathbb{C}$ captures the jump structure.}
+No legal first move exists. The centre is the only empty cell, but
+an orthogonal jump landing there would have to start two squares away
+from the centre, outside the $3\times3$ board. Thus the initial
+configuration is already stuck with eight pegs.
+\insight{Check whether a first move exists before seeking a more elaborate invariant.}
 
-\subsection*{Easy -- Token Game Modulo 3}
-Assign weight $2^{\text{position}}$ modulo 3. Initially: $2^0 + 2^1 =
-1 + 2 = 0 \pmod 3$. A move replaces tokens at $x$ and $x+1$ (total
-weight $2^x+2^{x+1}=3\cdot2^x\equiv0$) with one at $x+2$ (weight
-$2^{x+2}=4\cdot2^x\equiv 2^x$). Wait -- this doesn't work!
-Correct invariant: Assign weight $1$ to position $0$, $x$ to position
-$1$, $x^2$ to position $2$, etc., with $x$ a root of $x^2+x+1=0$.
-Then $x^k+x^{k+1}=x^k(1+x)=-x^{k+2}$. The sum modulo the polynomial
-is invariant. Position 100 weight is $x^{100}=x^{100\bmod3}=x$.
-Initial sum $1+x\neq x$, so impossible.
+\subsection*{Easy -- Token Game}
+Initially the only adjacent pair is at 0 and 1, so the only move
+replaces those two tokens with one token at 2. No further move is
+possible with just one token. Position 100 is never occupied.
 
 \subsection*{Medium -- Conway's Soldiers}
-Assign weight $\varphi^{|y|}$ where $\varphi=(\sqrt5-1)/2 \approx
-0.618$ (so $\varphi^2=1-\varphi$). A vertical jump: two tokens at $y$
-and $y+1$ become one at $y+2$. Weight change:
-$\varphi^y+\varphi^{y+1}-\varphi^{y+2}=\varphi^y(1+\varphi-\varphi^2)=0$.
-Horizontal jumps don't change $y$. Total weight never increases.
-Initial weight for $y\le0$ is finite; weight at $y=5$ is $\varphi^5$.
-Sum of all weights below line exceeds any single target weight, but
-the invariant shows you cannot concentrate enough weight at $y=5$.
-Actually, the standard proof uses $x=(\sqrt5-1)/2$ and shows total
-weight of starting configuration is 1, while weight needed at row 5
-is $\varphi^5 \approx 0.09$, but the row 4 pegs needed to get there
-consume the weight. Full proof: each row's total weight is bounded by
-a geometric series.
+Fix a possible target square $(x_0,5)$ and put
+$\varphi=(\sqrt5-1)/2$, so $\varphi+\varphi^2=1$.
+Assign cell $(x,y)$ weight $\varphi^{|x-x_0|+|y-5|}$.
+For any three consecutive cells in a row or column, the weight of
+the destination is at most the sum of the weights of the two cells
+from which a peg jumps. In the only tight case, their distances from
+the target are $k+2,k+1,k$ and the inequality is precisely
+$\varphi^{k+2}+\varphi^{k+1}=\varphi^k$.
+Removing the jumped peg therefore never increases total weight.
+
+The initially occupied cells have total weight exactly 1:
+\[
+\sum_{y\le0}\sum_{x\in\mathbb Z}
+\varphi^{|x-x_0|+5-y}
+=\frac{\varphi^5}{1-\varphi}
+ \left(1+\frac{2\varphi}{1-\varphi}\right)=1.
+\]
+The target itself has weight 1. After any finite number of jumps,
+infinitely many initial pegs remain elsewhere, with positive total
+weight. Reaching the target would give total weight greater than 1,
+a contradiction. This holds for every $x_0$, so row 5 is unreachable.
 
 \subsection*{Hard -- Polynomial Invariant For (x+2,y-1)}
 The move $(x,y)\to(x+2,y-1)$ changes $x+2y$ by $2+2(-1)=0$. Thus
 $P(x,y)=x+2y$ is a polynomial invariant. More generally, any
-polynomial in $x+2y$ is invariant. The reachable positions are exactly
-those with the same value of $x+2y$ as the start: $x+2y=0$ (and
-$x,y\ge0$ reachable by non-negative steps).
-\insight{The linear combination $x+2y$ is unchanged by the move; polynomial invariants characterise reachable sets.}
+polynomial in $x+2y$ is invariant. This is a \emph{necessary} condition
+for reachability, not sufficient: the move can only be applied a
+non-negative integer number $k$ of times. The exact reachable set
+is $\{(2k,-k):k\in\mathbb Z_{\ge0}\}$, which lies on the line
+$x+2y=0$.
+\insight{An invariant excludes states, while the direction of the move
+and integrality complete the reachability argument.}
 
-\subsection*{Very Hard -- IMO 1986 Problem 3 (Sequence Invariant)}
-Define $d_n = a_n^2 - a_{n-1}a_{n+1}$. Then $d_{n+1} = a_{n+1}^2 -
-a_n a_{n+2}$. Using $a_{n+2}=a_{n+1}+a_n+1$, compute $d_{n+1}-d_n$.
-After algebra, $d_{n+1}=d_n$. So invariant modulo 3.
-Base: $d_1 = a_1^2 - a_0 a_2 = 1^2 - 0\cdot a_2 = 1$.
-Thus $d_n \equiv 1 \pmod 3$ for all $n$.
+\subsection*{Very Hard -- A Sequence Invariant}
+Set $b_n=a_n+1$. The given recurrence becomes the Fibonacci-type
+recurrence $b_{n+1}=b_n+b_{n-1}$, with $b_0=1$, $b_1=2$ and $b_2=3$.
+For $d_n=b_n^2-b_{n-1}b_{n+1}$,
+\[
+\begin{aligned}
+d_{n+1}&=b_{n+1}^2-b_nb_{n+2}\\
+&=b_{n+1}(b_n+b_{n-1})-b_n(b_{n+1}+b_n)\\
+&=b_{n+1}b_{n-1}-b_n^2=-d_n.
+\end{aligned}
+\]
+Since $d_1=b_1^2-b_0b_2=4-3=1$, we have
+$d_n=(-1)^{n-1}$, proving the claimed invariant.
 
 \section{Colouring And Tiling: Generalisations}
 
 \subsection*{Basic -- Mutilated Chessboard: Four Corners Removed}
-An $8\times8$ board with four corners removed has 60 squares. Colour
-the board with three colours in a repeating pattern: colour $(i,j)$ by
-$(i+j)\bmod3$. A domino covers one square of each of two colours (if
-horizontal) or the same colour twice (if vertical)? Actually, a
-horizontal domino covers $(i,j)$ and $(i,j+1)$ with colours $c$ and
-$c+1$, a vertical covers $(i,j)$ and $(i+1,j)$ with colours $c$ and
-$c+1$. Wait -- a domino always covers two squares of different colours
-in this colouring. So each domino covers one square of each of two
-colours. Count colour frequencies: 20 squares of each colour (64 total,
-4 corners = 1 of each colour removed, so 20 each). 30 dominoes would
-cover 30 squares of each colour -- but we only have 20 of each.
-Impossible.
-\insight{Three-colouring reveals colour imbalance: dominoes cover two colours, but counts are unequal.}
+Yes. In each of the top and bottom rows, the two corners are missing,
+leaving six consecutive squares; tile each row with three horizontal
+dominoes. Each of the other six rows has eight squares and can be
+tiled with four horizontal dominoes. These $3+3+6\cdot4=30$ dominoes
+cover every remaining square.
+\insight{An explicit tiling is more decisive than an unnecessary colouring.}
 
 \subsection*{Easy -- Tiling With T-Tetrominoes}
-Colour the board by $(x\bmod2, y\bmod2)$: four colours 00, 01, 10,
-11. A T-tetromino covers 3 of one colour and 1 of another (or 2 and 2
-depending on orientation). Count colour frequencies on $4\times4$: 4
-of each colour. Any T-tetromino tiling would require colour counts to
-be multiples of the pattern, which is impossible. For $4\times n$,
-similar parity argument fails for some $n$; the exact condition is
-that $n$ must be a multiple of 4.
+The equal letters in this diagram give four T-shaped pieces:
+\begin{center}
+\begin{verbatim}
+AAAB
+CABB
+CCDB
+CDDD
+\end{verbatim}
+\end{center}
+Each letter appears in four edge-connected cells forming a T. To
+tile $4\times(4k)$, divide it into $k$ disjoint $4\times4$ blocks and
+repeat this construction in every block.
 
 \subsection*{Medium -- Fault-Free Domino Tiling}
-$6\times6$: Construct a spiral tiling with no vertical or horizontal fault line.
-$6\times8$: Colour columns alternately black and white. A fault line
-would require each row to have an even number of horizontal dominoes
-crossing it. Counting parity shows contradiction. (Standard proof:
-    consider the board as three $2\times8$ strips; each strip needs even
-horizontal dominoes, but total horizontal dominoes parity conflicts.)
+For a $6\times6$ board, consider any one of its five internal
+horizontal grid lines. The number of vertical dominoes crossing it
+must be even: the part above the line has an even number of cells,
+and all other dominoes cover two cells there. If the tiling is
+fault-free, at least two dominoes cross each such line. The same
+argument applies to its five internal vertical lines. Since each
+domino crosses at most one grid line, fault-freeness would require
+at least $2(5+5)=20$ dominoes, but the board holds only 18.
+
+Here is a fault-free $6\times8$ tiling; each repeated letter is one
+domino, and the paired cells are adjacent:
+\begin{center}
+\begin{verbatim}
+AABBCCDE
+FFGGHIDE
+JKKLHIMM
+JNOLPPQQ
+RNOSSTTU
+RVVWWXXU
+\end{verbatim}
+\end{center}
+Every one of the five internal horizontal and seven internal vertical
+lines crosses a domino, so there is no fault line.
 
 \subsection*{Hard -- Triominoes On A Chessboard}
-Colour the $8\times8$ board with 3 colours in a repeating pattern:
-colour $(i,j)$ by $(i+j)\bmod3$. A $1\times3$ tromino covers one of
-each colour. The board has 64 squares; removing one corner leaves 63
-squares with colour counts $22,21,20$ (not equal). Impossible.
+Choose row and column indices starting at the removed corner, and
+colour $(i,j)$ by $(i+j)\bmod3$. Every horizontal or vertical
+$1\times3$ tromino covers one cell of each colour. The intact board
+has colour counts $21,22,21$; removing the $(0,0)$ corner leaves
+$20,22,21$, which are not equal. Therefore no tiling exists.
 
 \subsection*{Very Hard -- Generalised Mutilated Chessboard}
-An $m\times n$ board with two opposite-colour squares removed can be
-tiled by dominoes iff $mn$ is even and $(m,n)\neq(1,2),(2,1)$.
-Proof: If $mn$ odd, total squares odd after removal, impossible. For
-even $mn$, standard constructive proof: pair rows, snake through
-columns, route around holes. The only small obstructions are the trivial boards.
+The answer is $m,n\ge2$ with $mn$ even, together with the two boards
+$1\times2$ and $2\times1$ (whose empty remainder has an empty tiling).
+Odd area leaves an odd number of squares and cannot be tiled. For
+$m,n\ge2$ with even area, rotate the board if necessary so that its
+number of rows is even. Cross the top row from left to right, snake
+through columns $2$ through $n$ of the remaining rows, then return
+up column $1$. This is a Hamiltonian cycle of the board's squares.
+Colours alternate around the cycle; deleting two opposite-colour
+squares leaves two paths, each containing an even number of squares.
+Pair consecutive squares on each path to tile the remainder.
+
+Finally, on a $1\times n$ board of even length $n\ge4$, remove
+positions 2 and 3. They have opposite colours but leave position 1
+isolated, so this board does not \emph{always} admit a tiling. The
+same holds after rotation. The $1\times2$ case is the sole exception.
 
 \section{Induction And Recursion: From Proof To Algorithm}
 
 \subsection*{Basic -- Josephus Problem}
-$J(1)=1$. For $n>1$, after first pass, even positions eliminated,
-problem reduces to $J(\lfloor n/2\rfloor)$ with positions renumbered.
-Recurrence:
-$J(2k)=2J(k)-1$, $J(2k+1)=2J(k)+1$.
-Closed form: write $n$ in binary, rotate left by one bit.
-$J(n)=2(n-2^{\lfloor\log_2 n\rfloor})+1$.
+$J(1)=1$. Number the people $1$ through $n$ and start by removing
+person 2. For $2k$ people, the first circuit removes every even
+position; the $k$ odd-numbered survivors form a smaller Josephus
+circle, giving $J(2k)=2J(k)-1$. For $2k+1$ people, the first circuit
+removes $2,4,\ldots,2k$ and then person 1. The remaining $k$ people
+are $3,5,\ldots,2k+1$, giving $J(2k+1)=2J(k)+1$.
+These recurrences imply by induction that if $n=2^r+s$ with
+$0\le s<2^r$, then $J(n)=2s+1$: for even and odd $n$ alike, the
+formula for $J(\lfloor n/2\rfloor)$ gives the next case.
+Equivalently, move the leading bit of $n$'s binary representation
+to the end.
 
 \subsection*{Easy -- Gray Codes}
 $G_1 = [0,1]$. Given $G_n$, construct $G_{n+1}$ by prefixing 0 to
 $G_n$ and prefixing 1 to reverse of $G_n$. Proof by induction:
 consecutive strings in first half differ by induction; boundary
-between halves is $0G_n$ followed by $1\text{reverse}(G_n)$,
-differing only in first bit; second half consecutive differ by induction.
+between halves is $0w$ followed by $1w$, where $w$ is the last
+string of $G_n$, so only the first bit changes. Consecutive strings
+in the reversed second half also differ by induction, and every
+$(n+1)$-bit string appears exactly once.
 
 \subsection*{Medium -- Recursive 15-Puzzle Parity}
-Given configuration, compute permutation parity of tiles (read
-row-major). Compute blank row from bottom. Solvable iff parity =
-blank row parity (for even-width boards). Algorithm: count inversions
-in $O(n^2)$ or $O(n\log n)$ with BIT.
+Read the numbered tiles row by row, omitting the blank, and count
+inversions $I$. Let $r$ be the blank's row counted from the bottom,
+starting at 1. A horizontal move leaves both parities unchanged; a
+vertical move changes $r$ by 1 and changes inversion parity by 3.
+Thus $I+r$ has invariant parity. The goal has $I=0,r=1$, so a
+configuration is solvable \emph{only if} $I+r$ is odd. To obtain a
+self-contained recursive decision algorithm without assuming the
+converse, reject even-parity configurations, then recursively explore
+legal slides from an odd-parity configuration using depth-first
+search and a visited-state set. Return true on reaching the goal;
+return false if all reachable states have been explored. There are
+finitely many arrangements, and every legal path is explored, so this
+algorithm terminates and answers correctly. Count inversions by
+recursively splitting the list in two, counting inversions in each
+half and cross-inversions while merging. The parity check takes
+$O(16\log16)$ time; exhaustive search is much more expensive.
 
 \subsection*{Hard -- Counterfeit Coin With $n$ Weighings}
-Maximum coins: $(3^n-3)/2$ for heavy/light unknown.
-Strategy: ternary search. Partition coins into three equal groups
-$A,B,C$. Weigh $A$ vs $B$. If balance, counterfeit in $C$; if tilt,
-counterfeit in heavier/lighter group and we know its type. Recurse.
-Each weighing gives 3 outcomes, so $3^n$ leaves. But we also need to
-distinguish heavy vs light, costing one bit per coin, giving $3^n/2$
-bound. Precise bound: $(3^n-3)/2$.
+The answer, for $n\ge2$ and no initially known genuine coin, is
+$N_n=(3^n-3)/2$. The following two auxiliary strategies explain how
+to attain it.
+
+\emph{Signed suspects:} If each of $3^r$ suspect coins has a known
+direction (it can only be heavy or only be light), $r$ weighings
+suffice. For $r=0$ there is one suspect. For the induction step put
+$t=3^{r-1}$, and, by reversing heavy/light if needed, let at least
+half of the $3t$ suspects be heavy candidates. If at least $2t$
+are heavy candidates, weigh $t$ heavy candidates against $t$ others:
+balance leaves $t$ suspects, while a tilt selects the $t$ heavy
+candidates on the heavier pan. Otherwise put $(t+1)/2$ heavy and
+$(t-1)/2$ light candidates on \emph{each} pan. A balance leaves $t$
+suspects off the scale; a tilt leaves the heavy candidates on the
+heavier pan and the light candidates on the lighter pan, again $t$
+in all. Each case reduces to the induction hypothesis.
+
+\emph{Known genuine coin:} With a genuine reference, we can resolve
+$U_r=(3^r-1)/2$ unknown suspects in $r$ weighings. For $r=1$,
+compare the suspect with the genuine coin. For $r>1$, let
+$t=3^{r-1}$; weigh $(t+1)/2$ suspects against $(t-1)/2$ other suspects
+and one genuine coin. If balanced, $U_{r-1}$ unweighed suspects
+remain, still with a genuine reference. If tilted, the $t$ weighed
+suspects have known heavy/light directions and the signed-suspect
+strategy applies.
+
+Now split $N_n=3U_{n-1}$ unknown coins into equal groups $A,B,C$
+and weigh $A$ against $B$. If balanced, $C$ contains the counterfeit
+and $A$ supplies genuine coins, so use the known-genuine strategy.
+If tilted, a coin in the heavier group might be heavy \emph{or} one
+in the lighter group might be light. These are $2U_{n-1}=3^{n-1}-1$
+signed suspects; add one known genuine coin from $C$ as a dummy
+candidate and apply the signed-suspect strategy. The dummy cannot be
+the answer. This constructs a strategy in $n$ weighings.
+
+For optimality, suppose the first weighing compares $k$ unknown
+coins against $k$ others, leaving $N-2k$ off the scale. A tilt gives
+$2k$ signed possibilities and only $3^{n-1}$ remaining outcome
+sequences; as $2k$ is even, $2k\le3^{n-1}-1$. A balance gives genuine
+coins but $N-2k$ unknown ones, so the known-genuine bound gives
+$N-2k\le U_{n-1}$ (the all-balanced outcome cannot distinguish the
+two directions of an unweighed counterfeit). Hence
+$N\le(3^{n-1}-1)+U_{n-1}=(3^n-3)/2$.
 
 \subsection*{Very Hard -- Hadamard Matrix Construction}
 $H_1=[1]$. $H_{2n}=
@@ -477,22 +603,40 @@ Tabulation: for $s=1$ to $n$, for each coin $c_i\le s$, update
 $f(s)=\min(f(s), 1+f(s-c_i))$. Time $O(kn)$, space $O(n)$.
 
 \subsection*{Hard -- Sliding Puzzle State-Space Search}
-State encoding: permutation of tiles 1--5 plus blank position (6
-locations). 720 permutations $\times$ 6 blank positions = 4320, but
-parity invariant halves it to 2160 reachable from any state. Actually
-$3\times2$ puzzle has $6!/2=360$ reachable states. BFS from goal
-state precomputes distance to goal for all states. Online: encode
-start state, look up distance, reconstruct path.
+Encode the whole state as a permutation of the five numbered tiles
+\emph{and} the blank: there are $6!=720$ such permutations in total.
+For a fixed goal, exactly 360 satisfy the puzzle's parity condition
+and are reachable. A transition swaps the blank with a tile sharing
+an edge. BFS from the goal (or from the supplied start state)
+explores these states, storing distances and predecessors. Look up
+the start state to get the minimum distance and follow predecessors
+to reconstruct a shortest solution; if it is absent, the start state
+is unsolvable.
 
 \subsection*{Very Hard -- Greedy Scheduling With Deadlines}
-Sort jobs by decreasing profit. Initialise disjoint-set union (DSU)
-over time slots $1\ldots n$, where each slot points to itself; slot 0
-points to 0 (sentinel).
-For each job in sorted order: find latest available slot $t =
-\text{find}(d_i)$. If $t>0$, schedule job at $t$, union $t$ with
-$t-1$ (mark $t$ occupied, next available is $t-1$). If $t=0$, skip job.
-Proof: exchange argument. If optimal solution doesn't include this
-job, either it has a slot free before deadline (exchange in), or all
-slots before deadline are filled with lower-profit jobs (exchange one out).
+Sort jobs by decreasing profit. Only $n$ slots can be occupied, so
+replace each deadline by $\min(d_i,n)$. Initialise a parent array
+on slots $0,1,\ldots,n$ with $\operatorname{parent}[t]=t$. Its
+$\operatorname{find}(t)$ returns the latest free slot at most $t$;
+0 is a sentinel. For each job, set
+$t=\operatorname{find}(\min(d_i,n))$. If $t>0$, schedule the job there
+and set $\operatorname{parent}[t]=\operatorname{find}(t-1)$; if $t=0$,
+skip it. This directed parent update, with path compression, preserves
+the \emph{latest-free-slot} meaning (ordinary union-by-rank would not).
+
+For an exchange proof, maintain an optimal schedule whose previously
+accepted greedy jobs occupy their assigned slots. A previously
+rejected job cannot appear in this schedule: when it was rejected,
+all slots before its deadline were already occupied by earlier
+accepted jobs. For the next accepted job $J$, let $t$ be its chosen
+free slot. If $J$ is absent from the optimal schedule, put it at
+$t$, replacing the job there if necessary. That job was not processed
+earlier, so it has profit at most that of $J$; if the slot was empty,
+positive profit makes the schedule strictly better. If $J$ is already
+scheduled at another slot $u$, then $u<t$: every free slot up to
+its deadline after $t$ is occupied by a previously accepted job.
+Swap $J$ into $t$ and move any occupant of $t$ to $u$; the latter's
+deadline is at least $t>u$, so feasibility is preserved. In either
+case an optimal schedule agreeing with one more greedy choice exists.
 
 \end{document}

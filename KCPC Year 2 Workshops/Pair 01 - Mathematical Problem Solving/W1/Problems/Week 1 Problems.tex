@@ -147,14 +147,30 @@ square exactly once using horizontal/vertical moves, or prove none exists.
 \begin{enumerate}[label=(\alph*)]
     \item A cross made from a $3\times9$ rectangle and a $9\times3$
         rectangle sharing their central $3\times3$ square.
-    \item The same cross with the four outer corner squares of the arms removed.
+    \item The same cross with four squares removed: indexing rows and
+        columns from 0 to 8 starting at the top-left corner of its
+        $9\times9$ bounding box, remove $(0,3)$, $(3,0)$, $(3,8)$,
+        and $(8,3)$.
 \end{enumerate}
 
 \subsection*{Hard -- Jumping To The Other Side}
-On a $5\times6$ board, the 15 cells above a diagonal line are
-occupied by counters. A counter may jump over an adjacent counter to
-the empty cell immediately beyond it, horizontally, vertically, or
-diagonally. Can all counters be moved below the diagonal?
+On a $5\times6$ board, a diagonal from the bottom-left to the
+top-right corner divides the cells into two sets of 15, marked
+\texttt{A} and \texttt{B} below. Initially each \texttt{A} cell has
+one counter and each \texttt{B} cell is empty.
+\begin{center}
+\begin{verbatim}
+AAAAAB
+AAAABB
+AAABBB
+AABBBB
+ABBBBB
+\end{verbatim}
+\end{center}
+A counter may jump over an adjacent counter to the empty cell
+immediately beyond it, horizontally, vertically, or diagonally;
+the jumped counter stays in place. Can all counters be moved onto
+\texttt{B} cells?
 
 \subsection*{Very Hard -- Domino Tiling Revisited}
 For which $n$ can an $n\times n$ chessboard with two missing squares
@@ -172,9 +188,9 @@ Prove that $n!>2^n$ for every integer $n>3$.
 
 \subsection*{Medium -- Infected Chessboard}
 A virus spreads on an $n\times n$ board. A square becomes infected if
-at least two of its horizontal/vertical neighbours are infected. What
-is the smallest number of initially infected squares needed to
-guarantee the whole board becomes infected?
+at least two of its horizontal/vertical neighbours are infected. If
+you may choose the initially infected squares, what is the smallest
+number with which the whole board can eventually become infected?
 
 \subsection*{Hard -- Parliament Pacification}
 In a parliament, each member has at most three enemies. Prove that
@@ -182,10 +198,11 @@ the members can be split into two chambers so that no member has more
 than one enemy in their own chamber.
 
 \subsection*{Very Hard -- Pebble Spreading}
-A pebble starts at the corner of an infinite grid. A move replaces
-one pebble by two pebbles in the cells immediately above and
-immediately to the right, if both are empty. Can you clear all
-pebbles from the first $n$ diagonals near the corner? Determine all
-possible $n$.
+A pebble starts at $(0,0)$ in the non-negative quadrant of an infinite
+grid. A move replaces one pebble by two pebbles in the cells
+immediately above and immediately to the right, if both are empty.
+Can you clear all
+pebbles from the first $n$ diagonals $i+j=0,1,\ldots,n-1$?
+Determine all possible positive integers $n$.
 
 \end{document}
