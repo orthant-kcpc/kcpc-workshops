@@ -1,0 +1,85 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
+
+\title{KCPC-CS111 Research References \\ Week 1: Invariants, Epistemic Logic, and Combinatorial Games}
+\author{King's Competitive Programming Club \\ \small Research Curator: Kutay Bozkurt}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\noindent
+This document compiles foundational research papers that underpin the mathematical concepts introduced in Workshop 1. These papers formalise common knowledge, epistemic reasoning in distributed multi-agent systems, and the algebraic theory of impartial combinatorial games.
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+\section*{I. Foundational Epistemic Logic and Common Knowledge}
+
+\subsection*{[1] Aumann, R. J. (1976)}
+\textit{Agreeing to Disagree.}
+The Annals of Statistics, 4(6), 1236--1239.
+\url{https://doi.org/10.1214/aos/1176343654}
+
+\textbf{Why referenced:}
+Introduces the formal mathematical definition of \textit{common knowledge}. Aumann demonstrates that two Bayesian agents with identical priors cannot possess common knowledge of differing posterior probabilities, laying the rigorous groundwork for the elimination of possibilities via public announcements (as seen in the Three Wise Men and Muddy Children puzzles).
+
+\vspace{1em}
+
+\subsection*{[2] Halpern, J. Y., \& Moses, Y. (1990)}
+\textit{Knowledge and common knowledge in a distributed environment.}
+Journal of the ACM, 37(3), 549--587.
+\url{https://doi.org/10.1145/79147.79161}
+
+\textbf{Why referenced:}
+Connects epistemic modal logic to distributed systems and computer science. The authors prove that achieving common knowledge is a prerequisite for simultaneous coordinated action (such as the coordinated step of muddy children or consensus in distributed networks) and demonstrate how round-by-round communication updates epistemic models.
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+\section*{II. Combinatorial Game Theory}
+
+\subsection*{[3] Bouton, C. L. (1901)}
+\textit{Nim, a game with a complete mathematical theory.}
+Annals of Mathematics, Second Series, 3(1/4), 35--39.
+\url{https://doi.org/10.2307/1967631}
+
+\textbf{Why referenced:}
+The origin of mathematical combinatorial game theory under normal play. Bouton introduces the binary XOR sum (nim-sum) and provides the complete classification of winning ($N$) and losing ($P$) positions, establishing the backward-induction paradigm used in the Simple Stick Game.
+
+\vspace{1em}
+
+\subsection*{[4] Sprague, R. (1935) \& Grundy, P. M. (1939)}
+\textit{Über mathematische Kampfspiele.} Tohoku Math. J., 41, 438--444. \\
+\textit{Mathematics and games.} Mathematical Gazette, 23(257), 359--362.
+\url{https://doi.org/10.2307/3607693}
+
+\textbf{Why referenced:}
+Formulates the fundamental Sprague--Grundy theorem: every impartial game played under normal-play convention is equivalent to a single-heap Nim game with value determined by the minimum excluded ordinal ($\operatorname{mex}$).
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+\section*{III. Invariants in Algorithms}
+
+\subsection*{[5] Hoare, C. A. R. (1969)}
+\textit{An axiomatic basis for computer programming.}
+Communications of the ACM, 12(10), 576--580.
+\url{https://doi.org/10.1145/363235.363259}
+
+\textbf{Why referenced:}
+Formalizes the concept of loop invariants in program verification, demonstrating how mathematical assertions preserved across iterations ensure algorithmic partial correctness.
+
+\end{document}

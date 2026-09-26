@@ -3,99 +3,214 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
-\usepackage{amsthm} % For proof environments
+\usepackage{amsthm}
 \usepackage{geometry}
-\usepackage{parskip} % Blank line between paragraphs, no indent
+\usepackage{parskip}
 \usepackage{xcolor}
+\usepackage{hyperref}
 
 \geometry{a4paper, margin=1in}
 
 % Custom command for a "Key Insight" box
 \newcommand{\insight}[1]{%
     \begin{center}
-    \fcolorbox{black}{gray!10}{\begin{minipage}{0.9\textwidth}
+    \fcolorbox{black}{gray!10}{\begin{minipage}{0.92\textwidth}
     \textbf{Key Insight:} #1
     \end{minipage}}
     \end{center}
 }
 
-\title{KCPC Workshop 1 \\ Solutions}
-\author{}
+\title{KCPC Workshop 1 \\ Solutions: Introductory Problem Solving \& Logic}
+\author{King's Competitive Programming Club}
 \date{}
 
 \begin{document}
 
 \maketitle
 
-\section{Introductory brainteaser}
+\noindent
+These official solutions accompany Workshop 1 of the KCPC 2nd Semester series. Each solution emphasises the underlying problem solving paradigm (finding invariants, epistemic deduction, backwards induction, or mathematical reduction) to prepare you!
 
-\subsection{Left handed people}
-\textbf{Answer:} 50 people must leave.
+\vspace{1em}
+\hrule
+\vspace{1em}
 
-\textbf{Explanation:} 
-Initially, there are 99 left-handed people and 1 right-handed person. To make the 1 right-handed person represent 2\% of the total population, we solve for the new total population $x$:
-\[ 0.02x = 1 \implies x = 50 \]
-Since the new total must be 50, then $100 - 50 = 50$ people must leave.
+\section{Introductory Brainteaser}
+
+\subsection{Left-Handed People}
+
+\insight{Focus on the invariant quantity: the absolute number of right-handed people in the room does not change when left-handed people leave.}
+
+\textbf{Answer:} Exactly 50 left-handed people must leave the room.
+
+\textbf{Detailed Explanation:}
+Initially, in the room of 100 people:
+\begin{itemize}
+    \item $99\%$ are left-handed $\implies 99$ left-handed people.
+    \item $1\%$ are right-handed $\implies 1$ right-handed person.
+\end{itemize}
+We wish to remove only left-handed people until left-handed people make up $98\%$ of the new total population $P_{\text{new}}$.
+
+Notice that the single right-handed person never leaves. Therefore, in the final population, that 1 right-handed person must account for the remaining $100\% - 98\% = 2\%$ of the people:
+\[
+2\% \times P_{\text{new}} = 1 \implies 0.02 \times P_{\text{new}} = 1 \implies P_{\text{new}} = \frac{1}{0.02} = 50.
+\]
+Since the new population is 50, exactly $100 - 50 = 50$ left-handed people must leave the room.
 
 \section{Induction and Logic Puzzles}
 
 \subsection{The Locker Problem}
-\insight{A locker is toggled once for every divisor it has. Only perfect squares have an odd number of divisors.}
 
-\textbf{Solution:}
-A locker $n$ ends up open if it is toggled an odd number of times. This only happens if $n$ is a perfect square.
+\insight{Locker $k$ is toggled once for every positive divisor of $k$. A positive integer has an odd number of positive divisors if and only if it is a perfect square.}
+
+\textbf{Answers:}
 \begin{itemize}
-    \item \textbf{Q1:} Between 1 and 100, the perfect squares are $1^2, 2^2, \dots, 10^2$. Thus, 10 lockers are open.
-    \item \textbf{Q2:} For $N$ lockers, the number of open lockers is $\lfloor \sqrt{N} \rfloor$.
+    \item \textbf{Question 1:} Exactly 10 lockers remain open. They are lockers 1, 4, 9, 16, 25, 36, 49, 64, 81, and 100.
+    \item \textbf{Question 2:} For $N$ lockers and $N$ students, exactly $\lfloor \sqrt{N} \rfloor$ lockers remain open, corresponding to the perfect squares $k^2 \le N$.
 \end{itemize}
 
+\textbf{Proof \& Reasoning:}
+All lockers begin in the closed state. Student $d$ toggles locker $k$ if and only if $d$ divides $k$. Hence, the total number of times locker $k$ is toggled equals $d(k)$, the number of positive divisors of $k$.
+\begin{itemize}
+    \item If $d(k)$ is even, the locker is toggled an even number of times and ends up closed.
+    \item If $d(k)$ is odd, the locker is toggled an odd number of times and ends up open.
+\end{itemize}
+For any integer $k$, its divisors come in pairs $(d, k/d)$. These two divisors are distinct unless $d = k/d$, which occurs if and only if $k = d^2$.
+
+Formally, by the fundamental theorem of arithmetic, let $k = p_1^{e_1} p_2^{e_2} \cdots p_r^{e_r}$ be the prime factorisation of $k$. The number of positive divisors is
+\[
+d(k) = (e_1 + 1)(e_2 + 1)\cdots (e_r + 1).
+\]
+This product is odd if and only if every factor $(e_i + 1)$ is odd, meaning every exponent $e_i$ is even. A number whose prime factors all have even exponents is, by definition, a perfect square.
+
+Among the integers $1, 2, \dots, 100$, the perfect squares are $1^2, 2^2, \dots, 10^2$, yielding 10 open lockers. For general $N$, the perfect squares are $1^2, 2^2, \dots, \lfloor\sqrt{N}\rfloor^2$, giving $\lfloor \sqrt{N} \rfloor$ open lockers.
+
 \subsection{The Three Wise Men}
-\textbf{Solution:}
-The man announced he was wearing a \textbf{Blue} hat. 
 
-\begin{proof}
-If there was only 1 blue hat, the wearer would see two white hats and instantly know he had blue (since at least one is blue). 
+\insight{In epistemic logic, \textbf{silence carries information}. When perfectly rational agents fail to announce an answer after having the opportunity to do so, it refutes the hypotheses under which an immediate deduction would have been possible.}
 
-If there were 2 blue hats, one wearer would see one blue and one white. He would wait to see if the other blue-hat-wearer jumped up. When they didn't (meaning they saw more than one blue), he would realize he must be the second blue hat. 
+\textbf{Answer:} The wise man announced that he was wearing a \textbf{Blue} hat.
 
-Since they sat for a "very long time," the winner realized that even the 2-hat logic had failed, meaning there must be 3 blue hats.
-\end{proof}
+\textbf{Deductive Reasoning:}
+Let the three wise men be $A$, $B$, and $C$. Without loss of generality, consider the perspective of wise man $A$.
+The King publicly stated that at least one blue hat is present. We analyze the possible hat configurations by cases:
+
+\begin{enumerate}
+    \item \textbf{Case 1: Exactly 1 Blue Hat.} \\
+    Suppose there is only 1 blue hat in total, and wise man $A$ wears it. Then wise men $B$ and $C$ wear white hats. $A$ would look at $B$ and $C$, see two white hats, and immediately deduce: \textit{``Since there is at least one blue hat and both $B$ and $C$ wear white, my hat must be blue.''} $A$ would announce this immediately without any hesitation.
+
+    \item \textbf{Case 2: Exactly 2 Blue Hats.} \\
+    Suppose there are 2 blue hats, worn by $A$ and $B$, while $C$ wears white.
+    $A$ sees that $B$ has blue and $C$ has white. $A$ thinks: \textit{``If my own hat were white, then $B$ would see two white hats ($A$ and $C$) and would have immediately announced blue under Case 1.''}
+    However, $B$ sits in silence and does not speak. Once enough time has passed for an immediate announcement, $A$ deduces: \textit{``Because $B$ is silent, $B$ does not see two white hats. Since $C$ is white, my hat must be blue.''} Thus, with 2 blue hats, an announcement occurs after the first pause.
+
+    \item \textbf{Case 3: Exactly 3 Blue Hats.} \\
+    Now consider the actual scenario: all three men wear blue hats.
+    Wise man $A$ looks at $B$ and $C$ and sees two blue hats. $A$ reasons hypothetically:
+    \textit{``Suppose my hat were white. Then $B$ and $C$ would each see one blue hat and one white hat. By the logic of Case 2, each of them would wait briefly, expect the other to speak, and upon hearing silence, one of them would announce blue. But neither $B$ nor $C$ speaks after that period has elapsed!''}
+
+    The continued silence of both $B$ and $C$ after the initial waiting period proves that neither $B$ nor $C$ is observing a white hat on $A$.
+    Therefore, $A$ concludes with absolute certainty that his own hat must be \textbf{Blue}. He stands up and announces it.
+\end{enumerate}
 
 \subsection{Muddy Children}
-\textbf{Solution:}
-They step forward on the $m$-th turn, where $m$ is the number of muddy children.
 
-Assuming that each child has-and knows each of the others to have-perfect logic all children with muddy faces ($X$) will step forward together on turn $X$. The children have different information, depending on whether their own face is muddy or not. Each member of $X$ sees $X-1$ muddy faces, and knows that those children will step forward on turn $X-1$ if they are the only muddy faces. When that does not occur, each member of $X$ knows that he or she is also a member of $X$, and steps forward on turn $X$. Each non-member of $X$ sees $X$ muddy faces, and will not expect anyone to step forward until at least turn $X$. 
+\insight{Public common knowledge transforms private information. A child with $k$ muddy peers uses mathematical induction on knowledge: silence in round $k-1$ refutes the hypothesis that there are only $k-1$ muddy children.}
 
+\textbf{Answer:} All $k$ muddy children step forward simultaneously on round $k$. None of the clean children ever step forward.
+
+\textbf{Step-by-Step Inductive Proof:}
+Let $M$ be the set of children with muddy foreheads, where $|M| = k \ge 1$.
+Every child can see the foreheads of all other $n-1$ children. Thus:
+\begin{itemize}
+    \item Each muddy child sees exactly $k - 1$ muddy foreheads and $n - k$ clean foreheads.
+    \item Each clean child sees exactly $k$ muddy foreheads and $n - k - 1$ clean foreheads.
+\end{itemize}
+
+We prove by induction on $m \ge 1$ that: \textit{If there are $m$ muddy children, they all step forward on round $m$, and no child steps forward on rounds $1, \dots, m-1$.}
+
+\textbf{Base Case ($m = 1$):}
+There is exactly 1 muddy child, Alice. Alice sees 0 muddy children. The parent's public announcement guarantees that at least one child is muddy. Since Alice sees no other muddy children, she immediately deduces on Round 1 that she must be the muddy child. She steps forward on Round 1. The clean children see 1 muddy child (Alice) and do not step forward.
+
+\textbf{Inductive Step:}
+Assume the proposition holds for $m = k - 1 \ge 1$: if there were $k - 1$ muddy children, all of them would step forward on round $k - 1$.
+
+Now suppose there are actually $k$ muddy children.
+Each muddy child $C \in M$ sees exactly $k - 1$ muddy faces. Child $C$ reasons:
+\begin{quote}
+\textit{``I see $k - 1$ muddy children. If my own forehead is clean, then there are only $k - 1$ muddy children in total. By the inductive hypothesis, all $k - 1$ of them would know this and step forward on round $k - 1$.''}
+\end{quote}
+Round $k - 1$ arrives, and \textbf{nobody steps forward}.
+
+This silence is decisive common knowledge. Child $C$ realizes:
+\begin{quote}
+\textit{``Because none of the $k - 1$ muddy children stepped forward on round $k - 1$, my hypothesis that I am clean is contradicted! There cannot be only $k - 1$ muddy children. Therefore, my forehead must be muddy.''}
+\end{quote}
+Every one of the $k$ muddy children reaches this identical conclusion simultaneously at the end of round $k - 1$. Consequently, on \textbf{round $k$}, all $k$ muddy children step forward together.
+
+The clean children see $k$ muddy children from the outset. Throughout rounds $1, \dots, k-1$, they expect that if there are $k$ muddy children, those children will step forward on round $k$. On round $k$, the muddy children indeed step forward, confirming to the clean children that their own foreheads are clean. No clean child ever steps forward.
 
 \section{Invariance and Physics}
 
 \subsection{Ants on a Ruler}
-\insight{When two ants of the same speed collide and bounce, it is mathematically identical to the ants passing through each other.}
 
-\textbf{Solution:}
-Since the ants are indistinguishable and travel at constant speed, we can treat collisions as "passing through." The worst-case scenario is an ant starting at one end and traveling the full length $L$.
-\[ T = \frac{L}{v} \]
+\insight{When two identical particles collide and bounce elastically, their trajectories are identical to particles that simply pass straight through each other without interacting.}
+
+\textbf{Answer:} $T = \dfrac{L}{v}$.
+
+\textbf{Explanation:}
+Labeling individual ants is a mental trap. Because all ants move at the identical constant speed $v$ and swap directions upon collision, the set of positions and velocities of the entire swarm after a collision is indistinguishable from the set where the two ants simply passed through each other without collision.
+
+Under this equivalent non-interacting model, each ant simply travels along its original straight line at speed $v$ until it falls off an edge at $0$ or $L$.
+
+The maximum distance any ant can ever travel before reaching an end is the full length of the ruler, $L$ (which happens if an ant starts at position $\epsilon \approx 0$ moving right, or at $L - \epsilon$ moving left). Thus, the maximum time before the ruler is completely clear is:
+\[
+T = \frac{L}{v}.
+\]
 
 \subsection{The Fly and the Cyclists}
-\textbf{Solution:}
-The trick is to ignore the fly's complex path and focus on \textbf{time}.
-The cyclists are 20 miles apart closing at a combined speed of $10 + 10 = 20$ mph. They will collide in exactly 1 hour.
-Since the fly travels at 15 mph for that entire hour, the distance is:
-\[ d = 15 \text{ mph} \times 1 \text{ hour} = 15 \text{ miles} \]
+
+\insight{Instead of calculating an infinite geometric series for the fly's back-and-forth segments, use the global invariant: the fly flies continuously at constant speed until the collision occurs.}
+
+\textbf{Answer:} 15 miles.
+
+\textbf{Explanation:}
+Let $d_{\text{start}} = 20\text{ miles}$ be the initial separation. Cyclists $A$ and $B$ ride toward each other at speeds $v_A = 10\text{ mph}$ and $v_B = 10\text{ mph}$.
+Their relative closing speed is:
+\[
+v_{\text{rel}} = v_A + v_B = 10 + 10 = 20\text{ mph}.
+\]
+The time elapsed before the cyclists collide is:
+\[
+t = \frac{d_{\text{start}}}{v_{\text{rel}}} = \frac{20\text{ miles}}{20\text{ mph}} = 1\text{ hour}.
+\]
+The fly flies at a constant speed of $v_{\text{fly}} = 15\text{ mph}$ for the entire duration of the journey. Therefore, the total distance traveled by the fly is:
+\[
+d = v_{\text{fly}} \times t = 15\text{ mph} \times 1\text{ hour} = 15\text{ miles}.
+\]
 
 \section{Game Theory}
 
 \subsection{Simple Stick Game}
-\textbf{Solution:}
-A \textbf{winning state} is a state where the player will win the game if they play optimally, and a \textbf{losing state} is a state where the player will lose the game if the opponent plays optimally. It turns out that we can classify all states of a game so that each state is either a winning state or a losing state.
 
-In the above game, state 0 is clearly a losing state, because the player cannot make any moves. States 1, 2 and 3 are winning states, because we can remove 1, 2 or 3 sticks and win the game. State 4, in turn, is a losing state, because any
-move leads to a state that is a winning state for the opponent.
+\insight{In an impartial game under normal play, every state is either a winning ($N$) position or a losing ($P$) position. A state is losing if every legal move leads to a winning state; it is winning if there exists at least one legal move to a losing state.}
 
-More generally, if there is a move that leads from the current state to a losing state, the current state is a winning state, and otherwise the current state is a
-losing state. Using this observation, we can classify all states of a game starting with losing states where there are no possible moves.
+\textbf{Answer:} Player $A$ (the first player) has a winning strategy if and only if $n$ is \textbf{not} divisible by 4 ($n \not\equiv 0 \pmod 4$). If $n$ is a multiple of 4 ($n \equiv 0 \pmod 4$), Player $B$ (the second player) has the winning strategy.
 
-It is easy to analyze this game: a state $k$ is a losing state if $k$ is divisible by
-4, and otherwise it is a winning state. An optimal way to play the game is to always choose a move after which the number of sticks in the heap is divisible by 4. Finally, there are no sticks left and the opponent has lost.
+\textbf{Optimal Strategy \& Proof:}
+We classify states $k \in \{0, 1, 2, \dots, n\}$ using backward induction:
+\begin{itemize}
+    \item \textbf{Base Case ($k = 0$):} The player whose turn it is has no legal moves and loses. Thus, $k = 0$ is a \textbf{losing state} ($P$-position).
+    \item \textbf{States $k \in \{1, 2, 3\}$:} A player can take $k$ sticks, leaving 0 sticks to the opponent. Because 0 is a losing state, states 1, 2, and 3 are \textbf{winning states} ($N$-positions).
+    \item \textbf{State $k = 4$:} The available moves leave 3, 2, or 1 sticks. All of these are winning states for the next player. Hence, any move from 4 hands a win to the opponent. Thus, $k = 4$ is a \textbf{losing state}.
+\end{itemize}
+
+\textbf{Inductive Hypothesis:} State $k$ is a losing state if $k \equiv 0 \pmod 4$, and a winning state if $k \not\equiv 0 \pmod 4$.
+
+\begin{itemize}
+    \item If $k \not\equiv 0 \pmod 4$, then $k \equiv r \pmod 4$ with $r \in \{1, 2, 3\}$. The current player removes $r$ sticks, leaving $k - r \equiv 0 \pmod 4$ sticks to the opponent. By induction, this leaves the opponent in a losing state.
+    \item If $k \equiv 0 \pmod 4$, any legal move removes $m \in \{1, 2, 3\}$ sticks, leaving $k - m \not\equiv 0 \pmod 4$ sticks. The next player is guaranteed to receive a winning state.
+\end{itemize}
+Therefore, if $n \not\equiv 0 \pmod 4$, Player $A$ wins by removing $n \bmod 4$ sticks on the first move, and on every subsequent turn, whenever Player $B$ takes $s$ sticks, Player $A$ takes $4 - s$ sticks. This preserves the invariant that the number of sticks remaining after Player $A$'s turn is always a multiple of 4, guaranteeing Player $A$ takes the final stick.
+
 \end{document}

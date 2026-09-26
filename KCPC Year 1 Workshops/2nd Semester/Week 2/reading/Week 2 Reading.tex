@@ -1,0 +1,82 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
+\setlist[itemize]{noitemsep, topsep=4pt}
+\setlist[enumerate]{noitemsep, topsep=4pt}
+
+\title{KCPC-CS111 \\ Supplementary Reading \\ Week 2: Techniques for Investigation}
+\author{King's Competitive Programming Club}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\noindent
+This document contains recommended reading for Workshop 2: Techniques for Investigation. These texts deepen your mathematical problem solving toolkit, spanning heuristics, induction, spatial visualisation, invariance, symmetry, the extreme principle, and bitwise competitive programming.
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+\section*{I. Core Problem-Solving Heuristics}
+
+\subsection*{The Art and Craft of Problem Solving (Paul Zeitz)}
+John Wiley \& Sons, 2nd Edition, 2006.
+
+\begin{itemize}
+    \item \textbf{Chapter 2: Strategies for Investigation} Psychological strategies, wishful thinking, ``make it easier'', drawing diagrams, and identifying patterns from small examples.
+    \item \textbf{Chapter 3: Tactics for Solving Problems} Symmetry (geometric and algebraic), parity, and the extreme principle.
+    \item \textbf{Chapter 7: Modular Arithmetic \& Functional Equations} Techniques for substituting zero or special values into multi-variable equations.
+\end{itemize}
+
+\subsection*{How to Solve It: A New Aspect of Mathematical Method (George P{\'o}lya)}
+Princeton University Press, 1945 / 2004.
+
+\begin{itemize}
+    \item \textbf{Part I: In the Classroom} Understanding the problem, devising a plan, carrying out the plan, and looking back.
+    \item \textbf{Heuristic Dictionary} Analogy, auxiliary problems, decomposing and recombining, inductive vs. deductive discovery, and specialization.
+\end{itemize}
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+\section*{II. The Extreme Principle and Invariants}
+
+\subsection*{Problem-Solving Strategies (Arthur Engel)}
+Springer, 1998.
+
+\begin{itemize}
+    \item \textbf{Chapter 2: Coloring Proofs} Grid tilings, dominoes, trominoes, and invariant checkerboard colorings.
+    \item \textbf{Chapter 3: The Extremal Principle} Choosing minimal and maximal elements in finite graphs, discrete geometries, and number systems to produce immediate contradictions.
+\end{itemize}
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+\section*{III. Bitwise Algorithms and Fibonacci Bases}
+
+\subsection*{CP-Algorithms: Bit Manipulation and Bitmasking}
+\url{https://cp-algorithms.com/algebra/all-submasks.html}
+
+\begin{itemize}
+    \item Bitwise operations ($\&, |, \oplus$), population count (\texttt{\_\_builtin\_popcountll}), and iterating over submasks in $O(3^N)$.
+    \item Structural explanation of $f(2n) = f(n)$ and $f(2n+1) = f(n)+1$ as bit-shift operations.
+\end{itemize}
+
+\subsection*{Competitive Programmer's Handbook (Antti Laaksonen)}
+\url{https://cses.fi/book/book.pdf}
+
+\begin{itemize}
+    \item \textbf{Chapter 10: Bit Manipulation} Bit representations, bitwise operations, and dynamic programming with bitmasks.
+    \item \textbf{Chapter 21: Number Theory} Fibonacci properties, Zeckendorf representation, and fast matrix exponentiation.
+\end{itemize}
+
+\end{document}

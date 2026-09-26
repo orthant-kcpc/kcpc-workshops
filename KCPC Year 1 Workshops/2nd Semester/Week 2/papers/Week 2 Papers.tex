@@ -1,0 +1,93 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{titlesec}
+
+\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
+\titleformat{\subsection}{\normalsize\bfseries}{\thesubsection}{1em}{}
+
+\title{KCPC-CS111 Research References \\ Week 2: Investigation Techniques, Extremal Principles, and Tilings}
+\author{King's Competitive Programming Club \\ \small Research Curator: Kutay Bozkurt}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\noindent
+This document compiles foundational research papers that underpin the heuristics and problem-solving techniques introduced in Workshop 2. These papers explore the extreme principle in discrete geometry, combinatorial invariants in polyomino tilings, and non-standard number representations.
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+\section*{I. The Extreme Principle and Discrete Geometry}
+
+\subsection*{[1] Sylvester, J. J. (1893) \& Gallai, T. (1944)}
+\textit{Mathematical Question 11851.} Educational Times, 59, 98 (1893). \\
+\textit{Solution to Problem 4065.} American Mathematical Monthly, 51(3), 169--171 (1944).
+\url{https://doi.org/10.2307/2304247}
+
+\textbf{Why referenced:}
+The origin and first published affirmative resolution of the Sylvester-Gallai theorem. Sylvester posed the question of whether a non-collinear finite set of points in the plane must determine an ordinary line (a line containing exactly two points). Tibor Gallai answered in the affirmative using an extremal configuration.
+
+\vspace{1em}
+
+\subsection*{[2] Kelly, L. M. / Coxeter, H. S. M. (1948)}
+\textit{A problem of collinear points.}
+American Mathematical Monthly, 55(1), 26--28.
+\url{https://doi.org/10.2307/2304500}
+
+\textbf{Why referenced:}
+Presents L.~M.~Kelly's celebrated one-paragraph proof of the Sylvester-Gallai theorem using the minimal positive perpendicular distance from a point to a connecting line. This elegant extremal argument is the direct template for the two-color problem solved in Workshop 2.
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+\section*{II. Polyominoes and Tiling Invariants}
+
+\subsection*{[3] Golomb, S. W. (1954)}
+\textit{Checker boards and polyominoes.}
+American Mathematical Monthly, 61(10), 675--682.
+\url{https://doi.org/10.2307/2307321}
+
+\textbf{Why referenced:}
+Introduced polyominoes into mainstream mathematical literature and established the systematic use of coloring invariants to prove the impossibility of covering boards with missing cells (the mutilated chessboard problem).
+
+\vspace{1em}
+
+\subsection*{[4] Klarner, D. A. (1969)}
+\textit{Packing a rectangle with congruent $n$-ominoes.}
+Journal of Combinatorial Theory, 7(2), 107--115.
+\url{https://doi.org/10.1016/S0021-9800(69)80044-X}
+
+\textbf{Why referenced:}
+Extends coloring arguments to higher-order polyominoes and establishes necessary and sufficient conditions for rectangular grid packings.
+
+\vspace{1em}
+\hrule
+\vspace{1em}
+
+\section*{III. Number Representations and Fibonacci Bases}
+
+\subsection*{[5] Zeckendorf, E. (1972)}
+\textit{Repr{\'e}sentation des nombres naturels par une somme de nombres de Fibonacci ou de nombres de Lucas.}
+Bulletin de la Soci{\'e}t{\'e} Royale des Sciences de Li{\`e}ge, 41, 179--182.
+
+\textbf{Why referenced:}
+Establishes Zeckendorf's theorem: every positive integer can be uniquely represented as the sum of one or more distinct, non-consecutive Fibonacci numbers. This canonical decomposition guarantees an optimal, greedy decomposition in $\le 86$ steps for integers up to $10^{18}$, directly providing the algorithm for ARC 122 C (Calculator).
+
+\vspace{1em}
+
+\subsection*{[6] Lekkerkerker, C. G. (1952)}
+\textit{Voorstelling van natuurlijke getallen door een som van getallen van Fibonacci.}
+Simon Stevin, 29, 190--195.
+
+\textbf{Why referenced:}
+Proves that the average number of Fibonacci numbers needed to represent an integer $n$ is $\frac{n}{\phi^2 + 1} \approx 0.276 \log_\phi n$, establishing rigorous bounds on the operation counts of Fibonacci-based algorithms.
+
+\end{document}
