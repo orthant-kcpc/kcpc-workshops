@@ -7,6 +7,7 @@
 \usepackage{graphicx}
 \usepackage{tikz}
 \usepackage{url}
+\usepackage{array}
 
 \graphicspath{{../}}
 
@@ -79,6 +80,54 @@
 \author{KCPC}
 \date{Week 2}
 
+% Labelled diagrams remain readable without relying on colour alone.
+\newcommand{\pairingboard}[1]{%
+    \begin{tikzpicture}[scale=0.65]
+        \draw[step=1,kcpc-muted] (0,0) grid (4,4);
+        \ifnum#1>0
+            \filldraw[fill=kcpc-red!18,draw=kcpc-red,thick]
+                (0,3) rectangle (2,4);
+            \node at (1,3.5) {\small A1};
+        \fi
+        \ifnum#1>1
+            \filldraw[fill=black!12,draw=kcpc-text,thick]
+                (0,0) rectangle (2,1);
+            \node at (1,0.5) {\small B1};
+        \fi
+        \ifnum#1>2
+            \filldraw[fill=kcpc-red!18,draw=kcpc-red,thick]
+                (1,2) rectangle (3,3);
+            \node at (2,2.5) {\small A2};
+        \fi
+        \ifnum#1>3
+            \filldraw[fill=black!12,draw=kcpc-text,thick]
+                (1,1) rectangle (3,2);
+            \node at (2,1.5) {\small B2};
+        \fi
+        \draw[kcpc-red,dashed,very thick] (-0.3,2) -- (4.3,2);
+        \foreach \y/\r in {3.5/1,2.5/2,1.5/3,0.5/4}
+            \node[left] at (-0.1,\y) {\small\r};
+        \node[below,align=center,font=\scriptsize] at (2,-0.2)
+            {A: first player\\B: second player};
+    \end{tikzpicture}%
+}
+
+\newcommand{\riverbanks}[3]{%
+    \begin{tikzpicture}[x=0.88cm,y=0.88cm]
+        \fill[kcpc-red!5] (0,0) rectangle (3.9,2.6);
+        \fill[blue!12] (3.9,-0.7) rectangle (6.1,3.3);
+        \fill[kcpc-red!5] (6.1,0) rectangle (10,2.6);
+        \node[font=\small\bfseries] at (1.95,2.25) {Left bank (0)};
+        \node[font=\small\bfseries] at (8.05,2.25) {Right bank (1)};
+        \node[align=center,text width=3.1cm,font=\small] at (1.95,1.25) {#1};
+        \node[align=center,text width=3.1cm,font=\small] at (8.05,1.25) {#2};
+        \ifnum#3=0 \def\boatx{4.05}\else\def\boatx{5.25}\fi
+        \draw[fill=white,thick] (\boatx,0.6) -- ++(0.7,0)
+            -- ++(-0.15,-0.25) -- ++(-0.4,0) -- cycle;
+        \node[font=\small] at (5,2.95) {River};
+    \end{tikzpicture}%
+}
+
 \begin{document}
 
 \begin{frame}
@@ -87,6 +136,48 @@
 
 \begin{frame}{Overview}
     \tableofcontents
+\end{frame}
+
+\begin{frame}{Today's Flow: Think, Discuss, Explain}
+    \begin{enumerate}[<1->]
+        \item Form \textbf{groups of three}.
+        \item For each topic, coordinators work through an example.
+        \item Your group tackles the \textbf{Basic} question, then the
+            \textbf{Easy} question if time permits.
+        \item After each Basic/Easy question attempted, we randomly
+            select a group to explain its idea; coordinators fill gaps.
+        \item Finish with assigned group problems and short presentations.
+    \end{enumerate}
+\end{frame}
+
+\begin{frame}{A Step Up From Workshop 1A}
+    \begin{itemize}[<1->]
+        \item These problems require more modelling and proof than last week.
+        \item Start with a small example or a drawing. Say what you tried.
+        \item In your trio: one explores, one checks, one explains.
+            \textbf{Rotate roles after each topic.}
+        \item Be ready to share an approach, even if the proof is unfinished.
+        \item Harder questions are stretch work; ask for a hint when stuck.
+    \end{itemize}
+\end{frame}
+
+\section{Problems and Materials}
+
+\begin{frame}[<1->]{Problems and Materials}
+    \begin{columns}[c]
+        \begin{column}{0.55\textwidth}
+            Open \textbf{Week 2 Problems.pdf} now and keep it ready
+            for the trio checkpoints.
+            \par\vspace{0.8em}
+            Problems and materials on GitHub:
+            \par\vspace{0.8em}
+            {\scriptsize\url{https://github.com/orthant-kcpc/kcpc-workshops/tree/main/KCPC\%20Year\%202\%20Workshops/Pair\%2001\%20-\%20Mathematical\%20Problem\%20Solving/W2}}
+        \end{column}
+        \begin{column}{0.4\textwidth}
+            \centering
+            \href{https://github.com/orthant-kcpc/kcpc-workshops/tree/main/KCPC\%20Year\%202\%20Workshops/Pair\%2001\%20-\%20Mathematical\%20Problem\%20Solving/W2}{\includegraphics[width=\linewidth,keepaspectratio]{github_qr.png}}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 \section{Week 1 Recap}
@@ -142,34 +233,47 @@
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Worked Example: Wishful Thinking -- Sum of Squares}
-    Construct infinitely many integer solutions to
-    $x^2 + y^2 = 2z^2$ with $x,y,z > 0$.
+\begin{frame}{Coordinator Example: Wish for a Square}
+    Find the minimum of $x^2-6x+13$ for real $x$.
 
-    Wishful thinking: what if $x+y$ and $x-y$ had a nice structure?
+    \begin{center}
+        \begin{tikzpicture}[x=0.7cm,y=0.23cm]
+            \draw[->] (-0.3,0) -- (6.5,0) node[right] {$x$};
+            \draw[->] (0,-0.3) -- (0,14) node[above] {$y$};
+            \draw[kcpc-red,thick,domain=0:6,samples=40]
+                plot (\x,{(\x-3)^2+4});
+            \fill (3,4) circle (2pt);
+            \node[above right,font=\small] at (3,4) {$(3,4)$};
+            \node[below,font=\small] at (3,0) {3};
+        \end{tikzpicture}
+    \end{center}
+    The drawing suggests a minimum. How can we \textbf{prove} it?
 \end{frame}
 
-\begin{frame}{Solution: Sum Of Squares}
-    \pause
+\begin{frame}{Walkthrough: Complete the Square}
     \begin{itemize}
-        \item Set $x = u+v$, $y = u-v$.
-        \item $x^2 + y^2 = (u+v)^2 + (u-v)^2 = 2u^2 + 2v^2 = 2z^2$.
-        \item So $u^2 + v^2 = z^2$ (a Pythagorean triple!)
-        \item Take $u = m^2-n^2$, $v = 2mn$, $z = m^2+n^2$.
-        \item Then $x = (m^2-n^2) + 2mn$, $y = (m^2-n^2) - 2mn$.
-        \item For example, fixing $n=1$ and taking $m\ge3$ gives
-            infinitely many positive solutions.
+        \item \textbf{Wish:} a square would give an immediate lower bound.
+        \item \textbf{Build it:} $(x-3)^2=x^2-6x+9$.
+        \item \textbf{Account for the difference:}
+            $x^2-6x+13=(x-3)^2+4$.
+        \item \textbf{Prove the bound:} $(x-3)^2\ge0$, so the expression
+            is at least 4.
+        \item \textbf{Check attainability:} at $x=3$, its value is 4.
+            Therefore the minimum is exactly 4.
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Student Exercises: Wishful Thinking}
-    \begin{itemize}
-        \item<1-> \textbf{Basic:} Complete the Square
-        \item<1-> \textbf{Easy:} Make the Sum Telescope
-        \item<1-> \textbf{Medium:} A Number Puzzle
-        \item<1-> \textbf{Hard:} Improve the Recurrence
-        \item<1-> \textbf{Very Hard:} Factor the Equation
-    \end{itemize}
+\begin{frame}{Trio Checkpoint: Wishful Thinking}
+    \textbf{Basic: Complete the Square}
+    \[
+        x^2+y^2\ge\frac{(x+y)^2}{2}\qquad(x,y\in\mathbb R).
+    \]
+    Rewrite the difference as a square. When is equality possible?
+
+    \textbf{Easy, if ready:} Make the Sum Telescope (problem sheet).
+
+    \textbf{Share:} a randomly selected trio explains its rewrite and
+    why it proves the claim. We discuss each question attempted.
 \end{frame}
 
 \section{Symmetry}
@@ -182,16 +286,48 @@
                 \item Pairing strategy: if the opponent moves, reply
                     symmetrically.
                 \item Canonical form: transform to a standard representative.
-                \item Symmetric positions often have symmetric optimal moves.
+                \item Check that every paired response is legal.
             \end{itemize}
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Worked Example: Symmetry -- Pairing Game}
-    Two players alternately place a \textbf{horizontal} domino on a
-    $4\times4$ board. Dominoes cannot overlap. The player who cannot
-    move loses.
-    Show the second player has a winning strategy.
+\begin{frame}[<1->]{Worked Example: Symmetry -- Pairing Game}
+    \begin{columns}[c,onlytextwidth]
+        \begin{column}{0.58\textwidth}
+            Two players alternately place a \textbf{horizontal} domino
+            on a $4\times4$ board. Dominoes cannot overlap.
+
+            The player who cannot move loses. Show the second player
+            has a winning strategy.
+
+            What does reflection in the dashed line do to a move?
+        \end{column}
+        \begin{column}{0.38\textwidth}
+            \centering\pairingboard{0}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}[<1->]{Pairing Game: Watch Two Rounds}
+    \begin{columns}[c,onlytextwidth]
+        \begin{column}{0.42\textwidth}
+            \centering
+            \only<1>{\pairingboard{1}}
+            \only<2>{\pairingboard{2}}
+            \only<3>{\pairingboard{3}}
+            \only<4>{\pairingboard{4}}
+        \end{column}
+        \begin{column}{0.54\textwidth}
+            \only<1>{\textbf{1.} A puts a domino in row 1.\par
+                B's plan: use the same columns in row 4.}
+            \only<2>{\textbf{2.} B reflects A's move.\par
+                The occupied cells are now symmetric.}
+            \only<3>{\textbf{3.} A next plays in row 2.\par
+                Which cells should B use?}
+            \only<4>{\textbf{4.} B plays in row 3.\par
+                Symmetry is restored after the second round too.}
+        \end{column}
+    \end{columns}
 \end{frame}
 
 \begin{frame}{Solution: Pairing Game}
@@ -207,14 +343,20 @@
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Student Exercises: Symmetry}
-    \begin{itemize}
-        \item<1-> \textbf{Basic:} Pairing Game
-        \item<1-> \textbf{Easy:} Coins on a Circular Table
-        \item<1-> \textbf{Medium:} A Symmetric Integral
-        \item<1-> \textbf{Hard:} Odd Skew-Symmetric Matrices
-        \item<1-> \textbf{Very Hard:} Six People
-    \end{itemize}
+\begin{frame}{Trio Checkpoint: Symmetry}
+    \textbf{Basic: Pairing Game}
+
+    Generalise our strategy to a $2r\times c$ board, with
+    $r\ge1$, $c\ge2$, using horizontal dominoes only.
+
+    \textbf{Explain:} which rows pair up? Why is the reply always empty
+    and disjoint from the new domino?
+
+    \textbf{Easy, if ready:} Coins on a Circular Table.
+    What should happen at the centre?
+
+    \textbf{Share:} randomly selected trios explain each attempted
+    question; coordinators complete the legality argument.
 \end{frame}
 
 \section{Extreme Principle}
@@ -234,35 +376,51 @@
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Worked Example: Extreme Principle -- A Finite Set}
-    Let $S$ be a finite, non-empty set of integers such that
-    $a+b\in S$ whenever $a,b\in S$.
+\begin{frame}{Coordinator Example: A Largest Element}
+    Could a finite, non-empty set of \textbf{positive} integers be
+    closed under addition? That means $a+b\in S$ for all $a,b\in S$,
+    including $a=b$.
 
-    Prove that $S=\{0\}$.
+    \begin{center}
+        \begin{tikzpicture}[x=0.65cm]
+            \draw[->] (0,0) -- (10,0);
+            \foreach \x in {1,2,3,4}
+                \fill (\x,0) circle (2pt);
+            \node[above] at (4,0.15) {$M=\max S$};
+            \draw[kcpc-red,->,thick] (4,0.8) -- (8,0.8);
+            \node[above,kcpc-red] at (6,0.8) {add $M$};
+            \draw[kcpc-red,thick] (8,-0.12) -- (8,0.12);
+            \node[below,kcpc-red] at (8,-0.12) {$2M>M$};
+        \end{tikzpicture}
+    \end{center}
 \end{frame}
 
-\begin{frame}{Solution: A Finite Set}
-    \pause
+\begin{frame}{Solution: The Maximum Cannot Grow}
     \begin{itemize}
-        \item Examine the largest and smallest elements of $S$.
-        \item Let $M$ be the largest element. If $M>0$, then
-            $M+M=2M\in S$, contradicting maximality.
-        \item Therefore $M\le 0$.
-        \item Let $m$ be the smallest element. If $m<0$, then
-            $m+m=2m\in S$, contradicting minimality.
-        \item Therefore $m\ge 0$.
-        \item Hence $m=M=0$, so $S=\{0\}$.
+        \item Suppose such a set exists.
+        \item Because it is finite and non-empty, it has a largest
+            element $M$.
+        \item Closure forces $M+M=2M$ to belong to the set.
+        \item Positivity gives $2M>M$: a contradiction.
+        \item No such set exists. The extreme element made the
+            contradiction unavoidable.
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Student Exercises: Extreme Principle}
-    \begin{itemize}
-        \item<1-> \textbf{Basic:} A Finite Set Closed Under Addition
-        \item<1-> \textbf{Easy:} Minimum Degree Forces a Cycle
-        \item<1-> \textbf{Medium:} An Empty Triangle
-        \item<1-> \textbf{Hard:} A Path Through a Tournament
-        \item<1-> \textbf{Very Hard:} Longest Paths Meet
-    \end{itemize}
+\begin{frame}{Trio Checkpoint: Extreme Principle}
+    \textbf{Basic: A Finite Set Closed Under Addition}
+
+    Now allow \textbf{all integers}, including negative numbers and zero.
+    If $S$ is finite, non-empty, and closed under addition,
+    prove $S=\{0\}$.
+
+    \textbf{Explain:} what does the maximum tell you? What extra
+    information comes from the minimum?
+
+    \textbf{Easy, if ready:} Minimum Degree Forces a Cycle.
+    Use an endpoint of a longest path.
+
+    \textbf{Share:} random trios explain each attempted question.
 \end{frame}
 
 \section{Reduction}
@@ -281,63 +439,164 @@
     \end{itemize}
 \end{frame}
 
+\begin{frame}[<1->]{Graph Vocabulary for Reduction}
+    \begin{columns}[c,onlytextwidth]
+        \begin{column}{0.58\textwidth}
+            \begin{itemize}
+                \item A \textbf{vertex} represents an object or a complete
+                    puzzle state.
+                \item An \textbf{edge} represents a relationship or a legal move.
+                \item A vertex's \textbf{degree} counts its incident edges.
+                \item A \textbf{path} follows edges without repeating vertices;
+                    a \textbf{cycle} closes back at its start.
+            \end{itemize}
+        \end{column}
+        \begin{column}{0.38\textwidth}
+            \centering
+            \begin{tikzpicture}[scale=0.9,
+                vertex/.style={circle,draw,fill=kcpc-bg,minimum size=0.6cm}]
+                \node[vertex] (a) at (0,1.5) {A};
+                \node[vertex] (b) at (2,1.5) {B};
+                \node[vertex] (c) at (1,0) {C};
+                \draw[thick] (a) -- (b) -- (c) -- (a);
+                \node[below,font=\small] at (1,-0.5) {Each degree is 2.};
+            \end{tikzpicture}
+        \end{column}
+    \end{columns}
+\end{frame}
+
 \begin{frame}{Worked Example: Reduction -- River Crossing}
     A farmer must take a wolf, a goat, and a cabbage across a river.
     The boat carries only the farmer and at most one item.
 
     The wolf cannot be left with the goat, and the goat cannot be left
-    with the cabbage. How can everyone cross safely?
+    with the cabbage \textbf{without the farmer}. How can everyone cross safely?
+
+    \begin{center}
+        \riverbanks{Farmer, wolf,\\goat, cabbage}{Empty}{0}
+    \end{center}
 \end{frame}
 
-\begin{frame}{Solution: River Crossing}
-    \pause
+\begin{frame}{River Crossing: Build the State Model}
     \begin{itemize}
-        \item Represent a situation by which riverbank contains the farmer,
-            wolf, goat, and cabbage.
-        \item Keep only safe situations and connect two when one legal boat
-            crossing changes one into the other.
-        \item The puzzle is now a path problem from the all-left state to the
-            all-right state.
-        \item One path is: goat over, farmer back, wolf over, goat back,
-            cabbage over, farmer back, goat over.
+        \item Encode a state as $(F,W,G,C)$: 0 means left, 1 means right.
+            The boat is always with the farmer.
+        \item A state is unsafe if $W=G\ne F$ or $G=C\ne F$.
+        \item A legal crossing flips $F$ and, optionally, one item
+            starting on the farmer's bank. The new state must be safe.
+        \item The start is $0000$; the goal is $1111$.
+        \item States are vertices; legal crossings are edges.
+            We need a \textbf{path} between start and goal.
     \end{itemize}
 \end{frame}
 
-\begin{frame}{Student Exercises: Reduction}
-    \begin{itemize}
-        \item<1-> \textbf{Basic:} An Acquaintance Graph
-        \item<1-> \textbf{Easy:} The Bridges of K\"onigsberg
-        \item<1-> \textbf{Medium:} Water Jugs as Reachability
-        \item<1-> \textbf{Hard:} Lamps as Linear Algebra
-        \item<1-> \textbf{Very Hard:} Assignment as Maximum Flow
-    \end{itemize}
+\begin{frame}{Full Walkthrough: River Crossing (1/2)}
+    \begin{overprint}
+        \onslide<1>
+        \textbf{Start: $0000$.} Only the goat can go first: taking the
+        wolf leaves goat/cabbage; taking cabbage leaves wolf/goat.
+        \begin{center}\riverbanks{Farmer, wolf,\\goat, cabbage}{Empty}{0}\end{center}
+        \onslide<2>
+        \textbf{1. Goat over: $1010$.} The unattended bank has only
+        wolf and cabbage, so it is safe.
+        \begin{center}\riverbanks{Wolf, cabbage}{Farmer, goat}{1}\end{center}
+        \onslide<3>
+        \textbf{2. Farmer back alone: $0010$.} The goat can wait safely
+        on its own. Bringing it back would undo our progress.
+        \begin{center}\riverbanks{Farmer, wolf,\\cabbage}{Goat}{0}\end{center}
+        \onslide<4>
+        \textbf{3. Wolf over: $1110$.} Wolf and goat are safe together
+        while the farmer is present. How can the farmer return?
+        \begin{center}\riverbanks{Cabbage}{Farmer, wolf,\\goat}{1}\end{center}
+    \end{overprint}
 \end{frame}
 
-\begin{frame}{Week 2 Complete}
-    \pause
-    \begin{itemize}
+\begin{frame}{Full Walkthrough: River Crossing (2/2)}
+    \begin{overprint}
+        \onslide<1>
+        \textbf{4. Goat back: $0100$.} The farmer cannot leave wolf
+        and goat alone. Bringing the goat back makes both banks safe.
+        \begin{center}\riverbanks{Farmer, goat,\\cabbage}{Wolf}{0}\end{center}
+        \onslide<2>
+        \textbf{5. Cabbage over: $1101$.} Wolf and cabbage can be left
+        together; the goat waits alone on the left.
+        \begin{center}\riverbanks{Goat}{Farmer, wolf,\\cabbage}{1}\end{center}
+        \onslide<3>
+        \textbf{6. Farmer back alone: $0101$.} Neither unattended bank
+        contains a dangerous pair.
+        \begin{center}\riverbanks{Farmer, goat}{Wolf, cabbage}{0}\end{center}
+        \onslide<4>
+        \textbf{7. Goat over: $1111$.} Everyone is on the right bank.
+        Every crossing was legal and every intermediate state safe.
+        \begin{center}\riverbanks{Empty}{Farmer, wolf,\\goat, cabbage}{1}\end{center}
+    \end{overprint}
+\end{frame}
+
+\begin{frame}{River Crossing: A Path Through Safe States}
+    \begin{center}
+        \begin{tikzpicture}[x=2.25cm,y=1.7cm,
+            state/.style={draw,rounded corners,font=\small,
+                minimum width=1.25cm,minimum height=0.6cm}]
+            \node[state] (s0) at (0,1) {0000};
+            \node[state] (s1) at (1,1) {1010};
+            \node[state] (s2) at (2,1) {0010};
+            \node[state] (s3) at (3,1) {1110};
+            \node[state] (s4) at (3,0) {0100};
+            \node[state] (s5) at (2,0) {1101};
+            \node[state] (s6) at (1,0) {0101};
+            \node[state] (s7) at (0,0) {1111};
+            \foreach \a/\b/\label in {s0/s1/FG,s1/s2/F,s2/s3/FW,
+                s4/s5/FC,s5/s6/F,s6/s7/FG}
+                \draw[->,thick,kcpc-red] (\a) --
+                    node[above,font=\scriptsize,kcpc-text] {\label} (\b);
+            \draw[->,thick,kcpc-red] (s3) --
+                node[right,font=\scriptsize,kcpc-text] {FG} (s4);
+        \end{tikzpicture}
+    \end{center}
+    \small Edge labels show who crosses: F = farmer, W = wolf,
+    G = goat, C = cabbage. This is \textbf{one solution path}, not
+    the whole state graph.
+
+    \textbf{Takeaway:} model the rules first, then search the legal states.
+\end{frame}
+
+\begin{frame}{Trio Checkpoint: Reduction}
+    \textbf{Basic: An Acquaintance Graph}
+
+    At a party of $n\ge2$ people, acquaintance is mutual. Prove
+    that two people have the same number of acquaintances.
+
+    \textbf{Try:} draw a small example, then list the possible degrees.
+    Can degree 0 and degree $n-1$ occur together?
+
+    \textbf{Easy, if ready:} The Bridges of K\"onigsberg.
+
+    \textbf{Share:} random trios explain each attempted question;
+    coordinators complete the counting argument if needed.
+\end{frame}
+
+\begin{frame}{Our Toolkit for Group Problems}
+    \begin{itemize}[<1->]
         \item Wishful thinking simplifies the target structure.
         \item Symmetry pairs equivalent positions and cases.
         \item The extreme principle focuses on boundary objects.
         \item Reduction changes a problem into a familiar representation.
-        \item Optional extensions continue in \textbf{Week 2 Advanced Slides}.
+        \item Choose a viewpoint, test it on an example, then justify it.
     \end{itemize}
 \end{frame}
 
-\section{Problems and Materials}
+\section{Group Problem Lab}
 
-\begin{frame}{Problems and Materials}
-    \begin{columns}[c]
-        \begin{column}{0.55\textwidth}
-            Problems and materials on GitHub:
-            \par\vspace{0.8em}
-            {\scriptsize\url{https://github.com/orthant-kcpc/kcpc-workshops/tree/main/KCPC\%20Year\%202\%20Workshops/Pair\%2001\%20-\%20Mathematical\%20Problem\%20Solving/W2}}
-        \end{column}
-        \begin{column}{0.4\textwidth}
-            \centering
-            \href{https://github.com/orthant-kcpc/kcpc-workshops/tree/main/KCPC\%20Year\%202\%20Workshops/Pair\%2001\%20-\%20Mathematical\%20Problem\%20Solving/W2}{\includegraphics[width=\linewidth,keepaspectratio]{github_qr.png}}
-        \end{column}
-    \end{columns}
+\begin{frame}{Debrief}
+    \begin{itemize}[<1->]
+        \item In trios: state the problem, show your key
+            drawing or rewrite, and explain why the idea works.
+        \item If unfinished, explain your progress and the exact sticking point.
+        \item Another trio can add a missing step! It is supposed to be collaborative.
+        \item Share follow-up ideas as time allows. Which heuristic helped?
+        \item Further practice: remaining sheet problems and
+            \textbf{Week 2 Advanced Slides}.
+    \end{itemize}
 \end{frame}
 
 \begin{frame}{Thanks for coming!}

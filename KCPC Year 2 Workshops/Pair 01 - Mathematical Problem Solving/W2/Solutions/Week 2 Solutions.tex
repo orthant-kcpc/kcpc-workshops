@@ -55,7 +55,7 @@ to\headwidth{\color{kcpc-red}\leaders\hrule height \headrulewidth\hfill}}
 
 \section{Wishful Thinking}
 
-\subsection*{Basic -- Complete The Square}
+\subsection*{Basic: Complete The Square}
 Subtract the right-hand side from the left:
 \[
 x^2+y^2-\frac{(x+y)^2}{2}=\frac{(x-y)^2}{2}\ge0.
@@ -63,7 +63,7 @@ x^2+y^2-\frac{(x+y)^2}{2}=\frac{(x-y)^2}{2}\ge0.
 Equality holds exactly when $x=y$.
 \insight{Wish for a square because squares are automatically non-negative.}
 
-\subsection*{Easy -- Make The Sum Telescope}
+\subsection*{Easy: Make The Sum Telescope}
 Use partial fractions:
 \[
 \frac1{k(k+1)}=\frac1k-\frac1{k+1}.
@@ -75,7 +75,7 @@ Therefore all intermediate terms cancel:
 \]
 \insight{Rewriting each term as a difference exposes cancellation.}
 
-\subsection*{Medium -- A Number Puzzle}
+\subsection*{Medium: A Number Puzzle}
 Set $x=u+v$ and $y=u-v$. The equation becomes
 $u^2+v^2=z^2$. Take the Pythagorean triple
 \[
@@ -86,10 +86,10 @@ for any integer $m\ge3$. Then
 x=m^2+2m-1,\qquad y=m^2-2m-1,\qquad z=m^2+1
 \]
 is positive and satisfies the original equation. Varying $m$ gives
-infinitely many solutions.
+infinitely many solutions; moreover, $x-y=4m\ne0$.
 \insight{The substitution turns the desired equation into a familiar one.}
 
-\subsection*{Hard -- Improve The Recurrence}
+\subsection*{Easy: Improve The Recurrence}
 Define $b_n=a_n+1$. Then
 \[
 b_{n+1}=a_{n+1}+1=2a_n+2=2b_n,
@@ -101,7 +101,7 @@ a_n=2^n-1.
 \]
 \insight{Changing variables absorbs the awkward constant term.}
 
-\subsection*{Very Hard -- Factor The Equation}
+\subsection*{Very Hard: Factor The Equation}
 Multiplying by $nxy$ gives $n(x+y)=xy$. Rearranging and adding $n^2$
 to both sides gives
 \[
@@ -118,7 +118,67 @@ of $n^2$ arises this way.
 
 \section{Symmetry}
 
-\subsection*{Basic -- Chomp: Poisoned Chocolate}
+\subsection*{Basic: Pairing Game}
+Number the rows $1,\ldots,2r$. Reflect every first-player move across
+the horizontal line between rows $r$ and $r+1$: row $i$ is paired with
+row $2r+1-i$, using the same columns. No row is paired with itself.
+
+Initially the board is symmetric and empty. Suppose it is symmetric
+after a second-player reply. If the first player now plays a legal
+domino, its reflected cells were also empty: an occupied reflected cell
+would, by symmetry, imply an occupied cell in the first player's move.
+The reflected domino lies in a different row, so the two new dominoes
+are disjoint. The reply is therefore legal and restores symmetry.
+This proves the invariant after every round. Since the board is finite,
+play terminates, and the second player always has a reply whenever the
+first player can move. The first player must run out of moves first.
+\insight{Pair rows with no fixed row, and prove the mirrored response is always legal.}
+
+\subsection*{Easy: Coins On A Circular Table}
+The first player places a coin at the centre. After every later move,
+the first player places a coin in the position obtained by rotating
+the opponent's coin by $180^\circ$. The table remains symmetric after
+each response, so the mirrored placement is legal whenever the
+opponent's placement is legal. More explicitly, if the coin radius is
+$\rho$, a legal opponent coin has centre at distance at least $2\rho$
+from the central coin's centre. Its reflected centre is therefore at
+distance at least $4\rho$ from it, so the two coins do not overlap.
+Any overlap with an earlier coin would reflect to an overlap in the
+opponent's move, which was legal. The finite table can hold only finitely
+many coins, so the first player moves last. As usual, assume at least
+one coin fits on the table.
+\insight{Occupy the unique fixed point, then pair all remaining positions.}
+
+\subsection*{Medium: A Symmetric Integral}
+Let $I=\int_0^1f(x)\,dx$. Substituting $u=1-x$ gives
+\[
+I=\int_0^1f(1-x)\,dx.
+\]
+Adding the two expressions and using the given identity,
+\[
+2I=\int_0^1\bigl(f(x)+f(1-x)\bigr)\,dx=\int_0^1 1\,dx=1.
+\]
+Hence $I=\tfrac12$.
+\insight{Reflecting the interval pairs every value with its complement.}
+
+\subsection*{Hard: Odd Skew-Symmetric Matrices}
+Using invariance of the determinant under transposition,
+\[
+\det A=\det A^{\mathsf T}=\det(-A)=(-1)^n\det A.
+\]
+When $n$ is odd this says $\det A=-\det A$, so $2\det A=0$ and
+$\det A=0$.
+\insight{Transpose symmetry turns the determinant into its own negative.}
+
+\subsection*{Very Hard: Six People}
+Represent people by vertices and colour each edge red for acquaintances
+and blue for strangers. Choose a vertex $v$. At least three of its
+five incident edges have one colour; by symmetry suppose $va,vb,vc$
+are red. If one of $ab,bc,ca$ is red, it forms a red triangle with
+$v$. Otherwise $ab,bc,ca$ are all blue and form a blue triangle.
+\insight{Colour symmetry reduces two relationship cases to one.}
+
+\subsection*{Stretch: Chomp: Poisoned Chocolate}
 Suppose the second player has a winning strategy. If the first player
 eats only the top-right square, this strategy specifies a reply at
 some unpoisoned square $q$. The first player could instead have chosen
@@ -131,56 +191,18 @@ strategy, a contradiction. Thus the first player has a winning
 strategy, although this argument does not specify their first move.
 \insight{A hypothetical winning reply can be stolen as the first move.}
 
-\subsection*{Easy -- Coins On A Circular Table}
-The first player places a coin at the centre. After every later move,
-the first player places a coin in the position obtained by rotating
-the opponent's coin by $180^\circ$. The table remains symmetric after
-each response, so the mirrored placement is legal whenever the
-opponent's placement is legal. The first player therefore moves last.
-\insight{Occupy the unique fixed point, then pair all remaining positions.}
-
-\subsection*{Medium -- A Symmetric Integral}
-Let $I=\int_0^1f(x)\,dx$. Substituting $u=1-x$ gives
-\[
-I=\int_0^1f(1-x)\,dx.
-\]
-Adding the two expressions and using the given identity,
-\[
-2I=\int_0^1\bigl(f(x)+f(1-x)\bigr)\,dx=\int_0^1 1\,dx=1.
-\]
-Hence $I=\tfrac12$.
-\insight{Reflecting the interval pairs every value with its complement.}
-
-\subsection*{Hard -- Odd Skew-Symmetric Matrices}
-Using invariance of the determinant under transposition,
-\[
-\det A=\det A^{\mathsf T}=\det(-A)=(-1)^n\det A.
-\]
-When $n$ is odd this says $\det A=-\det A$, so $2\det A=0$ and
-$\det A=0$.
-\insight{Transpose symmetry turns the determinant into its own negative.}
-
-\subsection*{Very Hard -- Six People}
-Represent people by vertices and colour each edge red for acquaintances
-and blue for strangers. Choose a vertex $v$. At least three of its
-five incident edges have one colour; by symmetry suppose $va,vb,vc$
-are red. If one of $ab,bc,ca$ is red, it forms a red triangle with
-$v$. Otherwise $ab,bc,ca$ are all blue and form a blue triangle.
-\insight{Colour symmetry reduces two relationship cases to one.}
-
 \section{Extreme Principle}
 
-\subsection*{Basic -- Erd\H{o}s--Szekeres Monotone Subsequence}
-For each term $a_i$, let $L_i$ be the length of the longest increasing
-subsequence starting at $a_i$, and $D_i$ the longest decreasing. If
-$a_i<a_j$ with $i<j$, then $L_i>L_j$; if $a_i>a_j$, then $D_i>D_j$.
-Thus all pairs $(L_i,D_i)$ are distinct. Each $L_i,D_i$ is between 1
-and $n$ (otherwise we have the desired subsequence). There are at most
-$n^2$ distinct pairs, but $n^2+1$ terms. By pigeonhole, some pair
-repeats, contradiction unless a subsequence of length $n+1$ exists.
-\insight{Map each term to a pair of lengths; pigeonhole principle forces a collision unless the bound is reached.}
+\subsection*{Basic: A Finite Set Closed Under Addition}
+Let $M=\max S$ and $m=\min S$, which exist because $S$ is finite and
+non-empty. If $M>0$, closure gives $2M\in S$ with $2M>M$, contradicting
+maximality. Thus $M\le0$. If $m<0$, closure gives $2m\in S$ with
+$2m<m$, contradicting minimality. Thus $m\ge0$. Every element of $S$
+lies between $m$ and $M$, so $m=M=0$ and $S=\{0\}$. Conversely,
+$\{0\}$ is indeed closed under addition.
+\insight{The maximum excludes positive elements; the minimum excludes negative ones.}
 
-\subsection*{Easy -- Minimum Degree Forces A Cycle}
+\subsection*{Easy: Minimum Degree Forces A Cycle}
 Choose a longest path $v_0v_1\ldots v_k$. Every neighbour of $v_k$
 must already lie on the path, since a new neighbour would extend it.
 Because $v_k$ has at least two neighbours, it is adjacent to some
@@ -188,7 +210,7 @@ $v_i$ with $i<k-1$. The edge $v_kv_i$ together with the path from
 $v_i$ to $v_k$ forms a cycle.
 \insight{An endpoint of a longest path cannot escape to a new vertex.}
 
-\subsection*{Medium -- An Empty Triangle}
+\subsection*{Medium: An Empty Triangle}
 Among all non-degenerate triangles whose vertices belong to the set,
 choose one of minimum positive area. If another given point lay in
 its interior, joining that point to the three vertices would split
@@ -196,7 +218,7 @@ the triangle into three smaller triangles of positive area. At least
 one would contradict the chosen minimum. Therefore its interior is empty.
 \insight{A minimum-area counterexample cannot contain a smaller one.}
 
-\subsection*{Hard -- A Path Through A Tournament}
+\subsection*{Hard: A Path Through A Tournament}
 Choose a longest directed path $v_1\to\cdots\to v_k$. Suppose a
 vertex $u$ is omitted. If $u\to v_1$, prepend $u$; if $v_k\to u$,
 append $u$. Otherwise $v_1\to u$ and $u\to v_k$. Moving along the
@@ -205,7 +227,7 @@ $u$ can be inserted between them. Every case contradicts maximality,
 so the path contains every vertex.
 \insight{A longest object is rigid enough that an omitted vertex causes a contradiction.}
 
-\subsection*{Very Hard -- Longest Paths Meet}
+\subsection*{Very Hard: Longest Paths Meet}
 Let two longest paths $P$ and $Q$ both have $L$ edges. Suppose they
 are disjoint. Since the graph is connected, choose a shortest path
 joining a vertex $p$ of $P$ to a vertex $q$ of $Q$, with no other
@@ -215,9 +237,19 @@ distance at least $L/2$ from $q$. Joining these two subpaths through
 the connecting path produces a path longer than $L$, a contradiction.
 \insight{Two disjoint extremes can be joined to create something more extreme.}
 
+\subsection*{Stretch: Erd\H{o}s--Szekeres Monotone Subsequence}
+For each term $a_i$, let $L_i$ be the length of the longest increasing
+subsequence starting at $a_i$, and $D_i$ the longest decreasing. If
+$a_i<a_j$ with $i<j$, then $L_i>L_j$; if $a_i>a_j$, then $D_i>D_j$.
+Thus all pairs $(L_i,D_i)$ are distinct. Each $L_i,D_i$ is between 1
+and $n$ (otherwise we have the desired subsequence). There are at most
+$n^2$ distinct pairs, but $n^2+1$ terms. By pigeonhole, some pair
+repeats, contradiction unless a subsequence of length $n+1$ exists.
+\insight{Map each term to a pair of lengths; pigeonhole principle forces a collision unless the bound is reached.}
+
 \section{Reduction}
 
-\subsection*{Basic -- An Acquaintance Graph}
+\subsection*{Basic: An Acquaintance Graph}
 Represent each person by a vertex and join two vertices when those
 people are acquainted. Every degree is one of $0,1,\ldots,n-1$.
 However, degrees 0 and $n-1$ cannot both occur: if one person knows
@@ -226,7 +258,7 @@ degree values occur among $n$ vertices. By the pigeonhole principle,
 two vertices have the same degree.
 \insight{The graph representation turns acquaintances into vertex degrees.}
 
-\subsection*{Easy -- The Bridges Of K\"onigsberg}
+\subsection*{Easy: The Bridges Of K\"onigsberg}
 Replace each land mass by a vertex and each bridge by an edge. A walk
 using every bridge exactly once would be an Euler trail. In such a
 trail, every vertex except possibly the start and finish has even
@@ -234,7 +266,7 @@ degree. The K\"onigsberg graph has four odd-degree vertices, so no
 Euler trail exists.
 \insight{Only incidence matters, so geography can be discarded.}
 
-\subsection*{Medium -- Missionaries And Cannibals}
+\subsection*{Medium: Missionaries And Cannibals}
 State: $(M_L,C_L,B)$ with $M$ missionaries, $C$ cannibals on left,
 $B\in\{L,R\}$ boat position. On each bank, safety requires that
 there are no missionaries or that missionaries are at least as
@@ -255,7 +287,7 @@ Checking the counts on each bank after every crossing shows that
 none ever leaves a missionary outnumbered.
 \insight{State-space graph with safety constraints; BFS finds valid path.}
 
-\subsection*{Hard -- Lamps As Linear Algebra}
+\subsection*{Hard: Lamps As Linear Algebra}
 Encode on/off by $1/0$ in $\mathbb F_2$. Let $v$ be the initial state
 and let column $i$ of an $n\times n$ matrix $A$ have ones in positions
 $i-1,i,i+1$ modulo $n$. If $x_i$ records whether move $i$ is used,
@@ -268,7 +300,7 @@ when it is, returns a sequence of moves. Repeating a move is unnecessary
 because doing it twice has no effect.
 \insight{Toggle operations become vector addition modulo 2.}
 
-\subsection*{Very Hard -- Assignment As Maximum Flow}
+\subsection*{Very Hard: Assignment As Maximum Flow}
 Create a source $s$, one vertex for each student, one for each project,
 and a sink $t$. Add capacity-1 edges from $s$ to every student, from
 a student to each acceptable project, and from every project to $t$.
@@ -285,22 +317,27 @@ worked examples are presented in \textit{Week 2 Advanced Slides}.
 
 \section{Advanced Logic And Common Knowledge}
 
-\subsection*{Basic -- Blue-Eyed Islanders ($k=2$)}
+\subsection*{Basic: Blue-Eyed Islanders ($k=2$)}
 If $k=1$, the single blue-eyed islander sees no blue eyes, knows the
 announcement refers to them, and leaves night 1.
 If $k=2$, each blue-eyed islander sees one blue-eyed person. If I had
 brown eyes, the other would see 0 blue eyes and leave night 1. They
-don't. So I must have blue eyes. Both leave night 2.
+don't, so I must have blue eyes. Both blue-eyed islanders leave at
+midnight on day 2. Each brown-eyed islander sees two blue-eyed people;
+after observing both leave on day 2, they know they are brown. If one
+of them were blue-eyed, there would have been three blue-eyed
+islanders, none of whom would leave on day 2. Thus the brown-eyed
+islanders leave at midnight on day 3.
 \insight{Public announcement creates common knowledge; induction on
 $k$ gives the day of departure.}
 
-\subsection*{Easy -- Cheating Husbands}
+\subsection*{Easy: Cheating Husbands}
 Let $k$ be the number of cheating husbands. By the same induction as
 Blue-Eyed Islanders, all $k$ wives deduce their husbands cheated on
 day $k$ and act at midnight. The queen's truthful announcement
 ensures that $k\ge1$.
 
-\subsection*{Medium -- Sum And Product Puzzle}
+\subsection*{Medium: Sum And Product Puzzle}
 The information limit $x+y\le100$ makes systematic elimination
 possible. Start with all pairs
 $\Omega_0=\{(x,y):2\le x<y,\ x+y\le100\}$. Keep in $\Omega_1$
@@ -322,7 +359,7 @@ is $x=4$, $y=13$. These filters spell out exactly which set of
 possibilities each speaker has at every stage.
 \insight{Filter a finite set of possible worlds after each public statement.}
 
-\subsection*{Hard -- Cheryl's Birthday}
+\subsection*{Hard: Cheryl's Birthday}
 Dates: May 15, 16, 19; June 17, 18; July 14, 16; Aug 14, 15, 17.
 Albert knows month, Bernard knows day.
 Albert: Bernard doesn't know $\to$ month is not May or June (19 and
@@ -331,37 +368,40 @@ Bernard now knows $\to$ day is not 14. Remaining: July 16; Aug 15, 17.
 Albert now knows $\to$ month must be July (if August, Albert couldn't
 distinguish 15 and 17). Answer: July 16.
 
-\subsection*{Very Hard -- 100 Prisoners And A Light Bulb}
+\subsection*{Very Hard: 100 Prisoners And A Light Bulb}
 Designate one prisoner as the Counter. Others are Drones.
 Protocol: A Drone who has never turned the light on, and finds it
 off, turns it on exactly once. The Counter only turns the light off,
 and increments a mental count each time they find it on. When the
 Counter's count reaches 99, they announce.
-Proof: Each Drone eventually visits and turns the light on if they
-haven't, with probability 1: independent uniform visits give each
-prisoner infinitely many opportunities. Each on-state waits until
-the Counter next visits, at which point they turn it off and record
-the signal. Consequently all 99 Drones eventually signal, and the
-count reaches 99 exactly when all 99 have visited. Every announcement
-is correct, and the protocol terminates almost surely.
+Proof: Because visits are independent and uniform, every prisoner is
+selected infinitely often with probability 1. Whenever the light is
+on, the Counter eventually visits, turns it off, and records one
+signal. Whenever it is off and an unsignalled Drone remains, an
+unsignalled Drone eventually visits and turns it on. These stages
+repeat, so all 99 Drones eventually signal almost surely. Each Drone
+signals at most once, so the count reaches 99 only after every Drone
+has visited. The announcement is therefore correct, and termination
+has probability 1.
 \insight{The light bulb encodes one bit of shared state; the Counter
 aggregates information.}
 
 \section{Advanced Invariants And Monovariants}
 
-\subsection*{Basic -- Peg Solitaire (Small Board)}
+\subsection*{Basic: Peg Solitaire (Small Board)}
 No legal first move exists. The centre is the only empty cell, but
 an orthogonal jump landing there would have to start two squares away
 from the centre, outside the $3\times3$ board. Thus the initial
 configuration is already stuck with eight pegs.
 \insight{Check whether a first move exists before seeking a more elaborate invariant.}
 
-\subsection*{Easy -- Token Game}
+\subsection*{Easy: Token Game}
 Initially the only adjacent pair is at 0 and 1, so the only move
 replaces those two tokens with one token at 2. No further move is
 possible with just one token. Position 100 is never occupied.
+\insight{Check the legal moves before searching for an invariant.}
 
-\subsection*{Medium -- Conway's Soldiers}
+\subsection*{Medium: Conway's Soldiers}
 Fix a possible target square $(x_0,5)$ and put
 $\varphi=(\sqrt5-1)/2$, so $\varphi+\varphi^2=1$.
 Assign cell $(x,y)$ weight $\varphi^{|x-x_0|+|y-5|}$.
@@ -384,7 +424,7 @@ infinitely many initial pegs remain elsewhere, with positive total
 weight. Reaching the target would give total weight greater than 1,
 a contradiction. This holds for every $x_0$, so row 5 is unreachable.
 
-\subsection*{Hard -- Polynomial Invariant For (x+2,y-1)}
+\subsection*{Medium: Polynomial Invariant For (x+2,y-1)}
 The move $(x,y)\to(x+2,y-1)$ changes $x+2y$ by $2+2(-1)=0$. Thus
 $P(x,y)=x+2y$ is a polynomial invariant. More generally, any
 polynomial in $x+2y$ is invariant. This is a \emph{necessary} condition
@@ -395,7 +435,7 @@ $x+2y=0$.
 \insight{An invariant excludes states, while the direction of the move
 and integrality complete the reachability argument.}
 
-\subsection*{Very Hard -- A Sequence Invariant}
+\subsection*{Very Hard: A Sequence Invariant}
 Set $b_n=a_n+1$. The given recurrence becomes the Fibonacci-type
 recurrence $b_{n+1}=b_n+b_{n-1}$, with $b_0=1$, $b_1=2$ and $b_2=3$.
 For $d_n=b_n^2-b_{n-1}b_{n+1}$,
@@ -411,7 +451,7 @@ $d_n=(-1)^{n-1}$, proving the claimed invariant.
 
 \section{Colouring And Tiling: Generalisations}
 
-\subsection*{Basic -- Mutilated Chessboard: Four Corners Removed}
+\subsection*{Basic: Mutilated Chessboard: Four Corners Removed}
 Yes. In each of the top and bottom rows, the two corners are missing,
 leaving six consecutive squares; tile each row with three horizontal
 dominoes. Each of the other six rows has eight squares and can be
@@ -419,7 +459,7 @@ tiled with four horizontal dominoes. These $3+3+6\cdot4=30$ dominoes
 cover every remaining square.
 \insight{An explicit tiling is more decisive than an unnecessary colouring.}
 
-\subsection*{Easy -- Tiling With T-Tetrominoes}
+\subsection*{Easy: Tiling With T-Tetrominoes}
 The equal letters in this diagram give four T-shaped pieces:
 \begin{center}
 \begin{verbatim}
@@ -433,7 +473,7 @@ Each letter appears in four edge-connected cells forming a T. To
 tile $4\times(4k)$, divide it into $k$ disjoint $4\times4$ blocks and
 repeat this construction in every block.
 
-\subsection*{Medium -- Fault-Free Domino Tiling}
+\subsection*{Hard: Fault-Free Domino Tiling}
 For a $6\times6$ board, consider any one of its five internal
 horizontal grid lines. The number of vertical dominoes crossing it
 must be even: the part above the line has an even number of cells,
@@ -458,14 +498,14 @@ RVVWWXXU
 Every one of the five internal horizontal and seven internal vertical
 lines crosses a domino, so there is no fault line.
 
-\subsection*{Hard -- Triominoes On A Chessboard}
+\subsection*{Hard: Triominoes On A Chessboard}
 Choose row and column indices starting at the removed corner, and
 colour $(i,j)$ by $(i+j)\bmod3$. Every horizontal or vertical
 $1\times3$ tromino covers one cell of each colour. The intact board
 has colour counts $21,22,21$; removing the $(0,0)$ corner leaves
 $20,22,21$, which are not equal. Therefore no tiling exists.
 
-\subsection*{Very Hard -- Generalised Mutilated Chessboard}
+\subsection*{Very Hard: Generalised Mutilated Chessboard}
 The answer is $m,n\ge2$ with $mn$ even, together with the two boards
 $1\times2$ and $2\times1$ (whose empty remainder has an empty tiling).
 Odd area leaves an odd number of squares and cannot be tiled. For
@@ -484,20 +524,22 @@ same holds after rotation. The $1\times2$ case is the sole exception.
 
 \section{Induction And Recursion: From Proof To Algorithm}
 
-\subsection*{Basic -- Josephus Problem}
+\subsection*{Basic: Josephus Problem}
 $J(1)=1$. Number the people $1$ through $n$ and start by removing
 person 2. For $2k$ people, the first circuit removes every even
 position; the $k$ odd-numbered survivors form a smaller Josephus
 circle, giving $J(2k)=2J(k)-1$. For $2k+1$ people, the first circuit
 removes $2,4,\ldots,2k$ and then person 1. The remaining $k$ people
 are $3,5,\ldots,2k+1$, giving $J(2k+1)=2J(k)+1$.
+Thus the recurrence ranges are $J(2k)=2J(k)-1$ for $k\ge1$ and
+$J(2k+1)=2J(k)+1$ for $k\ge1$.
 These recurrences imply by induction that if $n=2^r+s$ with
 $0\le s<2^r$, then $J(n)=2s+1$: for even and odd $n$ alike, the
 formula for $J(\lfloor n/2\rfloor)$ gives the next case.
 Equivalently, move the leading bit of $n$'s binary representation
 to the end.
 
-\subsection*{Easy -- Gray Codes}
+\subsection*{Easy: Gray Codes}
 $G_1 = [0,1]$. Given $G_n$, construct $G_{n+1}$ by prefixing 0 to
 $G_n$ and prefixing 1 to reverse of $G_n$. Proof by induction:
 consecutive strings in first half differ by induction; boundary
@@ -506,25 +548,23 @@ string of $G_n$, so only the first bit changes. Consecutive strings
 in the reversed second half also differ by induction, and every
 $(n+1)$-bit string appears exactly once.
 
-\subsection*{Medium -- Recursive 15-Puzzle Parity}
+\subsection*{Medium: Recursive 15-Puzzle Parity}
 Read the numbered tiles row by row, omitting the blank, and count
 inversions $I$. Let $r$ be the blank's row counted from the bottom,
 starting at 1. A horizontal move leaves both parities unchanged; a
 vertical move changes $r$ by 1 and changes inversion parity by 3.
 Thus $I+r$ has invariant parity. The goal has $I=0,r=1$, so a
-configuration is solvable \emph{only if} $I+r$ is odd. To obtain a
-self-contained recursive decision algorithm without assuming the
-converse, reject even-parity configurations, then recursively explore
-legal slides from an odd-parity configuration using depth-first
-search and a visited-state set. Return true on reaching the goal;
-return false if all reachable states have been explored. There are
-finitely many arrangements, and every legal path is explored, so this
-algorithm terminates and answers correctly. Count inversions by
-recursively splitting the list in two, counting inversions in each
-half and cross-inversions while merging. The parity check takes
-$O(16\log16)$ time; exhaustive search is much more expensive.
+configuration is solvable only if $I+r$ is odd. This condition is
+also sufficient by the classical completeness theorem for the
+15-puzzle: every configuration with the goal's invariant is
+reachable.\footnote{W. E. Story, ``Note on the `15' Puzzle,''
+\emph{American Journal of Mathematics} 2 (1879), 399--404.} Therefore
+the decision algorithm returns true exactly when $I+r$ is odd. Count
+inversions recursively using merge sort, counting cross-inversions
+while merging; then find the blank's row $r$ and test the parity. This
+takes $O(16\log16)$ time and $O(16)$ space.
 
-\subsection*{Hard -- Counterfeit Coin With $n$ Weighings}
+\subsection*{Hard: Counterfeit Coin With $n$ Weighings}
 The answer, for $n\ge2$ and no initially known genuine coin, is
 $N_n=(3^n-3)/2$. The following two auxiliary strategies explain how
 to attain it.
@@ -534,7 +574,8 @@ direction (it can only be heavy or only be light), $r$ weighings
 suffice. For $r=0$ there is one suspect. For the induction step put
 $t=3^{r-1}$, and, by reversing heavy/light if needed, let at least
 half of the $3t$ suspects be heavy candidates. If at least $2t$
-are heavy candidates, weigh $t$ heavy candidates against $t$ others:
+are heavy candidates, weigh $t$ heavy candidates against $t$ other
+heavy candidates:
 balance leaves $t$ suspects, while a tilt selects the $t$ heavy
 candidates on the heavier pan. Otherwise put $(t+1)/2$ heavy and
 $(t-1)/2$ light candidates on \emph{each} pan. A balance leaves $t$
@@ -569,7 +610,7 @@ $N-2k\le U_{n-1}$ (the all-balanced outcome cannot distinguish the
 two directions of an unweighed counterfeit). Hence
 $N\le(3^{n-1}-1)+U_{n-1}=(3^n-3)/2$.
 
-\subsection*{Very Hard -- Hadamard Matrix Construction}
+\subsection*{Very Hard: Hadamard Matrix Construction}
 $H_1=[1]$. $H_{2n}=
 \begin{bmatrix}H_n & H_n\\H_n & -H_n
 \end{bmatrix}$.
@@ -579,7 +620,7 @@ induction, $H_{2^k}$ is Hadamard.
 
 \section{Algorithmic Bridges}
 
-\subsection*{Basic -- A Maze As A Graph}
+\subsection*{Basic: A Maze As A Graph}
 Create one vertex for every open cell. Join two vertices when their
 cells share a side. Run BFS from the start, storing distance 0 there
 and assigning each newly discovered neighbour distance one greater
@@ -588,32 +629,48 @@ if it is never discovered, no route exists. BFS is optimal because it
 visits vertices in non-decreasing distance from the start, so the
 first path reaching any cell uses the fewest possible edges.
 
-\subsection*{Easy -- Greedy Activity Selection}
+\subsection*{Easy: Greedy Activity Selection}
 Sort by finish time $f_1\le f_2\le\cdots\le f_n$. Pick $i_1=1$. For
-$k>1$, pick first $i_k$ with $s_{i_k}\ge f_{i_{k-1}}$.
-Proof by exchange: let $O$ be an optimal solution with earliest first
-finish. If $O$ doesn't pick the greedy first choice, exchange it; the
-new solution is at least as good and has earlier first finish. Repeat
-inductively.
+$k>1$, pick the first $i_k$ with $s_{i_k}\ge f_{i_{k-1}}$.
+For the exchange proof, let $g$ be the earliest-finishing activity
+and let $o$ be the first activity in an optimal schedule. Since
+$f_g\le f_o$, replacing $o$ by $g$ leaves every later activity
+compatible: each starts at or after $f_o$, hence at or after $f_g$.
+Thus an optimal schedule can start with the greedy choice. Apply the
+same argument to the remaining activities, proving optimality by
+induction.
 
-\subsection*{Medium -- DP From Induction: Coin Change}
-$f(s)=$ min coins to make sum $s$. Recurrence: $f(s)=1+\min_{c_i\le
-s} f(s-c_i)$, with $f(0)=0$, $f(s<0)=\infty$.
-Tabulation: for $s=1$ to $n$, for each coin $c_i\le s$, update
-$f(s)=\min(f(s), 1+f(s-c_i))$. Time $O(kn)$, space $O(n)$.
+\subsection*{Medium: DP From Induction: Coin Change}
+Let $f(s)$ be the minimum number of coins needed to make sum $s$.
+Set $f(0)=0$ and, for $1\le s\le n$, initialise $f(s)=\infty$.
+Use the recurrence below, with $\min\varnothing=\infty$:
+\[
+f(s)=
+\begin{cases}
+0,&s=0,\\[2mm]
+1+\displaystyle\min_{\substack{1\le i\le k\\c_i\le s}}f(s-c_i),&s>0,
+\end{cases}
+\]
+Tabulate in increasing order of
+$s$, updating for each coin $c_i\le s$ by
+$f(s)=\min(f(s),1+f(s-c_i))$. An unreachable target retains value
+$\infty$. Time is $O(kn)$ and space is $O(n)$.
 
-\subsection*{Hard -- Sliding Puzzle State-Space Search}
+\subsection*{Hard: Sliding Puzzle State-Space Search}
 Encode the whole state as a permutation of the five numbered tiles
 \emph{and} the blank: there are $6!=720$ such permutations in total.
 For a fixed goal, exactly 360 satisfy the puzzle's parity condition
 and are reachable. A transition swaps the blank with a tile sharing
-an edge. BFS from the goal (or from the supplied start state)
-explores these states, storing distances and predecessors. Look up
-the start state to get the minimum distance and follow predecessors
-to reconstruct a shortest solution; if it is absent, the start state
-is unsolvable.
+an edge. BFS from the goal explores these states, storing distances
+and predecessors. If the start state is reached, its recorded
+distance is the minimum number of moves. Following predecessors from
+the start leads to the goal; if the start is not reached, it is
+unsolvable. Alternatively, BFS may start from the supplied start
+state and read the goal's distance; reconstruct the path by following
+predecessors from the goal back to the start and reversing that
+sequence.
 
-\subsection*{Very Hard -- Greedy Scheduling With Deadlines}
+\subsection*{Very Hard: Greedy Scheduling With Deadlines}
 Sort jobs by decreasing profit. Only $n$ slots can be occupied, so
 replace each deadline by $\min(d_i,n)$. Initialise a parent array
 on slots $0,1,\ldots,n$ with $\operatorname{parent}[t]=t$. Its
