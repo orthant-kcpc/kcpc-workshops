@@ -1,0 +1,94 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem,parskip,hyperref,xcolor,fancyhdr,tikz,graphicx,eso-pic,titlesec}
+\graphicspath{{../}}
+\definecolor{kcpc-text}{RGB}{20,20,20}
+\definecolor{kcpc-muted}{RGB}{90,90,90}
+\definecolor{kcpc-red}{RGB}{176,0,0}
+\pagestyle{fancy}\fancyhf{}
+\lhead{\textcolor{kcpc-text}{\small\bfseries Problems}}
+\rhead{\textcolor{kcpc-muted}{\small Week 3}}
+\cfoot{\textcolor{kcpc-muted}{\small KCPC}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{kcpc-red}\leaders\hrule height \headrulewidth\hfill}}
+\setlength{\headheight}{28pt}
+\AddToShipoutPictureBG{\begin{tikzpicture}[remember picture,overlay]
+  \node[opacity=0.035,at=(current page.center)]{\includegraphics[width=0.38\paperwidth]{kcpc-logo.png}};
+\end{tikzpicture}}
+\titleformat{\section}{\large\bfseries\color{kcpc-red}}{\thesection}{1em}{}
+\setlist[enumerate]{topsep=4pt}
+\title{KCPC Week 3 Problems\\The Lambda Calculus: Functions, Computation, and Numbers}
+\author{}\date{}
+
+\begin{document}
+\maketitle\thispagestyle{fancy}
+
+This proof-based sheet follows the workshop slides. Attempt the five foundational warm-ups before the five linked problems; the final two programming exercises are extended homework. Work in the \emph{untyped, pure} lambda calculus unless a question explicitly uses mathematical numbers as a teaching shorthand.
+
+\textbf{Conventions.} Application associates left ($MNP=(MN)P$); abstraction extends as far right as possible ($\lambda xy.M=\lambda x.\lambda y.M$). $\mathrm{FV}(M)$ is the set of free variables. $M[N/x]$ replaces free occurrences of $x$ in $M$ with $N$, renaming bound variables to avoid capture. A beta step is $(\lambda x.M)N\to_\beta M[N/x]$. Write $M\equiv_\alpha N$ for renaming of bound variables. Named closed terms ($\mathrm{T}$, $\overline n$, etc.) below are abbreviations for their pure lambda definitions, not extra primitives. Show your reasoning, not just the final term.
+
+\section{Foundational warm-ups}
+
+\subsection*{1. Terms and parentheses}
+\textbf{Prerequisites:} Variables, abstraction, application.
+Expand $\lambda x.\lambda y.x(yz)$ into the fully parenthesised grammar $M::=x\mid(\lambda x.M)\mid(MM)$. Identify every free variable and prove your answer using the recursive rules for $\mathrm{FV}$. Is $\lambda x.xy$ an abstraction or an application at its root?
+
+\subsection*{2. Free variables and substitution}
+\textbf{Prerequisites:} Problem 1.
+Define $\mathrm{FV}(x)$, $\mathrm{FV}(MN)$, and $\mathrm{FV}(\lambda x.M)$. Derive a formula for $\mathrm{FV}((\lambda x.M)N)$ in terms of $\mathrm{FV}(M)$ and $\mathrm{FV}(N)$; evaluate it for $(\lambda x.xy)z$. Explain why a bound occurrence of $x$ is not a free occurrence.
+
+\subsection*{3. Alpha conversion and capture}
+\textbf{Prerequisites:} Problems 1--2.
+Prove $\lambda x.\lambda y.xy\equiv_\alpha\lambda u.\lambda v.uv$ but not $\lambda x.\lambda y.xy\equiv_\alpha\lambda y.\lambda y.yy$. Reduce $(\lambda x.\lambda y.x)y$ correctly in one beta step and explain why $\lambda y.y$ would be the wrong result.
+
+\subsection*{4. Identity and constant functions}
+\textbf{Prerequisites:} Beta reduction.
+Let $I=\lambda x.x$, $K=\lambda x.\lambda y.x$, and $F=\lambda x.\lambda y.y$. Prove, for arbitrary terms $A,B$, that $IA\to_\beta A$, $KAB\to_\beta^* A$, and $FAB\to_\beta^* B$. Compare the number of beta steps required for the last two. Give the two-step trace for $KI\,I$.
+
+\subsection*{5. Currying and composition}
+\textbf{Prerequisites:} Problem 4.
+Set $C=\lambda f.\lambda g.\lambda x.f(gx)$. Prove $Cfga\to_\beta^* f(ga)$ for arbitrary $f,g,a$; explain why $C$ is a sequence of one-input functions rather than a three-input primitive. Then prove $CII\equiv_\beta I$ (beta-convertible, not necessarily one beta step).
+
+\section{Linked ideas: proofs and encodings}
+
+\subsection*{6. Boolean selectors}
+\textbf{Prerequisites:} Problems 3--5; currying.
+Take $\mathrm{T}=K$ and $\mathrm{F}=F$. Define pure closed terms $\mathrm{AND}$, $\mathrm{OR}$ (two Boolean arguments each), and $\mathrm{NOT}$ (one Boolean argument). Prove all four rows of the truth table for each binary operation by using the selector equations, and prove both cases for $\mathrm{NOT}$. Why is choosing between two arbitrary terms possible without a built-in conditional?
+
+\subsection*{7. Church numerals and successor}
+\textbf{Prerequisites:} Problems 4--6; induction.
+Define $\overline n=\lambda f.\lambda x.f^n(x)$, where $f^0(x)=x$ and $f^{n+1}(x)=f(f^n(x))$. Write $\overline0$, $\overline1$, and $\overline2$ as closed terms. Construct a pure $\mathrm{SUCC}$ and prove for every $n\ge0$ that $\mathrm{SUCC}\,\overline n\equiv_\beta\overline{n+1}$. Compute $\overline2\,g\,a$ by beta reduction.
+
+\subsection*{8. Arithmetic as iteration}
+\textbf{Prerequisites:} Problem 7; composition.
+Construct pure $\mathrm{ADD}$ and $\mathrm{MUL}$ with the expected effects $\mathrm{ADD}\,\overline m\,\overline n\equiv_\beta\overline{m+n}$ and $\mathrm{MUL}\,\overline m\,\overline n\equiv_\beta\overline{mn}$. Prove the claims using $f^m(f^n(x))=f^{m+n}(x)$ and $(f^n)^m(x)=f^{mn}(x)$, not just examples. Explain why $\overline n\,\overline m\,f\,x$ behaves like $f^{m^n}(x)$ (including $0^0=1$), and give a fully eta-expanded POW term beta-convertible to $\overline{m^n}$.
+
+\subsection*{9. Subtraction by state threading}
+\textbf{Prerequisites:} Problems 6--8; induction on an iterator.
+Let $\langle a,b\rangle=\lambda s.sab$,
+$\mathrm{FIRST}=\lambda p.p\,\mathrm{T}$,
+$\mathrm{SECOND}=\lambda p.p\,\mathrm{F}$, and
+$\mathrm{PAIR}=\lambda a.\lambda b.\lambda s.sab$.
+Define
+\[\mathrm{STEP}=\lambda p.\mathrm{PAIR}\,(\mathrm{SECOND}\,p)\,(\mathrm{SUCC}(\mathrm{SECOND}\,p)).\]
+Prove by induction that $\mathrm{STEP}^n\langle\overline0,\overline0\rangle\equiv_\beta\langle\overline{\max(n-1,0)},\overline n\rangle$. Check the base case and the step from $n=0$ separately. Use the result to define a predecessor and truncated subtraction $\mathrm{SUB}\,m\,n=\max(m-n,0)$. State explicitly what happens at zero.
+
+\subsection*{10. Logic meets numbers}
+\textbf{Prerequisites:} Problems 6--9.
+Find a closed term $\mathrm{ISZERO}$ such that $\mathrm{ISZERO}\,\overline0\equiv_\beta\mathrm{T}$ and $\mathrm{ISZERO}\,\overline{n+1}\equiv_\beta\mathrm{F}$. Prove this for all $n$. Define $\mathrm{EVEN}$ using $\mathrm{NOT}$ and iteration, then prove $\mathrm{EVEN}\,\overline n$ selects $\mathrm{T}$ exactly when $n$ is even. Explain how $\mathrm{ISZERO}\,(\mathrm{SUB}\,m\,n)$ implements the comparison $m\le n$ for Church numerals.
+
+\textbf{Optional slide challenge:} Divide Church naturals by iterating a pair of quotient and remainder $m$ times for a nonzero divisor $d$. Specify the result for $d=0$.
+
+\section{Extended homework (C++ required)}
+
+\subsection*{11. Church arithmetic on a stack}
+\textbf{Prerequisites:} Problems 7--8; modular arithmetic and a stack.
+Input is an integer $q$ ($1\le q\le 200000$) followed by $q$ whitespace-separated postfix tokens: \texttt{Z} pushes $\overline0$; \texttt{S} replaces the top numeral by its successor; \texttt{A} and \texttt{M} pop $a$ then $b$ and push $\mathrm{ADD}\,b\,a$ or $\mathrm{MUL}\,b\,a$. The input is guaranteed well-formed, leaving one numeral. Output its value modulo $10^9+7$. Prove that maintaining a residue per stack item returns the interpretation of the encoded term. Implement in C++ (optional: also Python). Do not expand the lambda term into a string.
+
+\subsection*{12. Typed postfix booleans and numbers}
+\textbf{Prerequisites:} Problems 6--11; invariants and induction.
+Extend the preceding token language with \texttt{T}, \texttt{F} (push Boolean selectors), \texttt{N} (NOT), \texttt{D} (AND), \texttt{R} (OR), \texttt{Z?} (ISZERO), and \texttt{I} (IF). For \texttt{I}, pop number $b$, then number $a$, then Boolean $c$, and push $c\,a\,b$. Assume the postfix program is well-typed and ends with one numeral. Output its value modulo $10^9+7$. Since $\overline{10^9+7}$ has residue zero but is not zero, explain how to represent a numeric stack entry so \texttt{Z?} stays correct. Prove the extended interpreter correct by induction on tokens and implement it in C++.
+
+\end{document}

@@ -1,0 +1,477 @@
+\documentclass{beamer}
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{hyperref}
+
+\graphicspath{{../}{./}{../images/}{./images/}}
+
+% ===== KCPC clean theme (Weeks 1 and 2) =====
+\usetheme{default}
+\useinnertheme{rectangles}
+\useoutertheme{default}
+\setbeamertemplate{navigation symbols}{}
+\definecolor{kcpc-bg}{RGB}{250,250,250}
+\definecolor{kcpc-text}{RGB}{20,20,20}
+\definecolor{kcpc-muted}{RGB}{90,90,90}
+\definecolor{kcpc-red}{RGB}{176,0,0}
+\setbeamercolor{background canvas}{bg=kcpc-bg}
+\setbeamercolor{normal text}{fg=kcpc-text}
+\setbeamercolor{frametitle}{fg=kcpc-text,bg=kcpc-bg}
+\setbeamercolor{title}{fg=kcpc-text}
+\setbeamercolor{subtitle}{fg=kcpc-muted}
+\setbeamercolor{structure}{fg=kcpc-red}
+\setbeamerfont{title}{series=\bfseries,size=\Large}
+\setbeamerfont{frametitle}{series=\bfseries,size=\large}
+\setlength{\parskip}{0.4em}
+\setbeamertemplate{itemize item}{$\rightarrow$}
+\setbeamertemplate{itemize subitem}{$\rightarrow$}
+\setbeamertemplate{headline}{\vspace{0.2cm}\hspace{0.2cm}\textcolor{kcpc-muted}{\small\insertsection}\hfill}
+\setbeamertemplate{footline}{\hspace{0.2cm}\textcolor{kcpc-muted}{\small KCPC}\hfill\vspace{0.3cm}}
+\setbeamertemplate{background}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[opacity=0.035,at=(current page.center)]
+      {\includegraphics[width=0.55\paperwidth]{kcpc-logo.png}};
+  \end{tikzpicture}%
+}
+\AtBeginSection[]{\begin{frame}[plain]\vfill\centering{\Large\bfseries\insertsection}\vfill\end{frame}}
+\hypersetup{colorlinks=true,linkcolor=kcpc-red,urlcolor=kcpc-red}
+
+\title{The Lambda Calculus}
+\subtitle{Functions, Computation, and Numbers}
+\author{KCPC}
+\date{February 5, 2026}
+
+\begin{document}
+\begin{frame}[plain]\titlepage\end{frame}
+
+\begin{frame}{Overview}
+  \begin{enumerate}
+    \item What is the Lambda Calculus?
+    \item Syntax of the Lambda Calculus
+    \item Alpha and Beta Reductions
+    \item Currying
+    \item Some Purity
+    \item We're Programmers\dots
+    \item Some More Complexity
+    \item Conclusion
+  \end{enumerate}
+\end{frame}
+
+\section{What is the Lambda Calculus?}
+\begin{frame}{Overview}
+  \begin{itemize}
+    \item Mathematical language by \textbf{Alonzo Church} in the 1930s
+    \item It has no numbers, loops or variables that store values
+    \item Can describe any \textbf{computation} done on a computer
+  \end{itemize}
+\end{frame}
+\begin{frame}{Example}
+  \[(\lambda f.\lambda x.f(f(x)))\ (\lambda n.n+1)\ 0\]
+  \textbf{Evaluates to:} 2
+
+  \textbf{Goal of today:} Understand how this works, and creating our own mathematics!
+\end{frame}
+
+\section{Syntax of the Lambda Calculus}
+\begin{frame}{What Is a Function?}
+  \begin{itemize}
+    \item A function takes an \textbf{input}
+    \item And produces an \textbf{output}
+  \end{itemize}
+  \textbf{Mental model:} A function is a machine that takes an input and produces an output.
+
+  \textbf{Important restriction:}
+  \begin{itemize}\item In the lambda calculus, a function takes \textbf{one input only}\end{itemize}
+\end{frame}
+\begin{frame}{Building a Function}
+  In the lambda calculus, we build functions using \textbf{abstraction}.
+  \[\lambda x.M\]
+  \begin{itemize}
+    \item The symbol $\lambda$ means ``this is a function''
+    \item It tells us that $x$ is an \textbf{input}
+    \item Everything after the dot is the \textbf{output rule}
+  \end{itemize}
+  \textbf{Why do we need $\lambda$?}
+  \begin{itemize}
+    \item To clearly say when a variable is an input
+    \item To avoid confusion between inputs and ordinary names
+    \item To make functions precise and unambiguous
+  \end{itemize}
+\end{frame}
+\begin{frame}{Applying a Function}
+  Once we have a function, we can apply it to an input.
+  \[M\ N\]
+  \begin{itemize}
+    \item $M$ is a function
+    \item $N$ is its input
+    \item Application means ``run the machine''
+  \end{itemize}
+\end{frame}
+\begin{frame}{The Three Building Blocks}
+  In the lambda calculus, every valid expression is called a \textbf{term}. A term is
+  \begin{enumerate}
+    \item A variable $x$. A name represents an input.
+    \item A function (abstraction) $\lambda x.M$. A function that takes input $x$ and returns $M$.
+    \item A function application $M\ N$. Apply the function $M$ to the argument $N$.
+  \end{enumerate}
+\end{frame}
+\begin{frame}{Reading Terms: Parentheses and Scope}
+  The fully parenthesised grammar is
+  \[M::=x\mid(\lambda x.M)\mid(MM).\]
+  \begin{itemize}
+    \item Application groups to the left: $MNP=(MN)P$.
+    \item An abstraction's body extends as far right as possible:
+      $\lambda x.xy=\lambda x.(xy)$.
+    \item $\lambda xy.M$ abbreviates $\lambda x.\lambda y.M$.
+  \end{itemize}
+  \textbf{Worked example:}
+  \[\lambda xy.x(yz)=(\lambda x.(\lambda y.(x(yz)))).\]
+  Its root is an abstraction; $x(yz)$ is an application.
+\end{frame}
+\begin{frame}{Which Variables Are Bound?}
+  A \textbf{binder} $\lambda x$ binds occurrences of $x$ in its body.
+  The nearest enclosing binder with the same name owns an occurrence;
+  an occurrence with no such binder is \textbf{free}.
+  \[M=(\lambda x.xy)(\lambda y.yz)\]
+  \begin{itemize}
+    \item $x$ in the left body is bound by $\lambda x$.
+    \item $y$ in the left body is free; the right binder cannot reach it.
+    \item $y$ in the right body is bound by $\lambda y$; $z$ is free.
+  \end{itemize}
+  \textbf{Key idea:} The same name can have both free and bound occurrences.
+\end{frame}
+\begin{frame}{Finding Free Variables}
+  Compute the set $\mathrm{FV}(M)$ from the term's structure:
+  \begin{align*}
+    \mathrm{FV}(x)&=\{x\},\\
+    \mathrm{FV}(MN)&=\mathrm{FV}(M)\cup\mathrm{FV}(N),\\
+    \mathrm{FV}(\lambda x.M)&=\mathrm{FV}(M)\setminus\{x\}.
+  \end{align*}
+  \textbf{Worked example:}
+  \[\mathrm{FV}((\lambda x.xy)z)
+    =(\{x,y\}\setminus\{x\})\cup\{z\}=\{y,z\}.\]
+  A term is \textbf{closed} when its free-variable set is empty.
+\end{frame}
+\begin{frame}{Try It Yourself: Syntax and Binding}
+  \[\lambda x.y(xz)\]
+  \begin{enumerate}
+    \item Restore every parenthesis required by the grammar.
+    \item Is the root an abstraction or an application?
+    \item Identify the bound occurrences and compute the free-variable set.
+  \end{enumerate}
+  Explain your answer to a partner using scope and the three FV rules.
+\end{frame}
+\begin{frame}{Example: Identity Function}
+  \[\lambda x.x\]
+  \begin{itemize}
+    \item Input: $x$
+    \item Output: $x$
+    \item \textbf{Interpretation:} return exactly what is given
+  \end{itemize}
+\end{frame}
+\begin{frame}{Functions, Functions Everywhere}
+  \begin{itemize}
+    \item Every term is built from functions
+    \item There are no numbers built in
+    \item There is no special logic syntax
+    \item In the lambda calculus, everything is a function
+  \end{itemize}
+\end{frame}
+
+\section{Alpha and Beta Reductions}
+\begin{frame}{Alpha Conversion}
+  \textbf{Alpha conversion} is:
+  \begin{itemize}
+    \item The process of renaming a \textbf{bound} variable
+    \item Used to avoid confusion or name clashes
+  \end{itemize}
+  \textbf{General form:}
+  \[\lambda x.M\ \longrightarrow_\alpha\ \lambda y.M[y/x]\]
+  \textbf{Important rule:}
+  \begin{itemize}\item Renaming must not change how the input is used; choose $y$ fresh.\end{itemize}
+\end{frame}
+\begin{frame}{Alpha Equivalence}
+  \textbf{Alpha equivalence} means:
+  \begin{itemize}
+    \item Two functions are considered the same
+    \item If they differ only by input names
+  \end{itemize}
+  \textbf{Example:} $\lambda x.x\ \equiv_\alpha\ \lambda y.y$
+
+  \textbf{Key idea:}
+  \begin{itemize}
+    \item Variable names are just labels
+    \item What matters is how inputs are used
+  \end{itemize}
+\end{frame}
+\begin{frame}{Beta Reduction}
+  \textbf{Beta reduction} is where computation happens.
+
+  Applying a function means: \emph{Replace the input variable with the argument.}
+
+  \textbf{General rule:}
+  \[(\lambda x.M)\ N\ \longrightarrow_\beta\ M[N/x]\]
+  \textbf{Example:} $(\lambda x.x+1)\ 3\ \longrightarrow\ 3+1\ \longrightarrow\ 4$.
+
+  {\small Substitute only free occurrences of $x$; rename binders first if needed.}
+\end{frame}
+\begin{frame}{Worked Example: Avoiding Variable Capture}
+  Reduce $(\lambda x.\lambda y.x)y$.
+  \begin{enumerate}
+    \item The argument $y$ is free; the inner $\lambda y$ must not bind it.
+    \item Rename the inner binder to a fresh name $z$.
+    \item Substitute the argument for the free $x$ in the body.
+  \end{enumerate}
+  \begin{align*}
+    (\lambda x.\lambda y.x)y
+      &\equiv_\alpha(\lambda x.\lambda z.x)y\\
+      &\to_\beta\lambda z.y.
+  \end{align*}
+  The result keeps $y$ free; $\lambda y.y$ would capture it.
+\end{frame}
+\begin{frame}{Try It Yourself: Safe Substitution}
+  Reduce $(\lambda x.\lambda y.xy)y$ without capturing the free $y$.
+  \begin{itemize}
+    \item Which binder needs renaming? Choose a fresh name.
+    \item Show the alpha-renaming and then the beta step.
+    \item Which variable remains free in the result?
+  \end{itemize}
+  \textbf{Notation:} $\to_\beta$ means one beta step;
+  $\to_\beta^*$ means zero or more steps.
+  $\equiv_\beta$ allows steps in either direction (up to alpha-renaming).
+\end{frame}
+
+\section{Currying}
+\begin{frame}{Functions Take One Input}
+  \begin{itemize}
+    \item In the lambda calculus, every function takes \textbf{exactly one input}
+    \item There are no two-input or three-input functions
+  \end{itemize}
+  \textbf{Problem:}
+  \begin{itemize}
+    \item Many things in maths need more than one input
+    \item For example: addition, multiplication
+  \end{itemize}
+\end{frame}
+\begin{frame}{The Idea Behind Currying}
+  \textbf{Solution:} A function can return another function.
+  \begin{itemize}
+    \item First input is given
+    \item A new function is returned
+    \item That new function waits for the next input
+  \end{itemize}
+  This idea is called \textbf{currying}.
+\end{frame}
+\begin{frame}{Currying Explained with Addition}
+  In ordinary maths: \[x+y\]
+  In the lambda calculus: \[\lambda x.(\lambda y.x+y)\]
+  \begin{itemize}
+    \item The outer function takes $x$
+    \item It returns a new function
+    \item The inner function takes $y$
+  \end{itemize}
+\end{frame}
+\begin{frame}{Currying in Action}
+  First apply the function to 1:
+  \[(\lambda x.\lambda y.x+y)\ 1\ \longrightarrow\ \lambda y.1+y\]
+  Then apply the result to 2:
+  \[(\lambda y.1+y)\ 2\ \longrightarrow\ 3\]
+  \textbf{Conclusion:}
+  \begin{itemize}
+    \item One input at a time
+    \item But still behaves like a two-input function
+  \end{itemize}
+\end{frame}
+
+\section{Some Purity}
+\begin{frame}{Small Issue}
+  So far, we've used some notation without actually defining them\dots
+  \begin{itemize}
+    \item $\lambda x.(\lambda y.x+y)$: what is a ``$+$''?
+    \item $(\lambda y.1+y)\ 2\to3$: what is a ``2''? what is a ``number''?
+  \end{itemize}
+\end{frame}
+\begin{frame}{Purest of all Purest}
+  \begin{itemize}
+    \item Lambda calculus is \emph{pure}, \textbf{pure}
+    \item We only have $\lambda$, variables (such as $x$, $y$, etc.), and ``('' and ``)''
+    \item We don't have any notion of ``$+$'' or any of the numbers, or even truth values\dots
+    \item Let's create them!
+  \end{itemize}
+\end{frame}
+
+\section{We're Programmers\dots}
+\begin{frame}{\dots Bits!}
+  \begin{itemize}
+    \item Let's begin by defining TRUE and FALSE
+    \item Let's give some meaning to these functions
+    \item \emph{Foreshadowing\dots{} We will use these definitions to create the operations AND, OR, and NOT}
+  \end{itemize}
+\end{frame}
+\begin{frame}{Some Hint?}
+  Think of these two functions:
+  \begin{itemize}
+    \item $\lambda x.\lambda y.x$
+    \item $\lambda x.\lambda y.y$
+  \end{itemize}
+  What are they? How do they help us?
+\end{frame}
+\begin{frame}{Worked Example: Booleans Select a Branch}
+  Name the two selectors
+  \[\mathrm{T}=\lambda x.\lambda y.x,\qquad
+    \mathrm{F}=\lambda x.\lambda y.y.\]
+  For inputs $a$ and $b$:
+  \begin{align*}
+    \mathrm{T}\ a\ b&\to_\beta(\lambda y.a)b\to_\beta a,\\
+    \mathrm{F}\ a\ b&\to_\beta(\lambda y.y)b\to_\beta b.
+  \end{align*}
+  \textbf{Interpretation:} T chooses the first branch; F chooses the second.
+  Both are ordinary functions, so no built-in conditional is needed.
+\end{frame}
+\begin{frame}{We Orn’t And}
+  Let's try to define these functions which take either a single or two parameters:
+  \begin{itemize}
+    \item AND: $(x,y)$
+    \item OR: $(x,y)$
+    \item NOT: $(x)$
+  \end{itemize}
+\end{frame}
+
+\section{Some More Complexity}
+\begin{frame}{Unnaturally Natural Numbers}
+  $0,1,2,3,4,5,\dots$ How do we give these ``things'' meaning via lambda calculus?
+  \begin{itemize}
+    \item Let's define ``zero''
+    \item Let's define ``one''
+  \end{itemize}
+\end{frame}
+\begin{frame}{Oh, I Know This!}
+  We can use \emph{induction} to continue this pattern and to define all natural numbers. Find the successor function for your numbering system:
+  \[\mathrm{SUCC}(n)=n+1\]
+\end{frame}
+\begin{frame}{Remembering Two Values: Church Pairs}
+  Store two terms in a function that accepts a selector:
+  \[\langle a,b\rangle=\lambda s.sab\quad(s\text{ fresh}),\qquad
+    \mathrm{PAIR}=\lambda a.\lambda b.\lambda s.sab.\]
+  Recover either value using the Boolean selectors:
+  \[\mathrm{FIRST}=\lambda p.p\,\mathrm{T},\qquad
+    \mathrm{SECOND}=\lambda p.p\,\mathrm{F}.\]
+  \begin{align*}
+    \mathrm{FIRST}\,\langle a,b\rangle
+      &\to_\beta^*\mathrm{T}\ a\ b\to_\beta^*a,\\
+    \mathrm{SECOND}\,\langle a,b\rangle
+      &\to_\beta^*\mathrm{F}\ a\ b\to_\beta^*b.
+  \end{align*}
+  \textbf{Use:} An iterator can update a pair to remember its previous value.
+\end{frame}
+\begin{frame}{Finally Some Mathematics}
+  Using what we discovered and learned so far, let's finalise ``our'' mathematics:
+  \begin{itemize}
+    \item ADD: $(x,y)\mapsto x+y$
+    \item SUB: $(x,y)\mapsto x-y$
+    \item MUL: $(x,y)\mapsto x\times y$
+    \item POW: $(x,y)\mapsto x^y$
+    \item DIV: $(x,y)\mapsto x/y$ (if you can do this without looking it up, I'll give you a candy)
+  \end{itemize}
+\end{frame}
+
+\section{Conclusion}
+\begin{frame}{What You've Learned}
+  \begin{itemize}
+    \item Computation can be built from:
+      \begin{itemize}\item Functions\item Substitution\end{itemize}
+    \item Numbers are not primitive
+    \item Maths and programming meet here
+  \end{itemize}
+  \textbf{This is also the foundation of functional programming}
+\end{frame}
+
+% Answers to the interactive questions above, kept after the original conclusion.
+\begin{frame}{Try It Yourself: Syntax and Binding (Answers)}
+  \[\lambda x.y(xz)=(\lambda x.(y(xz))).\]
+  \begin{itemize}
+    \item The root is an abstraction; the body $y(xz)$ is an application.
+    \item The $x$ in $xz$ is bound by $\lambda x$.
+    \item The occurrences of $y$ and $z$ are free.
+  \end{itemize}
+  \begin{align*}
+    \mathrm{FV}(y(xz))&=\{y\}\cup\{x,z\}=\{x,y,z\},\\
+    \mathrm{FV}(\lambda x.y(xz))&=\{x,y,z\}\setminus\{x\}=\{y,z\}.
+  \end{align*}
+\end{frame}
+\begin{frame}{Try It Yourself: Safe Substitution (Answers)}
+  Rename the inner binder to fresh $z$, then substitute:
+  \begin{align*}
+    (\lambda x.\lambda y.xy)y
+      &\equiv_\alpha(\lambda x.\lambda z.xz)y\\
+      &\to_\beta\lambda z.yz.
+  \end{align*}
+  \begin{itemize}
+    \item $z$ is bound; $y$ remains free.
+    \item $\lambda y.yy$ would bind the argument's $y$ and is incorrect.
+  \end{itemize}
+  \textbf{Key idea:} Substitution preserves the argument's free occurrences
+  by renaming clashing binders first.
+\end{frame}
+\begin{frame}{Try It Yourself: Booleans (Answers)}
+  $\mathrm{T}=\lambda x.\lambda y.x$, $\mathrm{F}=\lambda x.\lambda y.y$;
+  $\mathrm{T}\ a\ b\to_\beta^* a$ and $\mathrm{F}\ a\ b\to_\beta^* b$.
+  \begin{align*}
+    \mathrm{AND}&=\lambda p.\lambda q.p\ q\ \mathrm{F},\\
+    \mathrm{OR}&=\lambda p.\lambda q.p\ \mathrm{T}\ q,\\
+    \mathrm{NOT}&=\lambda p.p\ \mathrm{F}\ \mathrm{T}.
+  \end{align*}
+  For example, $\mathrm{AND}\ \mathrm{T}\ \mathrm{F}\to_\beta^*\mathrm{T}\ \mathrm{F}\ \mathrm{F}\to_\beta^*\mathrm{F}$.
+\end{frame}
+\begin{frame}{Try It Yourself: Numbers (Answers)}
+  A Church numeral $\overline n$ applies a function $n$ times:
+  \[\overline0=\lambda f.\lambda x.x,\qquad
+    \overline1=\lambda f.\lambda x.f x,\qquad
+    \overline2=\lambda f.\lambda x.f(f x).\]
+  \[\mathrm{SUCC}=\lambda n.\lambda f.\lambda x.f(n f x)\]
+  Thus $\mathrm{SUCC}\ \overline n\ f\ x\to_\beta^* f(\overline n f x)$, which applies $f$ exactly $n+1$ times.
+\end{frame}
+\begin{frame}{Try It Yourself: Arithmetic (Answers)}
+  \small
+  \begin{align*}
+    \mathrm{ADD}&=\lambda m.\lambda n.\lambda f.\lambda x.m f(n f x),\\
+    \mathrm{MUL}&=\lambda m.\lambda n.\lambda f.m(n f),\\
+    \mathrm{POW}&=\lambda m.\lambda n.\lambda f.\lambda x.n m f x.
+  \end{align*}
+  They perform $m+n$, $mn$, and $m^n$ iterations respectively. SUB is truncated at zero for Church naturals; DIV additionally requires a zero-divisor convention.
+\end{frame}
+\begin{frame}{Try It Yourself: Subtraction (Answers)}
+  \small
+  Using the Church pair and its projections, define
+  \[\mathrm{STEP}=\lambda p.\mathrm{PAIR}\,(\mathrm{SECOND}\,p)\,
+    (\mathrm{SUCC}(\mathrm{SECOND}\,p)).\]
+  It updates $\langle a,b\rangle$ to $\langle b,\mathrm{SUCC}\,b\rangle$.
+  Starting from $\langle\overline0,\overline0\rangle$:
+  \[\langle\overline0,\overline0\rangle\xrightarrow{\mathrm{STEP}}
+    \langle\overline0,\overline1\rangle\xrightarrow{\mathrm{STEP}}
+    \langle\overline1,\overline2\rangle\xrightarrow{\mathrm{STEP}}\cdots\]
+  Each state-update arrow means: apply STEP, then beta-reduce.
+  After $n$ updates the state is
+  $\langle\overline{\max(n-1,0)},\overline n\rangle$. Hence
+  \[\mathrm{PRED}=\lambda n.\mathrm{FIRST}
+    (n\,\mathrm{STEP}\,\langle\overline0,\overline0\rangle),\]
+  \[\mathrm{SUB}=\lambda m.\lambda n.n\,\mathrm{PRED}\,m.\]
+  PRED maps zero to zero; SUB represents $\max(m-n,0)$.
+\end{frame}
+\begin{frame}{Try It Yourself: Division (Answers)}
+  For $d>0$, DIV iterates $m$ times on a pair $(q,r)$ initially $(0,0)$:
+  \begin{enumerate}
+    \item Increment the remainder $r$.
+    \item If $r=d$, reset it to $0$ and increment the quotient $q$.
+  \end{enumerate}
+  The invariant after $k$ steps is
+  \[k=qd+r,\qquad 0\le r<d.\]
+  The final $q$ is $\lfloor m/d\rfloor$. Set DIV$(m,0)=0$ by convention.
+
+  See the full lambda-term construction in the solutions sheet.
+\end{frame}
+
+\end{document}
