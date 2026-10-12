@@ -1,10 +1,10 @@
 # kcpc-workshops
 
-All workshops hosted by KCPC (whether collaborative or not) across 2025 - 2027
+All workshops and hacking sessions hosted by KCPC (whether collaborative or not) across 2025 - 2027
 
 ## Standard Workshops
 
-All workshops made solely by KCPC are supposed to have the following folder structure: 
+Content-based KCPC workshops, including the existing Year 1 materials, use the following folder structure:
 
 ```
 slides/
@@ -25,6 +25,14 @@ Week [X] Papers.pdf
 ```
 
 Where Typst is used instead of Latex, please consider the same folder layout!
+
+## Year 2 Hacking Sessions
+
+Year 2 (2026 - 2027) sessions are **hacking sessions** focused on collaborative problem solving. Participants can bring problems they would like to work on, and organisers provide a **problem sheet containing only links to problems**.
+
+The problem sheet is the only prepared session material. See [`KCPC Year 2 Workshops/README.md`](./KCPC%20Year%202%20Workshops/README.md) for the session format and folder layout.
+
+Existing workshop materials remain in their current locations and retain their original structure.
 
 ## Contribution
 

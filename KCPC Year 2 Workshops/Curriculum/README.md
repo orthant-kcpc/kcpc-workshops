@@ -1,5 +1,8 @@
 # KCPC Year 2 Workshop Curriculum (2026 - 2027)
 
+> [!NOTE]
+> **Original curriculum plan, retained for reference.** Year 2 has moved to **hacking sessions** focused on collaborative problem solving, including problems brought by participants. The only prepared session material is a problem sheet containing links to problems. The theory/application pairings and schedule below are historical; see the [current Year 2 guidance](../README.md) for the new format and folder layout.
+
 ## 1. Executive Summary & Overview
 
 Welcome to the **King's College Competitive Programming Club (KCPC)** Year 2 Workshop Curriculum. Designed for the 2026-2027 academic year, this curriculum provides a structured, rigorous, and accessible pathway from foundational mathematical heuristics to competitive contest performance (ICPC, Codeforces, AtCoder, and technical interviews).
@@ -86,7 +89,7 @@ Each workshop runs for **1.5 to 2.0 hours**. The structure of the pairing and th
 
 ## 4. Repository File & Folder Conventions
 
-All workshops follow the standardized paired directory structure defined in [`KCPC Year 2 Workshops/README.md`](../README.md):
+The original curriculum used the following paired directory structure. Existing materials retain this layout; new hacking sessions follow the [current Year 2 folder conventions](../README.md#folder-structure).
 
 ```text
 KCPC Year 2 Workshops/
