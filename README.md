@@ -2,6 +2,8 @@
 
 All workshops hosted by KCPC (whether collaborative or not) across 2025 - 2027
 
+See [External Competitive Programming Resources](EXTERNAL.md) for recommended learning materials, practice platforms, and contest resources.
+
 ## Standard Workshops
 
 All workshops made solely by KCPC are supposed to have the following folder structure: 
