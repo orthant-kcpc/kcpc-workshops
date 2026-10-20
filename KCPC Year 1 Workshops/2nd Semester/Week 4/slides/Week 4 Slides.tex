@@ -1,0 +1,747 @@
+\documentclass{beamer}
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
+\usepackage{hyperref}
+\usepackage{booktabs}
+
+\graphicspath{{../}{./}{../images/}{./images/}}
+
+\usetheme{default}
+\useinnertheme{rectangles}
+\useoutertheme{default}
+\setbeamertemplate{navigation symbols}{}
+
+\definecolor{kcpc-bg}{RGB}{250,250,250}
+\definecolor{kcpc-text}{RGB}{20,20,20}
+\definecolor{kcpc-muted}{RGB}{90,90,90}
+\definecolor{kcpc-red}{RGB}{176,0,0}
+\definecolor{kcpc-blue}{RGB}{0,90,170}
+\definecolor{kcpc-amber}{RGB}{190,115,0}
+\definecolor{kcpc-green}{RGB}{20,130,60}
+
+\setbeamercolor{background canvas}{bg=kcpc-bg}
+\setbeamercolor{normal text}{fg=kcpc-text}
+\setbeamercolor{frametitle}{fg=kcpc-text,bg=kcpc-bg}
+\setbeamercolor{title}{fg=kcpc-text}
+\setbeamercolor{subtitle}{fg=kcpc-muted}
+\setbeamercolor{structure}{fg=kcpc-red}
+\setbeamerfont{title}{series=\bfseries,size=\Large}
+\setbeamerfont{frametitle}{series=\bfseries,size=\large}
+\setlength{\parskip}{0.35em}
+
+\setbeamertemplate{itemize item}{$\rightarrow$}
+\setbeamertemplate{itemize subitem}{$\rightarrow$}
+\setbeamertemplate{headline}{\vspace{0.2cm}\hspace{0.2cm}\textcolor{kcpc-muted}{\small\insertsection}\hfill}
+\setbeamertemplate{footline}{\hspace{0.2cm}\textcolor{kcpc-muted}{\small KCPC}\hfill\vspace{0.3cm}}
+\setbeamertemplate{background}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[opacity=0.035,at=(current page.center)]
+      {\includegraphics[width=0.55\paperwidth]{kcpc-logo.png}};
+  \end{tikzpicture}%
+}
+\AtBeginSection[]{\begin{frame}[plain]\vfill\centering{\Large\bfseries\insertsection}\vfill\end{frame}}
+\hypersetup{colorlinks=true,linkcolor=kcpc-red,urlcolor=kcpc-red}
+
+\lstset{
+  basicstyle=\ttfamily\scriptsize,
+  keywordstyle=\bfseries\color{kcpc-red},
+  commentstyle=\itshape\color{kcpc-muted},
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  frame=single,
+  rulecolor=\color{kcpc-muted}
+}
+
+\tikzset{
+  gnode/.style={circle,draw=kcpc-text,thick,minimum size=16pt,inner sep=1pt,font=\scriptsize\bfseries,fill=white},
+  active/.style={circle,draw=kcpc-blue,very thick,minimum size=16pt,inner sep=1pt,font=\scriptsize\bfseries,fill=kcpc-blue!15},
+  done/.style={circle,draw=kcpc-red,very thick,minimum size=16pt,inner sep=1pt,font=\scriptsize\bfseries,fill=kcpc-red!12},
+  treeedge/.style={draw=kcpc-blue,very thick},
+  backedge/.style={draw=kcpc-amber,very thick,dashed}
+}
+
+\title{Introduction to Graphs}
+\subtitle{Representations, Traversals, and Structural Patterns}
+\author{King's Competitive Programming Club}
+\date{Workshop 4}
+
+\begin{document}
+
+\begin{frame}[plain]\titlepage\end{frame}
+
+\begin{frame}{Workshop Overview}
+  \begin{enumerate}
+    \item Graph Definitions and Structural Families
+    \item Storing Graphs: Representations and Trade-Offs
+    \item Breadth-First Search (BFS) and Unweighted Shortest Paths
+    \item Depth-First Search (DFS) and Edge Classification
+    \item Try It Yourself
+    \item Conclusion
+  \end{enumerate}
+\end{frame}
+
+% ============================================================
+\section{Graph Definitions and Structural Families}
+% ============================================================
+
+\begin{frame}{What Is a Graph?}
+  \begin{columns}[c]
+    \begin{column}{0.56\textwidth}
+      A \textbf{graph} $G = (V, E)$ consists of:
+      \begin{itemize}
+        \item A set of \textbf{vertices} (nodes) $V = \{1, 2, \dots, n\}$.
+        \item A set of \textbf{edges} $E$ connecting pairs of vertices.
+      \end{itemize}
+      \textbf{Example:} $V = \{1,2,3,4,5,6\}$,\\[2pt]
+      {\small $E = \{(1,2), (1,3), (2,3), (4,2), (6,5)\}$.}
+      \begin{itemize}
+        \item \textbf{Undirected:} edges are two-way $\{u,v\}$.
+        \item \textbf{Directed:} edges are one-way arrows $(u \to v)$.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.42\textwidth}
+      \centering
+      {\scriptsize\textbf{Undirected graph}}\\[2pt]
+      \begin{tikzpicture}[scale=0.75]
+        \node[gnode] (1) at (0,1) {1};
+        \node[gnode] (2) at (1.5,1.6) {2};
+        \node[gnode] (3) at (1.2,0.3) {3};
+        \node[gnode] (4) at (2.7,0.7) {4};
+        \node[gnode] (5) at (0.4,-0.7) {5};
+        \node[gnode] (6) at (2.0,-0.7) {6};
+        \draw[thick] (1)--(2) (1)--(3) (2)--(3) (4)--(2) (6)--(5);
+      \end{tikzpicture}\\[6pt]
+      {\scriptsize\textbf{Directed graph}}\\[2pt]
+      \begin{tikzpicture}[scale=0.75,>={Stealth[length=4pt]}]
+        \node[gnode] (1) at (0,1) {1};
+        \node[gnode] (2) at (1.5,1.6) {2};
+        \node[gnode] (3) at (1.2,0.3) {3};
+        \node[gnode] (4) at (2.7,0.7) {4};
+        \node[gnode] (5) at (0.4,-0.7) {5};
+        \node[gnode] (6) at (2.0,-0.7) {6};
+        \draw[thick,->] (1)--(2);
+        \draw[thick,->] (1)--(3);
+        \draw[thick,->] (2)--(3);
+        \draw[thick,->] (4)--(2);
+        \draw[thick,->] (6)--(5);
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Paths, Cycles, and Degrees}
+  \begin{itemize}
+    \item \textbf{Path:} A sequence of vertices $(v_1, v_2, \dots, v_k)$ with an edge between each consecutive pair $(v_i, v_{i+1})$. A path is \textbf{simple} if all vertices are distinct.
+    \item \textbf{Cycle:} A path of length $\ge 3$ where $v_1 = v_k$ and $v_1, \dots, v_{k-1}$ are distinct.
+    \item \textbf{Degree $\deg(v)$:} The number of edges incident to vertex $v$.
+      \begin{itemize}
+        \item In directed graphs, we split into \textbf{in-degree} $\deg^-(v)$ and \textbf{out-degree} $\deg^+(v)$.
+      \end{itemize}
+    \item \textbf{Handshaking Lemma:} Every undirected edge contributes $1$ to the degree of both endpoints:
+      \[ \sum_{v \in V} \deg(v) = 2|E|. \]
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Connectivity, Trees, and Rooted Trees}
+  \begin{columns}[c]
+    \begin{column}{0.58\textwidth}
+      \begin{itemize}
+        \item \textbf{Connected Graph:} A path exists between any two vertices $u, v \in V$.
+          \begin{itemize}
+            \item Maximal connected subgraphs are called \textbf{connected components}.
+          \end{itemize}
+        \item \textbf{Tree:} A connected, acyclic undirected graph.
+          \begin{itemize}
+            \item Equivalent: connected with $|E| = |V| - 1$.
+            \item Equivalent: \textbf{unique} simple path between any two vertices.
+          \end{itemize}
+        \item \textbf{Rooted Tree:} Fixing one special \textbf{root} node $r$ orients all edges as $\text{parent} \to \text{child}$.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.40\textwidth}
+      \centering
+      {\scriptsize\textbf{Tree rooted at 1}}\\[2pt]
+      \begin{tikzpicture}[scale=0.72,>={Stealth[length=4pt]}]
+        \node[active] (1) at (1.2,1.8) {1};
+        \node[gnode] (3) at (0.3,0.9) {3};
+        \node[gnode] (2) at (2.1,0.9) {2};
+        \node[gnode] (5) at (0.0,0.0) {5};
+        \node[gnode] (4) at (1.1,0.0) {4};
+        \draw[thick,->] (1)--(3);
+        \draw[thick,->] (1)--(2);
+        \draw[thick,->] (3)--(5);
+        \draw[thick,->] (3)--(4);
+      \end{tikzpicture}\\[6pt]
+      {\scriptsize\textbf{Same tree rooted at 3}}\\[2pt]
+      \begin{tikzpicture}[scale=0.72,>={Stealth[length=4pt]}]
+        \node[active] (3) at (1.2,1.8) {3};
+        \node[gnode] (5) at (0.1,0.9) {5};
+        \node[gnode] (4) at (1.1,0.9) {4};
+        \node[gnode] (1) at (2.2,0.9) {1};
+        \node[gnode] (2) at (2.6,0.0) {2};
+        \draw[thick,->] (3)--(5);
+        \draw[thick,->] (3)--(4);
+        \draw[thick,->] (3)--(1);
+        \draw[thick,->] (1)--(2);
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ============================================================
+\section{Storing Graphs: Representations and Trade-Offs}
+% ============================================================
+
+\begin{frame}{Three Ways to Represent a Graph}
+  \begin{columns}[c]
+    \begin{column}{0.26\textwidth}
+      \textbf{1. Edge List}\\
+      Store $E$ as pairs $(u, v)$:\par\vspace{0.2em}
+      {\scriptsize\ttfamily
+        2 3\\
+        1 2\\
+        3 1\\
+        3 4\\
+        1 5\\
+        6 5\par}
+    \end{column}
+    \begin{column}{0.32\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=0.8]
+        \node[gnode] (3) at (1.3,2.0) {3};
+        \node[gnode] (2) at (0.2,1.4) {2};
+        \node[gnode] (1) at (1.1,0.7) {1};
+        \node[gnode] (4) at (2.4,1.2) {4};
+        \node[gnode] (5) at (0.3,-0.3) {5};
+        \node[gnode] (6) at (1.6,-0.5) {6};
+        \draw[thick] (2)--(3) (1)--(2) (3)--(1) (3)--(4) (1)--(5) (6)--(5);
+      \end{tikzpicture}
+    \end{column}
+    \begin{column}{0.38\textwidth}
+      \textbf{2. Adjacency List}\\
+      For each $u$, list neighbours:\par\vspace{0.2em}
+      {\scriptsize\ttfamily
+        1: 2, 3, 5\\
+        2: 3, 1\\
+        3: 2, 1, 4\\
+        4: 3\\
+        5: 1, 6\\
+        6: 5\par}
+    \end{column}
+  \end{columns}
+  \vspace{0.3em}
+  \textbf{3. Adjacency Matrix:} An $N \times N$ table $A$ where $A[u][v] = 1$ if $(u,v) \in E$, else $0$.
+\end{frame}
+
+\begin{frame}[fragile]{Adjacency List in Code (C++ and Python)}
+  \begin{columns}[t]
+    \begin{column}{0.49\textwidth}
+      \textbf{C++ (\texttt{vector<int>})}
+\begin{lstlisting}[language=C++]
+const int MAXN = 100005;
+vector<int> g[MAXN];
+
+int main() {
+  int n, m;
+  cin >> n >> m;
+  for (int i = 0; i < m; i++) {
+    int u, v;
+    cin >> u >> v;
+    g[u].push_back(v);
+    g[v].push_back(u); // 2-way
+  }
+}
+\end{lstlisting}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \textbf{Python (\texttt{list} of \texttt{list}s)}
+\begin{lstlisting}[language=Python]
+import sys
+input = sys.stdin.readline
+
+n, m = map(int, input().split())
+g = [[] for _ in range(n + 1)]
+for _ in range(m):
+  u, v = map(int, input().split())
+  g[u].append(v)
+  g[v].append(u) # undirected
+\end{lstlisting}
+      {\scriptsize Total integers stored across all lists: $2|E|$ (or $|E|$ if directed).}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Adjacency Matrix in Code}
+  \begin{columns}[c]
+    \begin{column}{0.52\textwidth}
+\begin{lstlisting}[language=C++]
+const int MAXN = 1005;
+bool g[MAXN][MAXN];
+
+int main() {
+    int n, m;
+    cin >> n >> m;
+    for (int i = 0; i < m; i++) {
+        int u, v;
+        cin >> u >> v;
+        g[u][v] = true;
+        g[v][u] = true; // undirected
+    }
+}
+\end{lstlisting}
+    \end{column}
+    \begin{column}{0.44\textwidth}
+      \centering
+      {\scriptsize\textbf{Matrix $g[u][v]$ for the 6-node graph}}\\[3pt]
+      {\scriptsize
+      \begin{tabular}{c|cccccc}
+          & 1 & 2 & 3 & 4 & 5 & 6 \\\hline
+        1 & 0 & 1 & 1 & 0 & 1 & 0 \\
+        2 & 1 & 0 & 1 & 0 & 0 & 0 \\
+        3 & 1 & 1 & 0 & 1 & 0 & 0 \\
+        4 & 0 & 0 & 1 & 0 & 0 & 0 \\
+        5 & 1 & 0 & 0 & 0 & 0 & 1 \\
+        6 & 0 & 0 & 0 & 0 & 1 & 0
+      \end{tabular}}
+      \par\vspace{0.4em}
+      {\scriptsize Symmetric ($g[u][v] = g[v][u]$) when undirected.}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Comparison: Memory and Operations}
+  \textbf{Memory ($N = |V|$, $E = |E|$):}\par\vspace{0.1em}
+  {\scriptsize\setlength{\tabcolsep}{1pt}
+  \begin{tabular}{lcccc}
+    \toprule
+    \textbf{Structure} & $N{=}1k, E{=}1k$ & $N{=}1k, E{=}100k$ & $N{=}5k, E{=}200k$ & $N{=}100k, E{=}200k$ \\
+    \midrule
+    \textbf{Adj.\ List} $O(N{+}E)$ & ${\approx}\,0.01\text{ MB}$ & ${\approx}\,1\text{ MB}$ & ${\approx}\,2\text{ MB}$ & ${\approx}\,2\text{ MB}$ \\
+    \textbf{Adj.\ Matrix} $O(N^2)$ & ${\approx}\,1\text{ MB}$ & ${\approx}\,1\text{ MB}$ & ${\approx}\,25\text{ MB}$ & \textcolor{kcpc-red}{\textbf{${\approx}\,10\text{ GB}$}} \\
+    \bottomrule
+  \end{tabular}}
+
+  \vspace{0.3em}
+  \textbf{Operation Time Complexities:}\par\vspace{0.1em}
+  {\scriptsize\setlength{\tabcolsep}{1.5pt}
+  \begin{tabular}{lccc}
+    \toprule
+    \textbf{Operation} & \textbf{Adjacency List} & \textbf{Adjacency Matrix} & \textbf{Edge List} \\
+    \midrule
+    Does edge $(u,v)$ exist? & $O(\deg(u))$ & $O(1)$ & $O(E)$ \\
+    Iterate neighbours of $u$ & \textcolor{kcpc-green}{\textbf{$O(\deg(u))$}} & $O(N)$ & $O(E)$ \\
+    Inspect all edges & \textcolor{kcpc-green}{\textbf{$O(N + E)$}} & $O(N^2)$ & $O(E)$ \\
+    Add / delete edge $(u,v)$ & $O(1)$ / $O(\deg(u))$ & $O(1)$ / $O(1)$ & $O(1)$ / $O(E)$ \\
+    Add / delete vertex $u$ & $O(1)$ / $O(N + E)$ & $O(N)$ / $O(N)$ & $O(1)$ / $O(E)$ \\
+    \bottomrule
+  \end{tabular}}
+\end{frame}
+
+\begin{frame}{Try It Yourself: Representations and Degrees}
+  Suppose an undirected simple graph has $N = 100\,000$ vertices and $M = 150\,000$ edges.
+  \begin{enumerate}
+    \item What is the sum of $\deg(v)$ over all $100\,000$ vertices?
+    \item If you store the graph in an adjacency list \texttt{g[1..N]}, how many total loop iterations does
+      \[ \texttt{for } u = 1 \dots N: \quad \texttt{for } v \text{ in } g[u]: \dots \]
+      perform, and why is this much faster than scanning an adjacency matrix?
+    \item Can an undirected simple graph on $5$ vertices have vertex degrees $3, 3, 3, 2, 2$?
+  \end{enumerate}
+  \emph{Discuss with a neighbour.}
+\end{frame}
+
+\begin{frame}{Try It Yourself: Representations and Degrees (Answers)}
+  \begin{enumerate}
+    \item \textbf{Sum of degrees:} By the Handshaking Lemma,
+      \[ \sum_{v=1}^{100\,000} \deg(v) = 2M = 2 \times 150\,000 = 300\,000. \]
+    \item \textbf{Adjacency list loop iterations:} The inner loop runs $\deg(u)$ times for vertex $u$, so total iterations equal $\sum_u \deg(u) = 300\,000$ ($3 \times 10^5$ operations), compared to $N^2 = 10^{10}$ operations in an adjacency matrix.
+    \item \textbf{Degree sequence $3, 3, 3, 2, 2$:} Impossible! Their sum is $3+3+3+2+2 = 13$, which is odd, violating $\sum \deg(v) = 2|E|$.
+  \end{enumerate}
+\end{frame}
+
+% ============================================================
+\section{Breadth-First Search and Unweighted Shortest Paths}
+% ============================================================
+
+\begin{frame}{Breadth-First Search (BFS): Layer-by-Layer Exploration}
+  \begin{columns}[c]
+    \begin{column}{0.51\textwidth}
+      \textbf{Core Idea:}
+      \begin{itemize}
+        \item Start at source vertex $s$ (layer $0$).
+        \item Visit all neighbours at distance $1$, then distance $2$, then distance $3$, and so on.
+        \item Maintain a \textbf{FIFO queue} $q$ of discovered vertices whose neighbours still need to be inspected.
+        \item Mark a vertex \texttt{visited} \textbf{as soon as it is pushed} into $q$ so it is never enqueued twice.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.46\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=0.72]
+        \node[done,label={[font=\scriptsize,text=kcpc-red]above:$d=0$}] (1) at (0,1.6) {1};
+        \node[active,label={[font=\scriptsize,text=kcpc-blue]above:$d=1$}] (4) at (1.4,1.9) {4};
+        \node[active,label={[font=\scriptsize,text=kcpc-blue]left:$d=1$}] (2) at (0.9,0.5) {2};
+        \node[gnode,label={[font=\scriptsize,text=kcpc-muted]below:$d=2$}] (3) at (-0.1,-0.3) {3};
+        \node[gnode,label={[font=\scriptsize,text=kcpc-muted]above:$d=2$}] (7) at (2.8,1.5) {7};
+        \node[gnode,label={[font=\scriptsize,text=kcpc-muted]below:$d=2$}] (5) at (2.2,0.1) {5};
+        \node[gnode,label={[font=\scriptsize,text=kcpc-muted]below:$d=3$}] (6) at (3.4,0.5) {6};
+        \draw[treeedge] (1)--(4) (1)--(2) (4)--(7) (2)--(3) (2)--(5) (7)--(6);
+        \draw[backedge] (4)--(2) (7)--(5) (5)--(6);
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{BFS Step-by-Step Walkthrough}
+  \begin{columns}[c]
+    \begin{column}{0.54\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=0.9, every node/.style={transform shape}]
+        \draw<2->[draw=kcpc-text,thick] (1)--(4) (1)--(2) (4)--(2) (4)--(7)
+          (2)--(3) (2)--(5) (7)--(5) (7)--(6) (5)--(6);
+        \draw<2->[treeedge] (1)--(4) (1)--(2);
+        \draw<3->[treeedge] (4)--(7);
+        \draw<4->[treeedge] (2)--(3) (2)--(5);
+        \draw<5->[treeedge] (7)--(6);
+        \draw<2->[backedge] (4)--(2) (7)--(5) (5)--(6);
+
+        \node<1>[active] (1) at (0,1.6) {1};
+        \node<2->[done] (1) at (0,1.6) {1};
+        \node<1>[gnode] (4) at (1.4,1.9) {4};
+        \node<2>[active] (4) at (1.4,1.9) {4};
+        \node<3->[done] (4) at (1.4,1.9) {4};
+        \node<1>[gnode] (2) at (0.9,0.5) {2};
+        \node<2-3>[active] (2) at (0.9,0.5) {2};
+        \node<4->[done] (2) at (0.9,0.5) {2};
+        \node<1-3>[gnode] (3) at (-0.1,-0.3) {3};
+        \node<4-5>[active] (3) at (-0.1,-0.3) {3};
+        \node<6->[done] (3) at (-0.1,-0.3) {3};
+        \node<1-2>[gnode] (7) at (2.8,1.5) {7};
+        \node<3-4>[active] (7) at (2.8,1.5) {7};
+        \node<5->[done] (7) at (2.8,1.5) {7};
+        \node<1-3>[gnode] (5) at (2.2,0.1) {5};
+        \node<4-6>[active] (5) at (2.2,0.1) {5};
+        \node<7->[done] (5) at (2.2,0.1) {5};
+        \node<1-4>[gnode] (6) at (3.4,0.5) {6};
+        \node<5-7>[active] (6) at (3.4,0.5) {6};
+        \node<8->[done] (6) at (3.4,0.5) {6};
+        \draw<1>[draw=kcpc-text,thick] (1)--(4) (1)--(2) (4)--(2) (4)--(7)
+          (2)--(3) (2)--(5) (7)--(5) (7)--(6) (5)--(6);
+      \end{tikzpicture}
+    \end{column}
+    \begin{column}{0.42\textwidth}
+      \begin{overlayarea}{\linewidth}{3.6cm}
+        \only<1>{\textbf{Initialise}\par Push source $1$ and mark it visited.}
+        \only<2>{\textbf{Pop $1$}\par Discover $4$ and $2$; both have distance $1$.}
+        \only<3>{\textbf{Pop $4$}\par $1$ and $2$ are visited; discover $7$ at distance $2$.}
+        \only<4>{\textbf{Pop $2$}\par Discover $3$ and $5$ at distance $2$.}
+        \only<5>{\textbf{Pop $7$}\par Discover $6$ at distance $3$.}
+        \only<6>{\textbf{Pop $3$}\par All its neighbours are already visited.}
+        \only<7>{\textbf{Pop $5$}\par $6$ is already discovered, so $(5,6)$ is not a tree edge.}
+        \only<8>{\textbf{Pop $6$}\par The queue is empty; BFS is complete.}
+      \end{overlayarea}
+      \vspace{0.4em}
+      \textbf{Queue after this step:}\par
+      \only<1>{$[1]$}\only<2>{$[4,2]$}\only<3>{$[2,7]$}\only<4>{$[7,3,5]$}\only<5>{$[3,5,6]$}\only<6>{$[5,6]$}\only<7>{$[6]$}\only<8>{$[]$}
+      \vspace{0.25em}
+
+      \begin{overlayarea}{\linewidth}{0.8cm}
+        \only<1>{{\scriptsize\textbf{Discovered:} $1$}}
+        \only<2>{{\scriptsize\textbf{Discovered:} $1,4,2$}}
+        \only<3>{{\scriptsize\textbf{Discovered:} $1,4,2,7$}}
+        \only<4>{{\scriptsize\textbf{Discovered:} $1,4,2,7,3,5$}}
+        \only<5-7>{{\scriptsize\textbf{Discovered:} $1,4,2,7,3,5,6$}}
+        \only<8>{{\scriptsize\textbf{BFS order:} $1,4,2,7,3,5,6$}}
+      \end{overlayarea}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{BFS with Shortest Paths and Parent Reconstruction}
+  \begin{columns}[t]
+    \begin{column}{0.48\textwidth}
+      \textbf{C++ Implementation}
+\begin{lstlisting}[language=C++]
+vector<int> dist(n + 1, -1);
+vector<int> parent(n + 1, 0);
+queue<int> q;
+q.push(start);
+dist[start] = 0;
+
+while (!q.empty()) {
+  int v = q.front();
+  q.pop();
+  for (int u : g[v]) {
+    if (dist[u] == -1) {
+      dist[u] = dist[v] + 1;
+      parent[u] = v;
+      q.push(u);
+    }
+  }
+}
+\end{lstlisting}
+    \end{column}
+    \begin{column}{0.49\textwidth}
+      \textbf{Properties of BFS:}
+      \begin{itemize}
+        \item Tree edges form a \textbf{shortest-path tree} rooted at \texttt{start}.
+        \item Every vertex is enqueued at most once and each edge is inspected twice: $\mathbf{O(N + E)}$ time and space.
+        \item \textbf{Path reconstruction} (\emph{Message Route}): follow \texttt{cur = parent[cur]} from target $t$ back to \texttt{start}, then reverse.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Try It Yourself: BFS Shortest Path}
+  Consider the 7-vertex graph from the BFS walkthrough (edges: $(1,4), (1,2), (4,2), (4,7), (2,3), (2,5), (7,5), (7,6), (5,6)$).
+  \begin{enumerate}
+    \item What is the shortest distance \texttt{dist[6]} from vertex $1$ to vertex $6$, and what is the parent chain \texttt{6 -> parent[6] -> ... -> 1}?
+    \item Why is the edge $(5, 6)$ a \textbf{cross edge} rather than a tree edge when $7$ is popped before $5$?
+    \item What bug occurs if you set \texttt{visited[u] = true} when \emph{popping} $u$ from the queue instead of when \emph{pushing} $u$?
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Try It Yourself: BFS Shortest Path (Answers)}
+  \begin{enumerate}
+    \item \textbf{Shortest path to $6$:} $\texttt{dist}[6] = 3$. Following parents gives $6 \leftarrow 7 \leftarrow 4 \leftarrow 1$, so the shortest path is $1 \to 4 \to 7 \to 6$.
+    \item \textbf{Why $(5, 6)$ is a cross edge:} Both $7$ and $5$ are in layer $d = 2$, with $7$ enqueued before $5$. When $7$ is popped, it discovers $6$ ($d[6] = 3$). Later, when $5$ is popped, $6$ is already visited, so $(5, 6)$ is a non-tree cross edge.
+    \item \textbf{Marking visited on pop instead of push:} The same vertex can be pushed into the queue multiple times by different neighbours in the previous layer, causing duplicate work and up to $O(E)$ queue blowup (and incorrect parent overwrites).
+  \end{enumerate}
+\end{frame}
+
+% ============================================================
+\section{Depth-First Search and Edge Classification}
+% ============================================================
+
+\begin{frame}[fragile]{Depth-First Search (DFS): Plunge and Backtrack}
+  \begin{columns}[c]
+    \begin{column}{0.52\textwidth}
+      \textbf{Core Idea:}
+      \begin{itemize}
+        \item Follow one branch as deep as possible until stuck, then \textbf{backtrack}.
+        \item Naturally expressed via recursion (or an explicit LIFO stack).
+      \end{itemize}
+\begin{lstlisting}[language=C++]
+void dfs(int v) {
+    vis[v] = true;
+    tin[v] = ++timer;
+    for (int u : g[v]) {
+        if (!vis[u]) {
+            dfs(u);
+        }
+    }
+    tout[v] = ++timer;
+}
+\end{lstlisting}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=0.82]
+        \node[done] (1) at (0,1.6) {1};
+        \node[gnode] (4) at (1.4,1.9) {4};
+        \node[active] (2) at (0.9,0.5) {2};
+        \node[gnode] (3) at (-0.1,-0.1) {3};
+        \node[gnode] (7) at (2.8,1.2) {7};
+        \node[gnode] (5) at (2.1,0.1) {5};
+        \node[gnode] (6) at (3.5,0.1) {6};
+        \draw[treeedge] (1)--(4) (1)--(2) (2)--(3) (2)--(5) (5)--(7) (7)--(6);
+        \draw[backedge] (3)--(1) (7)--(2) (6)--(5);
+      \end{tikzpicture}
+      \\[4pt]
+      {\scriptsize
+      \textbf{DFS Entry (\texttt{tin}) order:} $1, 4, 2, 3, 5, 7, 6$\\
+      \textbf{DFS Exit (\texttt{tout}) order:} $4, 3, 6, 7, 5, 2, 1$}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{DFS Step-by-Step: Follow a Branch, Then Backtrack}
+  \begin{columns}[c]
+    \begin{column}{0.54\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=1.0, every node/.style={transform shape}]
+        \draw<2->[draw=kcpc-text,thick] (1)--(4) (1)--(2) (1)--(3) (2)--(3)
+          (2)--(5) (2)--(7) (5)--(7) (5)--(6) (7)--(6);
+        \draw<2->[treeedge] (1)--(4);
+        \draw<4->[treeedge] (1)--(2);
+        \draw<5->[treeedge] (2)--(3);
+        \draw<8->[treeedge] (2)--(5);
+        \draw<9->[treeedge] (5)--(7);
+        \draw<11->[treeedge] (7)--(6);
+        \draw<6->[backedge] (3)--(1);
+        \draw<10->[backedge] (7)--(2);
+        \draw<12->[backedge] (6)--(5);
+
+        \node<1>[active] (1) at (0,1.6) {1};
+        \node<2-17>[active] (1) at (0,1.6) {1};
+        \node<18>[done] (1) at (0,1.6) {1};
+        \node<1>[gnode] (4) at (1.4,1.9) {4};
+        \node<2>[active] (4) at (1.4,1.9) {4};
+        \node<3->[done] (4) at (1.4,1.9) {4};
+        \node<1-3>[gnode] (2) at (0.9,0.5) {2};
+        \node<4-16>[active] (2) at (0.9,0.5) {2};
+        \node<17->[done] (2) at (0.9,0.5) {2};
+        \node<1-4>[gnode] (3) at (-0.1,-0.1) {3};
+        \node<5-6>[active] (3) at (-0.1,-0.1) {3};
+        \node<7->[done] (3) at (-0.1,-0.1) {3};
+        \node<1-7>[gnode] (5) at (2.1,0.1) {5};
+        \node<8-14>[active] (5) at (2.1,0.1) {5};
+        \node<15->[done] (5) at (2.1,0.1) {5};
+        \node<1-8>[gnode] (7) at (2.8,1.2) {7};
+        \node<9-13>[active] (7) at (2.8,1.2) {7};
+        \node<14->[done] (7) at (2.8,1.2) {7};
+        \node<1-10>[gnode] (6) at (3.5,0.1) {6};
+        \node<11-12>[active] (6) at (3.5,0.1) {6};
+        \node<13->[done] (6) at (3.5,0.1) {6};
+        \draw<1>[draw=kcpc-text,thick] (1)--(4) (1)--(2) (1)--(3) (2)--(3)
+          (2)--(5) (2)--(7) (5)--(7) (5)--(6) (7)--(6);
+      \end{tikzpicture}
+    \end{column}
+    \begin{column}{0.42\textwidth}
+      \begin{overlayarea}{\linewidth}{3.3cm}
+        \only<1>{\textbf{Call dfs(1)}\par Start at vertex $1$.}
+        \only<2>{\textbf{Call dfs(4)}\par Follow the first neighbour of $1$.}
+        \only<3>{\textbf{Return from 4}\par Its only neighbour, $1$, is its parent.}
+        \only<4>{\textbf{Call dfs(2)}\par Back at $1$, take the next unvisited neighbour.}
+        \only<5>{\textbf{Call dfs(3)}\par From $2$, follow the next unvisited neighbour.}
+        \only<6>{\textbf{Back edge $(3,1)$}\par $1$ is already on the recursion stack.}
+        \only<7>{\textbf{Return from 3}\par Finish this branch and resume at $2$.}
+        \only<8>{\textbf{Call dfs(5)}\par Continue from $2$ to its next unvisited neighbour.}
+        \only<9>{\textbf{Call dfs(7)}\par Follow the branch through $5$.}
+        \only<10>{\textbf{Back edge $(7,2)$}\par $2$ is an ancestor already on the stack.}
+        \only<11>{\textbf{Call dfs(6)}\par From $7$, follow its unvisited neighbour.}
+        \only<12>{\textbf{Back edge $(6,5)$}\par $5$ is already on the recursion stack.}
+        \only<13>{\textbf{Return from 6}\par No unvisited neighbours remain.}
+        \only<14>{\textbf{Return from 7}\par Resume at $5$.}
+        \only<15>{\textbf{Return from 5}\par Resume at $2$.}
+        \only<16>{\textbf{Return from 2}\par Resume at $1$.}
+        \only<17>{\textbf{Neighbour 3 already visited}\par Skip it and finish $1$.}
+        \only<18>{\textbf{DFS complete}\par Every reachable vertex has been visited.}
+      \end{overlayarea}
+      \vspace{0.35em}
+      \textbf{Call stack:}\par
+      \only<1>{$[1]$}\only<2>{$[1,4]$}\only<3>{$[1]$}\only<4>{$[1,2]$}
+      \only<5-6>{$[1,2,3]$}\only<7>{$[1,2]$}\only<8>{$[1,2,5]$}
+      \only<9-10>{$[1,2,5,7]$}\only<11-12>{$[1,2,5,7,6]$}
+      \only<13>{$[1,2,5,7]$}\only<14>{$[1,2,5]$}\only<15>{$[1,2]$}
+      \only<16-17>{$[1]$}\only<18>{$[]$}
+      \begin{overlayarea}{\linewidth}{0.9cm}
+        \only<18>{\scriptsize Entry order: $1,4,2,3,5,7,6$\\Exit order: $4,3,6,7,5,2,1$}
+      \end{overlayarea}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{DFS Properties and Edge Classification}
+  \begin{itemize}
+    \item \textbf{Subtree Property:} Once DFS exits vertex $v$, it has visited \emph{every} vertex reachable from $v$ along unvisited paths. Vertex $u$ is in $v$'s DFS subtree iff $\text{tin}[v] \le \text{tin}[u] \le \text{tout}[u] \le \text{tout}[v]$.
+    \item \textbf{Edge Types in Undirected Graphs:} Every edge is either:
+      \begin{enumerate}
+        \item a \textbf{Tree Edge} (discovers a new vertex $u$ from $v$), or
+        \item a \textbf{Back Edge} (connects $v$ to an already-visited ancestor $u \neq \text{parent}[v]$).
+      \end{enumerate}
+    \item \textbf{Edge Types in Directed Graphs:} In addition to tree and back edges, directed graphs can have \textbf{forward edges} (to a proper descendant) and \textbf{cross edges} (to a previously finished branch).
+    \item \textbf{Complexity:} Visits every vertex and edge once: $\mathbf{O(N + E)}$ time and $\mathbf{O(N)}$ recursion stack.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Try It Yourself: DFS Trace and Back-Edges}
+  In the 7-vertex DFS walkthrough graph, the adjacency lists are:
+  \begin{center}
+    {\small $1:[4,2,3],\quad 2:[1,3,5,7],\quad 3:[2,1],\quad 4:[1],$\\[2pt]
+    $5:[2,7,6],\quad 6:[7,5],\quad 7:[2,5,6].$}
+  \end{center}
+  \begin{enumerate}
+    \item When DFS is at vertex $3$ (called from $2$, which was called from $1$), it inspects neighbour $1$. Why does $(3, 1)$ prove the existence of a simple cycle?
+    \item List all three back-edges encountered during $\texttt{dfs}(1)$ and the simple cycle each back-edge closes.
+  \end{enumerate}
+\end{frame}
+
+\begin{frame}{Try It Yourself: DFS Trace and Back-Edges (Answers)}
+  \begin{enumerate}
+    \item \textbf{Why $(3, 1)$ proves a cycle:} At vertex $3$, $\texttt{parent}[3] = 2$. Neighbour $1$ is already visited and $1 \neq \texttt{parent}[3]$, so $1$ is an ancestor of $3$ in the DFS tree. Combining the tree path $1 \to 2 \to 3$ with the back-edge $(3, 1)$ gives the simple cycle $1 - 2 - 3 - 1$.
+    \item \textbf{All three back-edges:}
+      \begin{itemize}
+        \item $(3, 1)$ closes cycle $1 - 2 - 3 - 1$.
+        \item $(7, 2)$ closes cycle $2 - 5 - 7 - 2$.
+        \item $(6, 5)$ closes cycle $5 - 7 - 6 - 5$.
+      \end{itemize}
+  \end{enumerate}
+\end{frame}
+
+% ============================================================
+\section{Try It Yourself}
+% ============================================================
+
+\begin{frame}{Try It Yourself: Tree Bipartiteness}
+  Can a tree with $N \ge 2$ vertices fail to be bipartite? Explain why or why not.
+
+  \vspace{0.8em}
+  \emph{Hint: Consider the parity of each vertex's depth from a chosen root.}
+\end{frame}
+
+\begin{frame}{Try It Yourself: Tree Bipartiteness (Answer)}
+  \textbf{No.} Root the tree anywhere and colour each vertex by the parity of its depth.
+
+  Every tree edge joins a parent to a child, whose depths differ by exactly one, so its endpoints have opposite colours. Thus this is a valid 2-colouring. Equivalently, a tree has no cycles, and hence no odd cycles.
+\end{frame}
+
+\begin{frame}{Try It Yourself: Counting Paths in a DAG}
+  Suppose a DAG has vertices $\{1,2,3,4\}$ and directed edges
+  \[1 \to 2,\quad 1 \to 3,\quad 2 \to 3,\quad 2 \to 4,\quad 3 \to 4.\]
+  Find a valid topological ordering and calculate the number of directed paths from vertex $1$ to vertex $4$.
+\end{frame}
+
+\begin{frame}{Try It Yourself: Counting DAG Paths (Answer)}
+  A valid topological ordering is $[1,2,3,4]$. Initialise $\text{dp}[1]=1$ and process the edges in that order:
+  \begin{align*}
+    \text{dp}[2] &= 1,\\
+    \text{dp}[3] &= \text{dp}[1]+\text{dp}[2]=2,\\
+    \text{dp}[4] &= \text{dp}[2]+\text{dp}[3]=1+2=\mathbf{3}.
+  \end{align*}
+  The three routes are $1\to2\to4$, $1\to3\to4$, and $1\to2\to3\to4$.
+\end{frame}
+
+\begin{frame}{Try It Yourself: Longest Path in a DAG}
+  Using the same DAG, find the length (number of edges) of the longest directed path from vertex $1$ to vertex $4$.
+
+  \vspace{0.8em}
+  \emph{Hint: Compare the direct routes with the route that passes through both vertices $2$ and $3$.}
+\end{frame}
+
+\begin{frame}{Try It Yourself: Longest DAG Path (Answer)}
+  The longest route is $1\to2\to3\to4$, which contains \textbf{3 edges}.
+
+  The other routes are $1\to2\to4$ and $1\to3\to4$, each with 2 edges. Therefore the longest-path answer is $3$.
+\end{frame}
+
+% ============================================================
+\section{Conclusion}
+% ============================================================
+
+\begin{frame}{Summary: Matching Problems to Graph Techniques}
+  \centering
+  {\scriptsize\setlength{\tabcolsep}{1pt}
+  \begin{tabular}{lll}
+    \toprule
+    \textbf{Goal} & \textbf{Key Invariant} & \textbf{Method} \\
+    \midrule
+    Connect components & Reachability classes & DFS/BFS, $O(N{+}E)$ \\
+    Unweighted shortest path & BFS layers & BFS + \texttt{parent[]}, $O(N{+}E)$ \\
+    Find undirected cycle & Non-parent back-edge & DFS + \texttt{parent[]}, $O(N{+}E)$ \\
+    Split into two teams & No odd cycle & 2-colouring, $O(N{+}E)$ \\
+    Component is a cycle & Connected; degree $2$ & Degree check, $O(N{+}E)$ \\
+    Paths / longest in DAG & Topological order & Kahn / DFS DP, $O(N{+}E)$ \\
+    Tree diameter & Farthest node is an endpoint & Two-BFS/DFS, $O(N)$ \\
+    Same-colour line rides & Auxiliary line nodes & Auxiliary BFS, $O(N{+}E)$ \\
+    \bottomrule
+  \end{tabular}}
+\end{frame}
+
+
+
+\end{document}
