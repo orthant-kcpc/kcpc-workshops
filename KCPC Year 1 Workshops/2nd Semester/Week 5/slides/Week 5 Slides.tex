@@ -1,26 +1,28 @@
 \documentclass{beamer}
 
-\usepackage{amsmath}
-\usepackage{amsfonts}
-\usepackage{amssymb}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amsfonts,amssymb}
 \usepackage{listings}
 \usepackage{graphicx}
 \usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning}
+\usepackage{hyperref}
+\usepackage{booktabs}
 
-% ===== KCPC clean theme =====
+\graphicspath{{../}{./}{../images/}{./images/}}
+
 \usetheme{default}
 \useinnertheme{rectangles}
 \useoutertheme{default}
-
-%\beamerdefaultoverlayspecification{<+->}
-
 \setbeamertemplate{navigation symbols}{}
 
-% --- Colours ---
 \definecolor{kcpc-bg}{RGB}{250,250,250}
 \definecolor{kcpc-text}{RGB}{20,20,20}
 \definecolor{kcpc-muted}{RGB}{90,90,90}
 \definecolor{kcpc-red}{RGB}{176,0,0}
+\definecolor{kcpc-blue}{RGB}{0,90,170}
+\definecolor{kcpc-amber}{RGB}{190,115,0}
+\definecolor{kcpc-green}{RGB}{20,130,60}
 
 \setbeamercolor{background canvas}{bg=kcpc-bg}
 \setbeamercolor{normal text}{fg=kcpc-text}
@@ -28,719 +30,822 @@
 \setbeamercolor{title}{fg=kcpc-text}
 \setbeamercolor{subtitle}{fg=kcpc-muted}
 \setbeamercolor{structure}{fg=kcpc-red}
-
 \setbeamerfont{title}{series=\bfseries,size=\Large}
 \setbeamerfont{frametitle}{series=\bfseries,size=\large}
+\setlength{\parskip}{0.35em}
 
-\setlength{\parskip}{0.4em}
+\setbeamertemplate{itemize item}{$\rightarrow$}
+\setbeamertemplate{itemize subitem}{$\rightarrow$}
+\setbeamertemplate{headline}{\vspace{0.2cm}\hspace{0.2cm}\textcolor{kcpc-muted}{\small\insertsection}\hfill}
+\setbeamertemplate{footline}{\hspace{0.2cm}\textcolor{kcpc-muted}{\small KCPC}\hfill\vspace{0.3cm}}
+\setbeamertemplate{background}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \node[opacity=0.035,at=(current page.center)]
+      {\includegraphics[width=0.55\paperwidth]{kcpc-logo.png}};
+  \end{tikzpicture}%
+}
+\AtBeginSection[]{\begin{frame}[plain]\vfill\centering{\Large\bfseries\insertsection}\vfill\end{frame}}
+\hypersetup{colorlinks=true,linkcolor=kcpc-red,urlcolor=kcpc-red}
 
-\setbeamertemplate{itemize item}{→}
-\setbeamertemplate{itemize subitem}{→}
-
-\setbeamertemplate{headline}{
-    \vspace{0.2cm}
-    \hspace{0.2cm}
-    \textcolor{kcpc-muted}{\small\insertsection}
-    \hfill
+\lstset{
+  basicstyle=\ttfamily\scriptsize,
+  keywordstyle=\bfseries\color{kcpc-red},
+  commentstyle=\itshape\color{kcpc-muted},
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  frame=single,
+  rulecolor=\color{kcpc-muted}
 }
 
-\setbeamertemplate{footline}{
-    \hspace{0.2cm}
-    \textcolor{kcpc-muted}{\small KCPC}
-    \hfill
-    \vspace{0.3cm}
+\tikzset{
+  gnode/.style={circle,draw=kcpc-text,thick,minimum size=16pt,inner sep=1pt,font=\scriptsize\bfseries,fill=white},
+  active/.style={circle,draw=kcpc-blue,very thick,minimum size=16pt,inner sep=1pt,font=\scriptsize\bfseries,fill=kcpc-blue!15},
+  done/.style={circle,draw=kcpc-red,very thick,minimum size=16pt,inner sep=1pt,font=\scriptsize\bfseries,fill=kcpc-red!12},
+  treeedge/.style={draw=kcpc-blue,very thick},
+  backedge/.style={draw=kcpc-amber,very thick,dashed},
+  tentative/.style={draw=kcpc-amber,very thick,dashed},
+  wt/.style={font=\scriptsize,fill=kcpc-bg,inner sep=1pt}
 }
 
-\setbeamertemplate{background}{
-    \begin{tikzpicture}[remember picture,overlay]
-        \node[
-            opacity=0.035,
-            at=(current page.center)
-        ] {
-            \includegraphics[width=0.55\paperwidth]{kcpc-logo.png}
-        };
-    \end{tikzpicture}
+% Every edge is drawn once; the static figure takes the weight of D--E as its argument.
+\newcommand{\dijkstragraph}[1]{%
+  \begin{tikzpicture}[x=0.9cm,y=0.9cm]
+    \node[gnode] (A) at (0,0) {A};
+    \node[gnode] (B) at (1.8,1.15) {B};
+    \node[gnode] (C) at (1.8,-1.15) {C};
+    \node[gnode] (D) at (3.6,0) {D};
+    \node[gnode] (E) at (5.6,0) {E};
+    \draw[thick] (A) -- node[wt,above left] {8} (B);
+    \draw[thick] (A) -- node[wt,below left] {1} (C);
+    \draw[thick] (B) -- node[wt,left] {2} (C);
+    \draw[thick] (B) -- node[wt,below left] {1} (D);
+    \draw[thick] (C) -- node[wt,below right] {5} (D);
+    \draw[thick] (B) -- node[wt,above] {9} (E);
+    \draw[thick] (D) -- node[wt,below] {#1} (E);
+  \end{tikzpicture}%
 }
-
-\AtBeginSection[]{
-    \begin{frame}[plain]
-        \vfill
-        \centering
-        {\Large\bfseries \insertsection}
-        \vfill
-    \end{frame}
+\newcommand{\binarygraph}{%
+  \begin{tikzpicture}[x=0.9cm,y=0.9cm,>={Stealth[length=4pt]}]
+    \node[gnode] (S) at (0,0) {S};
+    \node[gnode] (A) at (2,1) {A};
+    \node[gnode] (B) at (2,-1) {B};
+    \node[gnode] (T) at (4,0) {T};
+    \draw[thick,->] (S) -- node[wt,above left] {1} (A);
+    \draw[thick,->] (S) -- node[wt,below left] {0} (B);
+    \draw[thick,->] (B) -- node[wt,left] {0} (A);
+    \draw[thick,->] (A) -- node[wt,above right] {0} (T);
+    \draw[thick,->] (B) -- node[wt,below right] {1} (T);
+  \end{tikzpicture}%
 }
-
+\newcommand{\arrowgrid}{%
+  \begin{tikzpicture}[x=1cm,y=1cm]
+    \foreach \r in {0,1} {
+      \foreach \c in {0,1,2} {
+        \draw[kcpc-muted] (\c,-\r) rectangle ++(1,-1);
+      }
+    }
+    \node at (0.5,-0.5) {$\rightarrow$};
+    \node at (1.5,-0.5) {$\leftarrow$};
+    \node at (2.5,-0.5) {$\downarrow$};
+    \node at (0.5,-1.5) {$\rightarrow$};
+    \node at (1.5,-1.5) {$\rightarrow$};
+    \node at (2.5,-1.5) {$\uparrow$};
+    \node[kcpc-red,above,font=\small] at (0.5,0) {start};
+    \node[kcpc-red,below,font=\small] at (2.5,-2) {target};
+  \end{tikzpicture}%
+}
 
 \title{Graphs II}
 \subtitle{Distance, Constraints, and Logical Structure}
-\author{KCPC}
-\date{\today}
+\author{King's Competitive Programming Club}
+\date{Workshop 5}
 
 \begin{document}
 
-% ------------------------------------------------
+\begin{frame}[plain]\titlepage\end{frame}
 
-\begin{frame}
-    \titlepage
+\begin{frame}{Workshop Overview}
+  \begin{enumerate}
+    \item Recap: BFS to Weighted Costs
+    \item Dijkstra's Algorithm
+    \item 0--1 BFS
+    \item Path Objectives and Model Choice
+    \item Conclusion
+  \end{enumerate}
 \end{frame}
 
-% ------------------------------------------------
+% ============================================================
+\section{Recap: BFS to Weighted Costs}
+% ============================================================
 
-\begin{frame}{Overview}
-    \tableofcontents
+\begin{frame}{Recap: BFS Counts Edges, Not Costs}
+  \begin{columns}[c]
+    \begin{column}{0.46\textwidth}
+      \centering
+      \begin{tikzpicture}[scale=0.85,>={Stealth[length=4pt]}]
+        \node[gnode] (A) at (0,0) {A};
+        \node[gnode] (B) at (3,0) {B};
+        \node[gnode] (C) at (1.5,-1.4) {C};
+        \draw[thick,->] (A) -- node[wt,above] {100} (B);
+        \draw[thick,->] (A) -- node[wt,below left] {1} (C);
+        \draw[thick,->] (C) -- node[wt,below right] {1} (B);
+      \end{tikzpicture}
+    \end{column}
+    \begin{column}{0.54\textwidth}
+      \begin{itemize}
+        \item Week 4 BFS finds the fewest \textbf{edges}.
+        \item Each edge now has a \textbf{weight} (cost), and a path costs the sum of its weights.
+        \item Here $A\to B$ costs $100$, but $A\to C\to B$ costs $1+1=2$.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+  \medskip
+  We want the minimum total \textbf{cost}, not the fewest edges.
 \end{frame}
 
-% ------------------------------------------------
+% ============================================================
+\section{Dijkstra's Algorithm}
+% ============================================================
 
-\begin{frame}{Attendance}
-    \centering
-    \includegraphics[width=0.5\paperwidth]{attendance.png}
+\begin{frame}{Relaxation: Improve a Best-Known Route}
+  \begin{itemize}
+    \item $\mathrm{dist}[v]$ is the cheapest route \textbf{found so far} to $v$.
+    \item Start with $\mathrm{dist}[s]=0$; every other label is $\infty$.
+    \item Relax an edge $u\to v$ of weight $w$:
+  \end{itemize}
+  \[
+    \mathrm{candidate}=\mathrm{dist}[u]+w.
+  \]
+  If $\mathrm{candidate}<\mathrm{dist}[v]$, update $\mathrm{dist}[v]$ and push $(\mathrm{dist}[v],v)$.
+  \medskip
+  Use a \textbf{min-heap}: it removes the smallest distance, not the oldest entry contrary to BFS.
 \end{frame}
 
-% ------------------------------------------------
-\begin{frame}{Our Socials}
-
-    \centering
-    \begin{columns}[c]
-    
-        \column{0.33\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{insta.JPG}
-        \\
-        Instagram
-        
-        \column{0.33\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{discord.JPG}
-        \\
-        Discord
-        
-        \column{0.33\textwidth}
-        \centering
-        \includegraphics[width=\textwidth]{whatsapp.JPG}
-        \\
-        WhatsApp
-    
-    \end{columns}
-
+\begin{frame}{The Invariant That Makes Dijkstra Safe}
+  \textbf{Invariant:} when the current minimum entry for $u$ is popped, $\mathrm{dist}[u]$ is final.
+  \begin{itemize}
+    \item Any cheaper route to $u$ must leave the popped set through some unpopped vertex $x$.
+    \item With nonnegative weights, its cost up to $x$ is at most its total cost, so $\mathrm{dist}[x]<\mathrm{dist}[u]$.
+    \item Then $x$ would have been popped before $u$: a contradiction.
+  \end{itemize}
+  \medskip
+  A negative edge breaks this argument. Do \textbf{not} use Dijkstra on negative-weight graphs.
 \end{frame}
 
-% ------------------------------------------------
-
-\section{Foundations - A Quick Graph Traversal Recap}
-
-% ------------------------------------------------
-
-\begin{frame}{Depth-First Search}
-
-    \textbf{Purpose}
-    
-        Explore as far as possible along each branch before backtracking.
-    
-    \vspace{0.5em}
-    
+\begin{frame}[fragile]{Dijkstra in Code (C++ and Python)}
+  \begin{columns}[t]
+    \begin{column}{0.49\textwidth}
+      \textbf{C++ (\texttt{priority\_queue})}
+\begin{lstlisting}[language=C++]
+vector<ll> dist(n, INF);
+priority_queue<PII, vector<PII>,
+               greater<PII>> pq;
+dist[src] = 0;
+pq.push({0, src});
+while (!pq.empty()) {
+  auto [d, u] = pq.top();
+  pq.pop();
+  if (d != dist[u]) continue;
+  for (auto [v, w] : adj[u]) {
+    if (d + w < dist[v]) {
+      dist[v] = d + w;
+      pq.push({dist[v], v});
+    }
+  }
+}
+\end{lstlisting}
+    \end{column}
+    \begin{column}{0.49\textwidth}
+      \textbf{Python (\texttt{heapq})}
+\begin{lstlisting}[language=Python]
+def dijkstra(adj, src):
+  dist = [float("inf")] * len(adj)
+  dist[src] = 0
+  heap = [(0, src)]
+  while heap:
+    d, u = heappop(heap)
+    if d != dist[u]:
+      continue
+    for v, w in adj[u]:
+      nd = d + w
+      if nd < dist[v]:
+        dist[v] = nd
+        heappush(heap, (nd, v))
+  return dist
+\end{lstlisting}
+    \end{column}
+  \end{columns}
+  \medskip
+  {\scriptsize $\mathrm{adj}[u]$ stores $(v,w)$ pairs. In C++, \texttt{ll} is \texttt{long long} and \texttt{PII} is \texttt{pair<ll,int>}.}
 \end{frame}
 
-\begin{frame}{Depth-First Search}
-
-    \textbf{Algorithm (Iterative)}
-    
-    \textbf{1. Initialize}
-        \begin{itemize}
-            \item Create empty \texttt{stack}
-            \item Mark all nodes unvisited
-            \item Push start node
-        \end{itemize}
-
+\begin{frame}{Stale Entries and the Stopping Rule}
+  \begin{itemize}
+    \item Heap entries are \textbf{snapshots} $(\mathrm{distance}, \text{vertex})$. Improving a label pushes a new snapshot; the old one stays.
+    \item A snapshot with $d\ne\mathrm{dist}[u]$ is \textbf{stale}: skip it without scanning neighbours.
+    \item \textbf{One target?} Stop when the target is \emph{popped}, after the stale check.
+    \item \textbf{All distances?} Run until the heap is empty.
+    \item \textbf{Complexity?} $O(V+E\log E)$ time and $O(V+E)$ space.
+  \end{itemize}
+  \medskip
+  \alert{Do not stop on first discovery or mark a vertex final on insertion.}
 \end{frame}
 
-\begin{frame}{Depth-First Search}
-
-    \textbf{2. While stack not empty}
-        \begin{itemize}
-            \item Pop node $u$
-            \item If $u$ unvisited:
-            \begin{itemize}
-                \item Mark $u$ visited
-                \item Push unvisited neighbours of $u$
-            \end{itemize}
-        \end{itemize}
-    
+\begin{frame}[fragile]{Live 1 / Problem 1: GFG Dijkstra}
+  \href{https://www.geeksforgeeks.org/problems/implementing-dijkstra-set-1-adjacency-matrix/1}{\textbf{GFG: Dijkstra Algorithm}}
+  supplies an \textbf{undirected edge list}.
+\begin{lstlisting}[language=Python]
+class Solution:
+    def dijkstra(self, V, edges, src):
+        adj = [[] for _ in range(V)]
+        for u, v, w in edges:
+            adj[u].append((v, w))
+            adj[v].append((u, w))
+        return dijkstra(adj, src)
+\end{lstlisting}
+  Reuse the helper from the code slide. The historical title says \emph{adjacency matrix}; use the current signature \texttt{V, edges, src}.
 \end{frame}
 
-\begin{frame}{Depth-First Search}
-
-    \textbf{3. Stop when stack empty}
-
+\begin{frame}{Live 1: a Graph We Can Trace}
+  \centering
+  \dijkstragraph{3}
+  \par\medskip
+  \raggedright
+  \textbf{Undirected.} Source A, target E. Labels A--E map to $0$--$4$.
+  \par\smallskip
+  {\small $\mathrm{edges}=[(0,1,8),(0,2,1),(1,2,2),(1,3,1),(2,3,5),(1,4,9),(3,4,3)]$}
+  \par\smallskip
+  Predict the order of \textbf{valid pops}. An edge weight is not the distance of its endpoint.
 \end{frame}
 
-% ------------------
+\begin{frame}{Live 1: Step-by-Step Walkthrough}
+  \begin{columns}[c]
+    \begin{column}{0.56\textwidth}
+      \centering
+      \begin{tikzpicture}[x=0.9cm,y=0.9cm]
+        \draw<1->[draw=kcpc-text,thick] (A) -- node[wt,above left] {8} (B);
+        \draw<1->[draw=kcpc-text,thick] (A) -- node[wt,below left] {1} (C);
+        \draw<1->[draw=kcpc-text,thick] (B) -- node[wt,left] {2} (C);
+        \draw<1->[draw=kcpc-text,thick] (B) -- node[wt,below left] {1} (D);
+        \draw<1->[draw=kcpc-text,thick] (C) -- node[wt,below right] {5} (D);
+        \draw<1->[draw=kcpc-text,thick] (B) -- node[wt,above] {9} (E);
+        \draw<1->[draw=kcpc-text,thick] (D) -- node[wt,below] {3} (E);
+        \draw<2>[tentative] (A) -- (B);
+        \draw<2->[treeedge] (A) -- (C);
+        \draw<3>[tentative] (C) -- (D);
+        \draw<3->[treeedge] (C) -- (B);
+        \draw<4>[tentative] (B) -- (E);
+        \draw<4->[treeedge] (B) -- (D);
+        \draw<5->[treeedge] (D) -- (E);
 
-\begin{frame}{Group walkthrough example}
-
-    % We assume the source (obviously) here is A, with us mapping
-    % all possible routes until we find our target node.
-    
-    \includegraphics<1>[width=0.8\linewidth]{DFS1.jpg}
-    \includegraphics<2>[width=0.8\linewidth]{DFS2.jpg}
-    \includegraphics<3>[width=0.8\linewidth]{DFS3.jpg}
-    \includegraphics<4>[width=0.8\linewidth]{DFS4.jpg}
-    \includegraphics<5>[width=0.8\linewidth]{DFS5.jpg}
-    \includegraphics<6>[width=0.8\linewidth]{DFS6.jpg}
-    \includegraphics<7>[width=0.8\linewidth]{DFS7.jpg}
-
+        \node<1>[gnode] (A) at (0,0) {A};
+        \node<2>[active] (A) at (0,0) {A};
+        \node<3->[done] (A) at (0,0) {A};
+        \node<1-2>[gnode] (C) at (1.8,-1.15) {C};
+        \node<3>[active] (C) at (1.8,-1.15) {C};
+        \node<4->[done] (C) at (1.8,-1.15) {C};
+        \node<1-3>[gnode] (B) at (1.8,1.15) {B};
+        \node<4>[active] (B) at (1.8,1.15) {B};
+        \node<5->[done] (B) at (1.8,1.15) {B};
+        \node<1-4>[gnode] (D) at (3.6,0) {D};
+        \node<5>[active] (D) at (3.6,0) {D};
+        \node<6->[done] (D) at (3.6,0) {D};
+        \node<1-6>[gnode] (E) at (5.6,0) {E};
+        \node<7>[active] (E) at (5.6,0) {E};
+        \node<8->[done] (E) at (5.6,0) {E};
+      \end{tikzpicture}
+    \end{column}
+    \begin{column}{0.42\textwidth}
+      \begin{overlayarea}{\linewidth}{2.8cm}
+        \only<1>{\textbf{Initialise}\par Push $(0,\mathrm A)$.}
+        \only<2>{\textbf{Pop $(0,\mathrm A)$}\par Improve B to 8 and C to 1.}
+        \only<3>{\textbf{Pop $(1,\mathrm C)$}\par Improve B to 3 via C, and D to 6.}
+        \only<4>{\textbf{Pop $(3,\mathrm B)$}\par Improve D to 4 and E to 12.}
+        \only<5>{\textbf{Pop $(4,\mathrm D)$}\par Improve E to 7 via D.}
+        \only<6>{\textbf{Pop $(6,\mathrm D)$}\par Stale: $6\neq 4$. Skip.}
+        \only<7>{\textbf{Pop $(7,\mathrm E)$}\par No improvement. E is settled.}
+        \only<8>{\textbf{Pop $(8,\mathrm B)$}\par Stale: $8\neq 3$. Skip.}
+        \only<9>{\textbf{Pop $(12,\mathrm E)$}\par Stale. The heap is empty.}
+      \end{overlayarea}
+      \vspace{0.3em}
+      \textbf{Heap after this step:}\par
+      {\scriptsize
+      \only<1>{$[(0,\mathrm A)]$}
+      \only<2>{$[(1,\mathrm C),(8,\mathrm B)]$}
+      \only<3>{$[(3,\mathrm B),(6,\mathrm D),(8,\mathrm B)]$}
+      \only<4>{$[(4,\mathrm D),(6,\mathrm D),(8,\mathrm B),(12,\mathrm E)]$}
+      \only<5>{$[(6,\mathrm D),(7,\mathrm E),(8,\mathrm B),(12,\mathrm E)]$}
+      \only<6>{$[(7,\mathrm E),(8,\mathrm B),(12,\mathrm E)]$}
+      \only<7>{$[(8,\mathrm B),(12,\mathrm E)]$}
+      \only<8>{$[(12,\mathrm E)]$}
+      \only<9>{$[\,]$}}
+    \end{column}
+  \end{columns}
 \end{frame}
 
-% ------------------
-
-\begin{frame}{Breadth-First Search (BFS)}
-
-    \textbf{Purpose}
-    
-        Explore a graph level by level from a starting node.
-
+\begin{frame}{Try It Yourself: A Free Final Edge}
+  \centering
+  \dijkstragraph{0}
+  \par\medskip
+  \raggedright
+  The same graph, but \textbf{D--E now costs 0}.
+  \begin{enumerate}
+    \item Find the new final distances from A and a shortest route to E.
+    \item When is E first discovered, and when is it safe to stop?
+    \item List the valid pops, breaking equal-distance ties alphabetically.
+  \end{enumerate}
 \end{frame}
 
-\begin{frame}{Breadth-First Search (BFS)}
-
-    \vspace{0.5em}
-    \textbf{Algorithm}
-    
-        \textbf{1. Initialize}
-        \begin{itemize}
-            \item Create empty \texttt{queue}
-            \item Mark all nodes unvisited
-            \item Mark start node visited
-            \item Enqueue start node
-        \end{itemize}
-    
-\end{frame}
-    
-\begin{frame}{Breadth-First Search (BFS)}
-    
-    \textbf{2. While queue not empty}
-        \begin{itemize}
-            \item Dequeue node $u$
-            \item For each neighbour $v$ of $u$:
-            \begin{itemize}
-                \item If $v$ unvisited:
-                \begin{itemize}
-                    \item Mark $v$ visited
-                    \item Enqueue $v$
-                \end{itemize}
-            \end{itemize}
-        \end{itemize}
-
+\begin{frame}{Try It Yourself: A Free Final Edge (Answer)}
+  \begin{itemize}
+    \item Final distances: $[0,3,1,4,4]$. The route $A\to C\to B\to D\to E$ costs $1+2+1+0=4$.
+    \item E is first discovered from B with cost $3+9=12$. This is not final.
+    \item Valid pops: $(0,\mathrm A),(1,\mathrm C),(3,\mathrm B),(4,\mathrm D),(4,\mathrm E)$. Equal keys use the alphabetical tie-break.
+    \item Stop safely at $(4,\mathrm E)$. The remaining snapshots $(6,\mathrm D),(8,\mathrm B),(12,\mathrm E)$ are stale.
+  \end{itemize}
 \end{frame}
 
-\begin{frame}{Breadth-First Search (BFS)}
+\begin{frame}{Live 2 / Problem 2: Network Delay Time}
+  \textbf{LC743:} a signal starts at vertex $k$. When has \emph{every} vertex
+  received it? Edges are \textbf{directed} travel times.
+  \begin{columns}[c]
+    \begin{column}{0.45\textwidth}
+      \centering
+      \begin{tikzpicture}[x=0.9cm,y=0.9cm,>={Stealth[length=4pt]}]
+        \node[active] (two) at (0,0) {2};
+        \node[gnode] (one) at (0,1.4) {1};
+        \node[gnode] (three) at (2,0) {3};
+        \node[gnode] (four) at (2,-1.4) {4};
+        \draw[thick,->] (two) -- node[wt,left] {1} (one);
+        \draw[thick,->] (two) -- node[wt,above] {1} (three);
+        \draw[thick,->] (three) -- node[wt,right] {1} (four);
+      \end{tikzpicture}
+    \end{column}
+    \begin{column}{0.52\textwidth}
+      $n=4,\ k=2$.\newline
+      Input: $(2,1,1)$, $(2,3,1)$, $(3,4,1)$.
 
-    \textbf{3. Stop when queue empty}
+      Distances in order 1--4:\newline
+      $[1,0,1,2]$.
 
+      Return $\max_v\mathrm{dist}[v]=\boxed{2}$.
+    \end{column}
+  \end{columns}
+  If any vertex is unreachable, return $-1$.
+  With a size $n+1$ array, ignore unused index 0 in the answer.
 \end{frame}
 
-% ------------------
+% ============================================================
+\section{0--1 BFS}
+% ============================================================
 
-\begin{frame}{Group walkthrough example}
-
-    % We assume the source (obviously) here is A, with us mapping
-    % all the routes from A to every other node existing in our tree.
-
-    \includegraphics<1>[width=0.8\linewidth]{BFS1.jpg}
-    \includegraphics<2>[width=0.8\linewidth]{BFS2.jpg}
-    \includegraphics<3>[width=0.8\linewidth]{BFS3.jpg}
-    \includegraphics<4>[width=0.8\linewidth]{BFS4.jpg}
-    \includegraphics<5>[width=0.8\linewidth]{BFS5.jpg}
-    \includegraphics<6>[width=0.8\linewidth]{BFS6.jpg}
-    \includegraphics<7>[width=0.8\linewidth]{BFS7.jpg}
-    \includegraphics<8>[width=0.8\linewidth]{BFS8.jpg}
-
+\begin{frame}{Binary Costs Do Not Need a Heap}
+  Suppose every edge costs \textbf{0 or 1}.
+  \begin{itemize}
+    \item From a route of cost $d$, the next cost is only $d$ or $d+1$.
+    \item A \textbf{deque} lets us insert at either end and pop from the front.
+    \item A cost-0 improvement goes to the \textbf{front}: same cost layer.
+    \item A cost-1 improvement goes to the \textbf{back}: next cost layer.
+  \end{itemize}
+  \medskip
+  This is \textbf{0--1 BFS}: Dijkstra's ordering, without a heap.
+  Ordinary FIFO BFS would count edges, not total cost.
 \end{frame}
 
-% ------------------
-
-\begin{frame}{Why BFS Is Not Enough}
-
-    \textbf{Edge Case: Weighted Graph}
-    
-        BFS assumes all edges have equal cost.
-    
-    \vspace{0.5em}
-    
-    Consider:
-    
-        \begin{itemize}
-            \item $A \rightarrow B$ with weight 100
-            \item $A \rightarrow C$ with weight 1
-            \item $C \rightarrow B$ with weight 1
-        \end{itemize}
-    
-    \vspace{0.5em}
-    
-    \textbf{What BFS does:}
-        \begin{itemize}
-            \item Finds path $A \rightarrow B$ (1 edge)
-        \end{itemize}
-
+\begin{frame}{The Deque Invariant}
+  \textbf{Store snapshots $(d,u)$}, just as in the heap.
+  \[
+    \underbrace{d,\ d,\ d}_{\text{front level}}
+    \quad
+    \underbrace{d+1,\ d+1}_{\text{next level}}
+  \]
+  \begin{itemize}
+    \item Stored keys are nondecreasing, with at most \textbf{two adjacent levels}.
+    \item On a current pop of cost $d$, front-inserting $d$ or back-inserting $d+1$ preserves this order.
+    \item Skip a pop when $d\ne\mathrm{dist}[u]$, exactly as with Dijkstra.
+  \end{itemize}
+  \medskip
+  Do not confuse \emph{stored keys} with the changing \texttt{dist} labels.
 \end{frame}
 
-\begin{frame}{Why BFS Is Not Enough}
-
-    \textbf{Actual shortest path:}
-    \begin{itemize}
-        \item $A \rightarrow C \rightarrow B$ with total cost $2$
-    \end{itemize}
-    
-    \textbf{Key Limitation}
-    
-    \vspace{0.5em}
-    
-        BFS minimises the \textit{number of edges},  
-        not the \textit{total path weight}.
-    
-    \vspace{0.8em}
-    
-    \textbf{Implication}
-    
-        When edge weights differ, BFS may return a suboptimal path.
-    
-    \vspace{0.8em}
-    
-    \textbf{Takeaway Point}
-    
-        Do not use BFS on graphs with weights on them!
-    
+\begin{frame}[fragile]{0--1 BFS in Code (C++ and Python)}
+  \begin{columns}[t]
+    \begin{column}{0.49\textwidth}
+      \textbf{C++ (\texttt{deque})}
+\begin{lstlisting}[language=C++]
+vector<ll> dist(n, INF);
+dist[src] = 0;
+deque<PII> dq{{0, src}};
+while (!dq.empty()) {
+  auto [d, u] = dq.front();
+  dq.pop_front();
+  if (d != dist[u]) continue;
+  for (auto [v, w] : adj[u]) {
+    if (d + w < dist[v]) {
+      dist[v] = d + w;
+      if (w == 0)
+        dq.push_front({dist[v], v});
+      else
+        dq.push_back({dist[v], v});
+    }
+  }
+}
+\end{lstlisting}
+    \end{column}
+    \begin{column}{0.49\textwidth}
+      \textbf{Python (\texttt{collections.deque})}
+\begin{lstlisting}[language=Python]
+def zero_one_bfs(adj, src):
+  dist = [float("inf")] * len(adj)
+  dist[src] = 0
+  dq = deque([(0, src)])
+  while dq:
+    d, u = dq.popleft()
+    if d != dist[u]:
+      continue
+    for v, w in adj[u]:
+      nd = d + w
+      if nd < dist[v]:
+        dist[v] = nd
+        if w == 0:
+          dq.appendleft((nd, v))
+        else:
+          dq.append((nd, v))
+  return dist
+\end{lstlisting}
+    \end{column}
+  \end{columns}
+  \medskip
+  {\scriptsize Strict $<$ queues only genuine improvements. $O(V+E)$ time and space.}
 \end{frame}
 
-% ------------------
-
-\begin{frame}{Priority Queues}
-    
-    \textbf{Motivation}
-    
-        When edge weights differ, we must expand the \textit{closest} node first.
-    
-    \vspace{0.8em}
-    
-    \textbf{Key Idea}
-    
-        Instead of processing nodes in FIFO order (like BFS),  
-        we process nodes in order of \textit{smallest current distance}.
-    
-    \vspace{0.8em}
-    
-    \textbf{Data Structure}
-    
-        A \texttt{min-heap} (priority queue) allows us to:
-        \begin{itemize}
-            \item Always extract the node with smallest distance
-            \item Efficiently update distances
-        \end{itemize}
-    
+\begin{frame}{Live: a Zero-Cost Detour Beats Discovery}
+  \centering
+  \binarygraph
+  \par\medskip
+  \raggedright
+  \textbf{Directed.} Scan outgoing edges in exactly this order:
+  \[
+    \begin{aligned}
+      S &: [(A,1),(B,0)] & A &: [(T,0)]\\
+      B &: [(A,0),(T,1)] & T &: []
+    \end{aligned}
+  \]
+  A is first discovered at 1, but $S\to B\to A$ costs 0.
+  Predict what happens to the \emph{old} entry for A.
 \end{frame}
 
-% ------------------------------------------------
+\begin{frame}{Live: Step-by-Step Deque Trace}
+  \begin{columns}[c]
+    \begin{column}{0.56\textwidth}
+      \centering
+      \begin{tikzpicture}[x=0.9cm,y=0.9cm,>={Stealth[length=4pt]}]
+        \draw<1->[draw=kcpc-text,thick,->] (S) -- node[wt,above left] {1} (A);
+        \draw<1->[draw=kcpc-text,thick,->] (S) -- node[wt,below left] {0} (B);
+        \draw<1->[draw=kcpc-text,thick,->] (B) -- node[wt,left] {0} (A);
+        \draw<1->[draw=kcpc-text,thick,->] (A) -- node[wt,above right] {0} (T);
+        \draw<1->[draw=kcpc-text,thick,->] (B) -- node[wt,below right] {1} (T);
+        \draw<2>[tentative,->] (S) -- (A);
+        \draw<2->[treeedge,->] (S) -- (B);
+        \draw<3>[tentative,->] (B) -- (T);
+        \draw<3->[treeedge,->] (B) -- (A);
+        \draw<4->[treeedge,->] (A) -- (T);
 
-\section{Dijkstra - An Exploration}
-
-% ------------------------------------------------
-
-\begin{frame}{Why Would We Ever Use This?}
-
-    \textbf{Problem}
-    
-        BFS only guarantees shortest path when all edges have equal weight.
-    
-    \vspace{0.8em}
-    
-    \textbf{Issue}
-    
-        When edge weights differ:
-        \begin{itemize}
-            \item The path with fewer edges may not have minimum total cost
-            \item We must prioritise smaller cumulative distance
-        \end{itemize}
-    
-    \vspace{0.8em}
-    
-    \textbf{Solution}
-    
-        Use Dijkstra’s Algorithm:
-        \begin{itemize}
-            \item Always expand the node with smallest known distance
-            \item Guarantees shortest paths for non-negative weights
-        \end{itemize}
-
+        \node<1>[gnode] (S) at (0,0) {S};
+        \node<2>[active] (S) at (0,0) {S};
+        \node<3->[done] (S) at (0,0) {S};
+        \node<1-2>[gnode] (B) at (2,-1) {B};
+        \node<3>[active] (B) at (2,-1) {B};
+        \node<4->[done] (B) at (2,-1) {B};
+        \node<1-3>[gnode] (A) at (2,1) {A};
+        \node<4>[active] (A) at (2,1) {A};
+        \node<5->[done] (A) at (2,1) {A};
+        \node<1-4>[gnode] (T) at (4,0) {T};
+        \node<5>[active] (T) at (4,0) {T};
+        \node<6->[done] (T) at (4,0) {T};
+      \end{tikzpicture}
+    \end{column}
+    \begin{column}{0.42\textwidth}
+      \begin{overlayarea}{\linewidth}{2.8cm}
+        \only<1>{\textbf{Initialise}\par Push $(0,\mathrm S)$.}
+        \only<2>{\textbf{Pop $(0,\mathrm S)$}\par B gets 0 (front). A gets 1 (back).}
+        \only<3>{\textbf{Pop $(0,\mathrm B)$}\par A improves to 0 (front). T gets 1 (back).}
+        \only<4>{\textbf{Pop $(0,\mathrm A)$}\par T improves to 0 (front).}
+        \only<5>{\textbf{Pop $(0,\mathrm T)$}\par No outgoing edges. T is settled.}
+        \only<6>{\textbf{Pop $(1,\mathrm A)$}\par Stale: skip.}
+        \only<7>{\textbf{Pop $(1,\mathrm T)$}\par Stale: skip. All distances are 0.}
+      \end{overlayarea}
+      \vspace{0.3em}
+      \textbf{Deque after this step} (front left):\par
+      {\scriptsize
+      \only<1>{$[(0,\mathrm S)]$}
+      \only<2>{$[(0,\mathrm B),(1,\mathrm A)]$}
+      \only<3>{$[(0,\mathrm A),(1,\mathrm A),(1,\mathrm T)]$}
+      \only<4>{$[(0,\mathrm T),(1,\mathrm A),(1,\mathrm T)]$}
+      \only<5>{$[(1,\mathrm A),(1,\mathrm T)]$}
+      \only<6>{$[(1,\mathrm T)]$}
+      \only<7>{$[\,]$}}
+    \end{column}
+  \end{columns}
 \end{frame}
 
-% ------------------
-
-\begin{frame}{Algorithmic Theory}
-
-    \textbf{Core Idea}
-    
-        Always expand the node with the smallest known distance.
-
+\begin{frame}{Try It Yourself: Two Tempting Mistakes}
+  Use the previous directed graph and the same edge-scan order.
+  \begin{enumerate}
+    \item Suppose we mark a vertex visited \emph{when enqueuing}, and
+      never allow it to improve. What wrong distance reaches T?
+    \item Keep the correct distance updates, but change the stale test
+      to always process old entries. What work is repeated?
+    \item Why must the relaxation test use $<$, not $\leq$, if a
+      zero-cost cycle exists?
+  \end{enumerate}
+  \medskip
+  Explain the role of \textbf{distance improvements}, not just queue order.
 \end{frame}
 
-\begin{frame}{Algorithmic Theory}
-
-    \vspace{0.8em}
-    
-    \textbf{Algorithm}
-    
-    \textbf{1. Initialize}
-    \begin{itemize}
-        \item Set $distance[v] = \infty$ for all nodes
-        \item Set $distance[start] = 0$
-        \item Create empty \texttt{min-heap} (priority queue)
-        \item Insert $(0, start)$ into queue
-    \end{itemize}
-    
+\begin{frame}{Try It Yourself: Two Tempting Mistakes (Answer)}
+  \begin{enumerate}
+    \item With enqueue-time visited flags, S fixes A at 1 and B at 0.
+      B cannot improve A, and discovers T at 1. A cannot improve T
+      either. The wrong answer is \textbf{1}, instead of 0.
+    \item Without the stale check, old $(1,A)$ rescans A's outgoing edge,
+      and old $(1,T)$ processes T again. Strict relaxation prevents
+      new improvements here, but these scans are unnecessary.
+    \item With $\leq$, an edge on a zero-cost cycle can requeue a vertex
+      at the \emph{same} distance forever. Strict $<$ queues only genuine
+      improvements.
+  \end{enumerate}
+  \medskip
+  The correct shortest route is $S\to B\to A\to T$, total cost 0.
+  Discovery is not settlement: never make first discovery final.
 \end{frame}
 
-\begin{frame}{Algorithmic Theory}
+% ============================================================
+\section{Path Objectives and Model Choice}
+% ============================================================
 
-    \textbf{2. While queue not empty}
-        \begin{itemize}
-            \item Extract node $u$ with smallest distance
-            \item If extracted distance is outdated, skip
-            \item For each neighbour $v$ with edge weight $w$:
-            \begin{itemize}
-                \item If $distance[u] + w < distance[v]$:
-                \begin{itemize}
-                    \item Update $distance[v]$
-                    \item Insert $(distance[v], v)$ into queue
-                \end{itemize}
-            \end{itemize}
-        \end{itemize}
-    
+\begin{frame}{A Grid Is an Implicit Graph}
+  \begin{itemize}
+    \item \textbf{State}: a cell $(r,c)$; \textbf{edge}: one legal move.
+    \item Generate neighbours when needed: usually
+      $(r\pm1,c)$ and $(r,c\pm1)$.
+    \item Reject out-of-bounds cells and any forbidden destinations.
+    \item Define the \textbf{cost of the move}, then select the algorithm.
+  \end{itemize}
+  \medskip
+  No need to build an adjacency list for every cell.
+  An $R\times C$ four-neighbour grid has $RC$ vertices and $O(RC)$ edges.
+
+  A rectangular drawing does \emph{not} imply unweighted BFS.
 \end{frame}
 
-\begin{frame}{Algorithmic Theory}
-
-    \textbf{3. Stop when queue empty}
-
+\begin{frame}{Live 3 / Problem 3: Arrow-Grid Costs}
+  \textbf{LC1368:} change as few cell arrows as possible to obtain a path
+  from top left to bottom right.
+  \begin{columns}[c]
+    \begin{column}{0.38\textwidth}
+      \centering
+      \arrowgrid
+    \end{column}
+    \begin{column}{0.59\textwidth}
+      Every in-bounds orthogonal move is allowed.
+      \[
+        w(u,v)=
+        \begin{cases}
+          0 & \text{follow the arrow at }u,\\
+          1 & \text{otherwise.}
+        \end{cases}
+      \]
+      The arrow belongs to the cell we \textbf{leave}, not the one we enter.
+    \end{column}
+  \end{columns}
+  \medskip
+  Platform encoding: $1=\rightarrow$, $2=\leftarrow$,
+  $3=\downarrow$, $4=\uparrow$. Use \textbf{0--1 BFS}.
 \end{frame}
 
-\begin{frame}{Algorithmic Theory}
-
-    \textbf{Time Complexity (Binary Min-Heap)}
-    
-        \begin{itemize}
-            \item Best case: $O((V + E)\log V)$
-            \item Average case: $O((V + E)\log V)$
-            \item Worst case: $O((V + E)\log V)$
-        \end{itemize}
-    
-    \vspace{0.6em}
-    
-    \textbf{Space Complexity}
-    
-        \begin{itemize}
-            \item $O(V + E)$
-        \end{itemize}
-    
+\begin{frame}{Try It Yourself: Escape the Arrow Loop}
+  \begin{columns}[c]
+    \begin{column}{0.38\textwidth}
+      \centering
+      \arrowgrid
+    \end{column}
+    \begin{column}{0.59\textwidth}
+      Input:
+      $\begin{pmatrix}1&2&3\\1&1&4\end{pmatrix}$.
+      \begin{enumerate}
+        \item What cells can we reach at cost 0 from $(0,0)$?
+        \item Find a minimum-cost route to $(1,2)$.
+        \item Give a lower bound proving that your route is optimal.
+      \end{enumerate}
+    \end{column}
+  \end{columns}
+  \medskip
+  Following arrows forever can loop. A shortest route can be chosen
+  without cycles, so paying for a departure corresponds to changing
+  that cell's arrow once.
 \end{frame}
 
-% ------------------
+\begin{frame}{Try It Yourself: Escape the Arrow Loop (Answer)}
+  \begin{columns}[c]
+    \begin{column}{0.38\textwidth}
+      \centering
+      \arrowgrid
+    \end{column}
+    \begin{column}{0.59\textwidth}
+      Zero-cost reachable cells are just $(0,0)$ and $(0,1)$:
+      their arrows point to each other.
 
-\begin{frame}{Group walkthrough example}
+      Any route to the target must leave this set, so it costs
+      \textbf{at least 1}.
+    \end{column}
+  \end{columns}
+  \medskip
+  Route $(0,0)\to(0,1)\to(0,2)\to(1,2)$ has costs $0,1,0$.
+  Change $(0,1)$ from left to right. Total $\boxed{1}$ matches the lower bound.
 
-\includegraphics<1>[width=0.8\linewidth]{Dijkstra1.jpg}
-\includegraphics<2>[width=0.8\linewidth]{Dijkstra2.jpg}
-\includegraphics<3>[width=0.8\linewidth]{Dijkstra3.jpg}
-\includegraphics<4>[width=0.8\linewidth]{Dijkstra4.jpg}
-\includegraphics<5>[width=0.8\linewidth]{Dijkstra5.jpg}
-\includegraphics<6>[width=0.8\linewidth]{Dijkstra6.jpg}
-\includegraphics<7>[width=0.8\linewidth]{Dijkstra7.jpg}
-\includegraphics<8>[width=0.8\linewidth]{Dijkstra8.jpg}
-
+  Alternatively, change $(0,0)$ to down, then follow the bottom row.
 \end{frame}
 
-% ------------------
-
-\begin{frame}{Edge Cases and Limitations}
-
-    \textbf{1. Negative Edge Weights}
-    
-        \begin{itemize}
-            \item Dijkstra assumes all edge weights are non-negative
-            \item Negative weights can produce incorrect shortest paths
-            \item Use Bellman–Ford instead
-        \end{itemize}
-    
-    \vspace{0.6em}
-    
-    \textbf{2. Disconnected Graphs}
-    
-        \begin{itemize}
-            \item Unreachable nodes remain at $distance = \infty$
-        \end{itemize}
-
+\begin{frame}{Live 3: Reproducible Deque Trace}
+  \small Name cells $\begin{smallmatrix}A&B&C\\D&E&F\end{smallmatrix}$.
+  Scan directions \textbf{right, left, down, up}; ignore out-of-bounds moves.
+  Entries are \textbf{(stored cost, cell)}, front on the left.
+  \medskip
+  \centering
+  \begin{tabular}{@{}lll@{}}
+    \toprule
+    Pop & Improved labels & Deque after the pop \\
+    \midrule
+    $(0,A)$ & B: 0, D: 1 & $[(0,B),(1,D)]$ \\
+    $(0,B)$ & C: 1, E: 1 & $[(1,D),(1,C),(1,E)]$ \\
+    $(1,D)$ & none & $[(1,C),(1,E)]$ \\
+    $(1,C)$ & F: 1 & $[(1,F),(1,E)]$ \\
+    $(1,F)$ & none & $[(1,E)]$ \\
+    $(1,E)$ & none & empty \\
+    \bottomrule
+  \end{tabular}
+  \medskip
+  \raggedright
+  Complete distances: $\begin{pmatrix}0&0&1\\1&1&1\end{pmatrix}$.
+  For F alone, stop at its current pop $(1,F)$.
+  The zero cycle A--B creates no new entries because updates are strict.
 \end{frame}
 
-\begin{frame}{Edge Cases and Limitations}
-
-    \textbf{3. Duplicate Priority Queue Entries}
-
-        \begin{itemize}
-            \item A node may be inserted multiple times with different distances
-            \item Outdated entries are skipped during extraction
-        \end{itemize}
-        
-    \vspace{0.6em}
-    
-    \textbf{4. When to Use Another Algorithm}
-    
-        \begin{itemize}
-            \item Equal weights → use BFS
-            \item Weights restricted to $0$ or $1$ → use 0–1 BFS
-        \end{itemize}
-
+\begin{frame}{Try It Yourself: What Are We Optimising?}
+  A route's score can be extended by a sum, a product or a maximum. Compare the candidate routes:
+  \begin{enumerate}
+    \item Route A has step differences $2,9$; route B has $6,6$.
+      Which is better under the \textbf{sum}? Which under the \textbf{maximum}?
+    \item A direct route has success probability $0.75$.
+      A two-edge route has probabilities $0.8$ and $0.9$.
+      Which is better when we maximise the \textbf{product}?
+  \end{enumerate}
+  \medskip
+  For each, state the operation used to extend a path score.
 \end{frame}
 
-% ------------------------------------------------
-
-\section{0--1 BFS - An Exploration}
-
-% ------------------------------------------------
-
-\begin{frame}{Why Would We Ever Use 0--1 BFS?}
-
-    \textbf{Observation}
-    
-        Dijkstra works for all non-negative weights,  
-        but requires a priority queue and incurs a $\log V$ factor.
-
-    \vspace{0.8em}
-    
-    \textbf{Special Case}
-    
-        If edge weights are restricted to $\{0,1\}$:
-        \begin{itemize}
-            \item We do not need full priority ordering
-            \item Only two distance transitions are possible
-        \end{itemize}
-    
-\end{frame}
-    
-\begin{frame}{Why Would We Ever Use 0--1 BFS?}
-    
-    \textbf{Key Idea}
-    
-        Exploit the weight structure to replace the heap  
-        with a deque.
-        
-    \vspace{0.8em}
-    
-    \textbf{Guarantee}
-    
-        0--1 BFS computes shortest paths  
-        when all edge weights are exactly $0$ or $1$.
-
+\begin{frame}{Try It Yourself: What Are We Optimising? (Answer)}
+  \begin{enumerate}
+    \item \textbf{Sum:} $2+9=11<12=6+6$, so route A wins.
+      \textbf{Maximum:} $\max(2,9)=9>6=\max(6,6)$, so route B wins.
+      Extend by \emph{adding} for sums and by \emph{taking a maximum} for bottlenecks.
+    \item \textbf{Product:} $0.8\cdot0.9=0.72<0.75$, so the direct route wins.
+      Extend by \emph{multiplying}; maximise with a max-heap.
+  \end{enumerate}
+  \medskip
+  The objective, not the graph, decides which route is best. In each case, a current best pop is final when extending a route cannot improve its score.
 \end{frame}
 
-% ------------------
+\begin{frame}{Try It Yourself: Nearest Zero}
+  \begin{columns}[c]
+    \begin{column}{0.38\textwidth}
+      \centering
+      \begin{tikzpicture}[x=0.9cm,y=0.9cm]
+        \foreach \r in {0,1,2} {
+          \foreach \c in {0,1,2} {
+            \draw[kcpc-muted] (\c,-\r) rectangle ++(1,-1);
+          }
+        }
+        \node[gnode] at (0.5,-0.5) {1};
+        \node[gnode] at (1.5,-0.5) {1};
+        \node[done]  at (2.5,-0.5) {0};
+        \node[gnode] at (0.5,-1.5) {1};
+        \node[gnode] at (1.5,-1.5) {1};
+        \node[gnode] at (2.5,-1.5) {1};
+        \node[done]  at (0.5,-2.5) {0};
+        \node[gnode] at (1.5,-2.5) {1};
+        \node[gnode] at (2.5,-2.5) {1};
+      \end{tikzpicture}
+    \end{column}
+    \begin{column}{0.59\textwidth}
+      \textbf{Multi-source BFS:} seed every zero at distance $0$ and run one BFS.
 
-\begin{frame}{Algorithmic Theory}
-
-    \textbf{Core Idea}
-    
-        Simulate Dijkstra without a heap by using a deque.
-    
-        \vspace{0.8em}
-    
-        Maintain $distance[v]$ as usual.
-
+      Move up, down, left or right. Coordinates are zero-based, top left is $(0,0)$.
+      \begin{enumerate}
+        \item Which cells enter the queue initially, and at what distance?
+        \item Compute the complete distance matrix.
+        \item Why would a DFS's first-found route not justify these distances?
+      \end{enumerate}
+    \end{column}
+  \end{columns}
 \end{frame}
 
-\begin{frame}{Algorithmic Theory}
-    \textbf{Algorithm}
-    
-        \textbf{1. Initialize}
-            \begin{itemize}
-                \item Set $distance[v] = \infty$ for all nodes
-                \item Set $distance[start] = 0$
-                \item Create empty \texttt{deque}
-                \item Push $start$ to front
-            \end{itemize}
-
+\begin{frame}{Try It Yourself: Nearest Zero (Answer)}
+  \begin{columns}[c]
+    \begin{column}{0.38\textwidth}
+      \centering
+      \begin{tikzpicture}[x=0.9cm,y=0.9cm]
+        \foreach \r in {0,1,2} {
+          \foreach \c in {0,1,2} {
+            \draw[kcpc-muted] (\c,-\r) rectangle ++(1,-1);
+          }
+        }
+        \node[gnode]  at (0.5,-0.5) {2};
+        \node[active] at (1.5,-0.5) {1};
+        \node[done]   at (2.5,-0.5) {0};
+        \node[active] at (0.5,-1.5) {1};
+        \node[gnode]  at (1.5,-1.5) {2};
+        \node[active] at (2.5,-1.5) {1};
+        \node[done]   at (0.5,-2.5) {0};
+        \node[active] at (1.5,-2.5) {1};
+        \node[gnode]  at (2.5,-2.5) {2};
+      \end{tikzpicture}
+    \end{column}
+    \begin{column}{0.59\textwidth}
+      \begin{itemize}
+        \item Seed $(0,2)$ and $(2,0)$ at distance 0 \textbf{before} expanding.
+        \item Layer 1: $(0,1),(1,0),(1,2),(2,1)$.
+        \item Layer 2: $(0,0),(1,1),(2,2)$.
+        \item FIFO processes shorter routes first, so first discovery is minimal.
+          DFS does not keep distance layers and may find a longer route first.
+        \item One BFS for all zeros: $O(RC)$ time.
+      \end{itemize}
+    \end{column}
+  \end{columns}
 \end{frame}
 
-\begin{frame}{Algorithmic Theory}
-
-    \textbf{2. While deque not empty}
-        \begin{itemize}
-            \item Pop node $u$ from front
-            \item For each neighbour $v$ with weight $w \in \{0,1\}$:
-            \begin{itemize}
-                \item If $distance[u] + w < distance[v]$:
-                \begin{itemize}
-                    \item Update $distance[v]$
-                    \item If $w = 0$: push $v$ to front
-                    \item If $w = 1$: push $v$ to back
-                \end{itemize}
-            \end{itemize}
-        \end{itemize}
-
+\begin{frame}{Try It Yourself: Keep the Useful Arrival}
+  At city $u$ we can arrive in two ways:
+  \begin{itemize}
+    \item cheaply but slowly: fee 3, time used 9;
+    \item expensively but quickly: fee 6, time used 3.
+  \end{itemize}
+  The time limit is 10. The only move from $u$ to the target takes 3 more time units,
+  and the target's entry fee is 2. The source fee and each entered city's fee are charged.
+  \begin{enumerate}
+    \item Which arrival at $u$ can finish? What is its total fee?
+    \item Why does retaining only the cheapest fee at $u$ fail?
+    \item How would you label the states and reject illegal transitions?
+  \end{enumerate}
 \end{frame}
 
-\begin{frame}{Algorithmic Theory}
-
-    \textbf{3. Stop when deque empty}
-
+\begin{frame}{Try It Yourself: Keep the Useful Arrival (Answer)}
+  \begin{center}
+  \small
+  \begin{tabular}{@{}lccc@{}}
+    \toprule
+    Arrival at $u$ & Time used & Finish time & Result \\
+    \midrule
+    Cheap (fee 3) & 9 & $9+3=12$ & infeasible \\
+    Fast (fee 6) & 3 & $3+3=6\le10$ & total fee $6+2=\boxed{8}$ \\
+    \bottomrule
+  \end{tabular}
+  \end{center}
+  \medskip
+  \begin{itemize}
+    \item Keeping only fee 3 at $u$ discards the arrival that can finish.
+    \item Let $\mathrm{dist}[u][t]$ be the minimum fee to reach $u$ at time $t$.
+      A move taking $\tau$ tries state $(v,t+\tau)$ with fee $\mathrm{dist}[u][t]+\mathrm{fee}[v]$.
+  \end{itemize}
+  Reject $t+\tau>10$. Initially $\mathrm{dist}[s][0]=\mathrm{fee}[s]$.
+  Minimise over feasible arrival times at the target.
 \end{frame}
 
-\begin{frame}{Algorithmic Theory}
+% ============================================================
+\section{Conclusion}
+% ============================================================
 
-    \textbf{Why It Works}
-    
-        The deque preserves nondecreasing distance order.
-    
-    \vspace{0.8em}
-    
-    \textbf{Time Complexity}
-    
-        \begin{itemize}
-            \item Best case: $O(V + E)$
-            \item Average case: $O(V + E)$
-            \item Worst case: $O(V + E)$
-        \end{itemize}
-    
-    \vspace{0.6em}
-    
-        \textbf{Space Complexity}
-    
-            \begin{itemize}
-                \item $O(V + E)$
-            \end{itemize}
+\begin{frame}{Summary: Matching Models to Algorithms}
+  \centering
+  {\small
+  \begin{tabular}{lll}
+    \toprule
+    \textbf{Need / edge costs} & \textbf{First choice} & \textbf{Time} \\
+    \midrule
+    Reachability only & DFS or BFS & $O(V+E)$ \\
+    Unit / equal positive cost & BFS & $O(V+E)$ \\
+    Costs 0 or 1 & 0--1 BFS & $O(V+E)$ \\
+    General nonnegative costs & Dijkstra & heap logarithm \\
+    General negative costs & e.g. Bellman--Ford & outside today's scope \\
+    \bottomrule
+  \end{tabular}}
+  \medskip
+  Multiple starts? Seed \textbf{all sources} at their correct initial scores.
 
+  Time, fuel, keys or remaining moves affect future choices?
+  They may belong in the \textbf{state}, not just in an edge weight.
 \end{frame}
-
-
-% ------------------
-
-\begin{frame}{Group walkthrough example}
-
-    \includegraphics<1>[width=0.8\linewidth]{01BFS1.jpg}
-
-\end{frame}
-
-% ------------------
-
-\begin{frame}{Edge Cases and Limitations}
-
-    \textbf{1. Weight Restriction}
-    
-        \begin{itemize}
-            \item Only valid when all edge weights are exactly $0$ or $1$
-            \item If weights include $2$ or higher, use Dijkstra (or Dial’s algorithm)
-        \end{itemize}
-    
-    \vspace{0.6em}
-    
-        \textbf{2. Disconnected Graphs}
-        
-        \begin{itemize}
-            \item Unreachable nodes remain at $distance = \infty$
-        \end{itemize}
-
-\end{frame}
-
-\begin{frame}{Edge Cases and Limitations}
-    
-    \textbf{3. Multiple Relaxations}
-    
-        \begin{itemize}
-            \item Nodes may be relaxed multiple times
-            \item Do not permanently mark nodes as “visited” after first processing
-        \end{itemize}
-    
-    \vspace{0.6em}
-    
-    \textbf{4. Negative Weights}
-    
-        \begin{itemize}
-            \item Not valid if negative edges are present
-        \end{itemize}
-
-\end{frame}
-
-% ------------------------------------------------
-
-\section{Choosing the Right Algorithm (Quick Rules)}
-
-% ------------------------------------------------
-
-\begin{frame}{Choosing the Right Algorithm}
-
-    \begin{itemize}
-    
-        \item \textbf{DFS:} Use when exploring graph structure such as connectivity or cycles, where shortest path distance is not required.
-        
-    \pause
-        
-        \item \textbf{BFS:} Use when all edges have equal weight and you need the shortest path in terms of number of edges.
-    
-    \pause
-        
-        \item \textbf{0--1 BFS:} Use when edge weights are restricted to exactly 0 or 1 and you need shortest path distances efficiently.
-    
-    \pause
-        
-        \item \textbf{Dijkstra:} Use when edge weights are non-negative and may vary, and you need the shortest path from a source node.
-        
-    \end{itemize}
-
-\end{frame}
-
-% ------------------------------------------------
-
-\section{Problem Sheet}
-
-% ------------------------------------------------
-
-
-\begin{frame}{Problem Sheet}
-
-    \begin{itemize}
-    
-        \item Solve the problems using the appropriate shortest-path algorithm
-    
-    \pause
-    
-        \item Work individually or in small groups
-    
-    \pause
-    
-        \item Refer to previous slides if needed
-    
-    \pause
-    
-        \item We will review selected solutions afterwards
-    
-    \end{itemize}
-
-\end{frame}
-
-% ------------------------------------------------
-
-\section{Final Remarks}
-
-% ------------------------------------------------
-
-\begin{frame}{Further Reading}
-
-    \begin{itemize}
-    
-        \item A document containing relevant supplementary + research reading will be available on the KCPC website (for this workshop) and the KCPC Discord Resource section for you to check out :D
-    
-    \end{itemize}
-    
-\end{frame}
-
-% ------------------------------------------------
 
 \end{document}
