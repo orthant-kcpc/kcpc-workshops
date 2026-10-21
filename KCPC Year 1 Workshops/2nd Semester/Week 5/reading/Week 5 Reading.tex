@@ -1,95 +1,64 @@
 \documentclass[11pt]{article}
-
-\usepackage[a4paper,margin=1in]{geometry}
-\usepackage{hyperref}
-\usepackage{enumitem}
-\usepackage{titlesec}
-
-\titleformat{\section}{\large\bfseries}{\thesection}{1em}{}
-\setlist[itemize]{noitemsep, topsep=4pt}
-\setlist[enumerate]{noitemsep, topsep=4pt}
-
-\title{KCPC-CS111 \\ Supplementary Reading \\ Graphs II: Traversal and Shortest Paths}
-\author{}
-\date{}
+\usepackage[utf8]{inputenc}
+\usepackage[a4paper,margin=0.8in]{geometry}
+\usepackage{amsmath,hyperref,xurl,enumitem,titlesec,xcolor,fancyhdr,tikz,graphicx,eso-pic}
+\graphicspath{{../}}
+\definecolor{kcpc-text}{RGB}{20,20,20}
+\definecolor{kcpc-muted}{RGB}{90,90,90}
+\definecolor{kcpc-red}{RGB}{176,0,0}
+\pagestyle{fancy}\fancyhf{}
+\lhead{\textcolor{kcpc-text}{\small\bfseries Reading}}
+\rhead{\textcolor{kcpc-muted}{\small Week 5}}
+\cfoot{\textcolor{kcpc-muted}{\small KCPC}}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\headrule}{\hbox to\headwidth{\color{kcpc-red}\leaders\hrule height \headrulewidth\hfill}}
+\renewcommand{\footrulewidth}{0pt}
+\setlength{\headheight}{28pt}
+\AddToShipoutPictureBG{\begin{tikzpicture}[remember picture,overlay]
+  \node[opacity=0.035,at=(current page.center)]{\includegraphics[width=0.38\paperwidth]{kcpc-logo.png}};
+\end{tikzpicture}}
+\titleformat{\section}{\large\bfseries\color{kcpc-red}}{}{0pt}{}
+\setlist[itemize]{noitemsep,topsep=4pt}
+\hypersetup{colorlinks=true,urlcolor=kcpc-red,linkcolor=kcpc-red}
+\setlength{\emergencystretch}{1.5em}
+\title{KCPC Week 5 Reading\\Graphs II: Dijkstra and 0--1 BFS}
+\author{}\date{}
 
 \begin{document}
+\maketitle\thispagestyle{fancy}
 
-\maketitle
+Follow this guide alongside the slides and problem sheet. Each reference below covers specific foundational theory from the workshop: graph traversal (DFS/BFS), shortest paths with non-negative weights (Dijkstra), the relaxation invariant, priority queues, and 0--1 BFS. Page numbers refer to the \emph{printed} pages of each text, rather than the PDF viewer counter. For the original research behind these algorithms, see \emph{Week 5 Papers}.
 
-\noindent
-This document contains recommended and further readings for Depth-First Search (DFS), Breadth-First Search (BFS), Dijkstra’s Algorithm, and 0--1 BFS.  
-These references are intended to deepen conceptual understanding beyond implementation.
-
-\hrule
-\vspace{1em}
-
-% ----------------------------------------------------
-\section*{I. Core Algorithmic Reading}
-
-\subsection*{Competitive Programming Guide (PDF)}
-
+\section*{I. Core algorithmic reading}
+\subsection*{Guide to Competitive Programming (Antti Laaksonen-style community PDF)}
 \url{https://duoblogger.github.io/assets/pdf/memonvyftw/guide-t-cp.pdf}
-
-\vspace{0.8em}
-
 \begin{itemize}
-    \item \textbf{Depth-First Search (DFS)} - p. 83
-    \item \textbf{Breadth-First Search (BFS)} - p. 85
-    \item \textbf{Bellman--Ford} (further reading) - p. 88
-    \item \textbf{Dijkstra’s Algorithm} - p. 89
-    \item \textbf{Floyd--Warshall} (further reading) - p. 92
+  \item \textbf{Depth-First Search, p.~83:} stack-based exploration and reachability; matches the slides' graph-foundations section.
+  \item \textbf{Breadth-First Search, p.~85:} FIFO layers and why first discovery minimises edge count; needed for Problem 7 (01 Matrix).
+  \item \textbf{Dijkstra's Algorithm, p.~89:} relaxation with a priority queue for non-negative weights; the basis for Problems 1--2, 4--5 and 9--15.
+  \item \textbf{Bellman--Ford, p.~88 (further reading):} the negative-weight alternative the slides warn about; not required for this sheet.
+  \item \textbf{Floyd--Warshall, p.~92 (further reading):} all-pairs shortest paths; optional context for why we only need single-source methods here.
 \end{itemize}
 
-\vspace{1em}
-\hrule
-\vspace{1em}
-
-% ----------------------------------------------------
 \section*{II. 0--1 BFS}
-
 \subsection*{CP-Algorithms}
-
 \url{https://cp-algorithms.com/graph/01_bfs.html}
 
-\vspace{0.5em}
+A concise explanation of 0--1 BFS, including its correctness argument and time complexity analysis. Read it before attempting the deque-based problems: 3 (arrow grid), 6 (obstacle removal), 8 (Wizard in Maze) and 15 (Stronger Takahashi). Compare its dial/bucket viewpoint with the slides' ``two adjacent distance levels'' invariant, and with Dial (1969) in \emph{Week 5 Papers}.
 
-This reference provides a concise explanation of 0--1 BFS, including its correctness argument and time complexity analysis.
-
-\vspace{1em}
-
-\hrule
-\vspace{1em}
-
-% ----------------------------------------------------
-\section*{III. Formal Textbook Reference}
-
-\subsection*{Introduction to Algorithms \\ (Cormen, Leiserson, Rivest, Stein)}
-
+\section*{III. Formal textbook reference}
+\subsection*{Introduction to Algorithms (Cormen, Leiserson, Rivest, Stein)}
 \url{https://www.cs.mcgill.ca/~akroit/math/compsci/Cormen%20Introduction%20to%20Algorithms.pdf}
-
-\vspace{0.8em}
-
 \begin{itemize}
-    \item \textbf{Priority Queue} - p. 162
-    \item \textbf{Breadth-First Search} - p. 594
-    \item \textbf{Depth-First Search} - p. 603
-    \item \textbf{Bellman--Ford} (further reading) - p. 651
-    \item \textbf{Dijkstra’s Algorithm} - p. 658
-    \item \textbf{Floyd--Warshall} (further reading) - p. 693
+  \item \textbf{Priority queues, p.~162 (\S6.5):} the heap operations behind the slides' lazy min-heap implementation.
+  \item \textbf{Breadth-First Search, p.~594 (\S22.2):} the formal layering argument; also covers the shortest-paths-in-unweighted-graphs theorem.
+  \item \textbf{Depth-First Search, p.~603 (\S22.3):} reachability and edge classification.
+  \item \textbf{Dijkstra's Algorithm, p.~658 (\S24.3):} the formal proof of the settling invariant the slides rely on, including why negative weights break it.
+  \item \textbf{Bellman--Ford, p.~651 (\S24.1, further reading):} the correct tool when negative weights appear.
+  \item \textbf{Floyd--Warshall, p.~693 (\S25.2, further reading):} optional all-pairs perspective.
 \end{itemize}
 
-\vspace{1em}
-
-\hrule
-\vspace{1em}
-
-\noindent
-\textbf{Recommended Approach:}
-\begin{itemize}
-    \item Begin with the competitive programming guide for implementation clarity.
-    \item Use CP-Algorithms for structural intuition regarding 0--1 BFS.
-    \item Consult CLRS for formal proofs, invariants, and complexity analysis.
-\end{itemize}
+\section*{Suggested order}
+Start with the competitive programming guide (DFS p.~83, BFS p.~85, Dijkstra p.~89) for implementation clarity, alongside the slides' worked traces; solve Problems 1--3. Read the CP-Algorithms 0--1 BFS page, then attempt Problems 3, 6, 8 and 15. Use CLRS \S\S22.2--22.3 and \S24.3 for the formal invariants and complexity analysis when writing up your own reasoning, and consult Bellman--Ford and Floyd--Warshall only as further reading. For original sources and historical context, see \emph{Week 5 Papers}.
 
 \end{document}
