@@ -30,7 +30,7 @@ Where Typst is used instead of Latex, please consider the same folder layout!
 
 ## Year 2 Hacking Sessions
 
-Year 2 (2026 - 2027) sessions are **hacking sessions** focused on collaborative problem solving. Participants can bring problems they would like to work on, and organisers provide a **problem sheet containing only links to problems**.
+Year 2 (2026 - 2027) sessions are **hacking sessions** focused on collaborative problem solving. Participants can bring problems they would like to work on, and organisers provide a **problem sheet** with links to the suggested problems and any official statement pages requested for the session.
 
 The problem sheet is the only prepared session material. See [`KCPC Year 2 Workshops/README.md`](./KCPC%20Year%202%20Workshops/README.md) for the session format and folder layout.
 
