@@ -14,7 +14,7 @@ Hacking sessions replace the previous theory/application pairing. Each session s
 
 ## Problem Sheet
 
-The **problem sheet is the only prepared session material**. It contains only links to problems, labelled with their problem names or identifiers. Link directly to the original problem pages so participants can access the statements and submit their solutions there.
+The **problem sheet is the only prepared session material**. Link directly to the problem pages, so participants can access the statements and submit their solutions there. When a session calls for official statements, append the original statement pages after the links, as in [Hacking Session 3](./Hacking%20Session%203/Hacking%20Session%203%20Problems.pdf).
 
 Slides, reading lists, papers, and separate solution documents are not part of the new hacking-session format.
 
@@ -29,7 +29,7 @@ Hacking Session [X]/
   Hacking Session [X] Problems.pdf
 ```
 
-Where Typst is used instead of LaTeX, use a `.typ` source in the same layout. Keep the compiled problem-sheet PDF in the session root and in sync with its source.
+Where Typst is used instead of LaTeX, use a `.typ` source in the same layout. Store any official statement PDFs in `Problems/`. Keep the compiled problem-sheet PDF in the session root and in sync with its source.
 
 ## Existing Materials
 
